@@ -1,4 +1,4 @@
-import { createHttpLink, InMemoryCache } from '@apollo/client/core'
+import { createHttpLink, InMemoryCache } from "@apollo/client/core";
 export /* async */ function getClientOptions(/* {app, router, ...} */ options) {
   return Object.assign(
     // General options.
@@ -7,42 +7,42 @@ export /* async */ function getClientOptions(/* {app, router, ...} */ options) {
         uri:
           process.env.GRAPHQL_URI ||
           // Change to your graphql endpoint.
-          'https://example.com/graphql',
+          "https://app.stud.druid.1t.ru/graphql",
       }),
       cache: new InMemoryCache(),
     },
     // Specific Quasar mode options.
-    process.env.MODE === 'spa'
+    process.env.MODE === "spa"
       ? {
           //
         }
       : {},
-    process.env.MODE === 'ssr'
+    process.env.MODE === "ssr"
       ? {
           //
         }
       : {},
-    process.env.MODE === 'pwa'
+    process.env.MODE === "pwa"
       ? {
           //
         }
       : {},
-    process.env.MODE === 'bex'
+    process.env.MODE === "bex"
       ? {
           //
         }
       : {},
-    process.env.MODE === 'cordova'
+    process.env.MODE === "cordova"
       ? {
           //
         }
       : {},
-    process.env.MODE === 'capacitor'
+    process.env.MODE === "capacitor"
       ? {
           //
         }
       : {},
-    process.env.MODE === 'electron'
+    process.env.MODE === "electron"
       ? {
           //
         }
@@ -59,16 +59,16 @@ export /* async */ function getClientOptions(/* {app, router, ...} */ options) {
         }
       : {},
     // For ssr mode, when on server.
-    process.env.MODE === 'ssr' && process.env.SERVER
+    process.env.MODE === "ssr" && process.env.SERVER
       ? {
           ssrMode: true,
         }
       : {},
     // For ssr mode, when on client.
-    process.env.MODE === 'ssr' && process.env.CLIENT
+    process.env.MODE === "ssr" && process.env.CLIENT
       ? {
           ssrForceFetchDelay: 100,
         }
       : {}
-  )
+  );
 }
