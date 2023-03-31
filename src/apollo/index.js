@@ -1,4 +1,5 @@
 import { createHttpLink, InMemoryCache } from "@apollo/client/core";
+import { setContext } from "@apollo/client/link/context";
 export /* async */ function getClientOptions(/* {app, router, ...} */ options) {
   const httpLink = createHttpLink({
     uri: process.env.GRAPHQL_URI || "https://app.stud.druid.1t.ru",
