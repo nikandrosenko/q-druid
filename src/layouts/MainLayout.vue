@@ -11,11 +11,7 @@
           @click="toggleLeftDrawer"
         />
 
-        <q-toolbar-title>
-          Quasar App
-        </q-toolbar-title>
-
-        <div>Quasar v{{ $q.version }}</div>
+        <q-toolbar-title> Приложение на платформе Druid </q-toolbar-title>
       </q-toolbar>
 
       <q-tabs align="left">
@@ -27,21 +23,11 @@
           v-ripple
         />
       </q-tabs>
-
     </q-header>
 
-    <q-drawer
-      v-model="leftDrawerOpen"
-      show-if-above
-      bordered
-    >
+    <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
       <q-list>
-        <q-item-label
-          header
-        >
-          Essential Links
-        </q-item-label>
-
+        <q-item-label header> Будущая древовидная навигация </q-item-label>
       </q-list>
     </q-drawer>
 
@@ -52,11 +38,11 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref } from "vue";
 
-    const leftDrawerOpen = ref(false)
+const leftDrawerOpen = ref(false);
 
-    const toggleLeftDrawer = () => {
-        leftDrawerOpen.value = !leftDrawerOpen.value
-      }
+const toggleLeftDrawer = () => {
+  leftDrawerOpen.value = !leftDrawerOpen.value;
+};
 </script>
