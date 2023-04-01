@@ -172,7 +172,7 @@ userSignUpSetPassword().then(res => {
   .step{
     height: 40px;
     width: 40px;
-    border: 1px solid black;
+    border: 1px solid rgba(0, 0, 0, 0.466);
     border-radius: 25px;
     text-align: center;
     cursor: pointer;

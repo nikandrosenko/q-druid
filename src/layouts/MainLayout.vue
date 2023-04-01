@@ -18,11 +18,20 @@
         <div>Quasar v{{ $q.version }}</div>
       </q-toolbar>
 
-      <q-tabs align="left">
+      <q-tabs align="right"  v-if="token.length === 0">
         <q-route-tab
           exact
           to="/Auth"
           label="Регистрация/Авторизация"
+          class="montserrat-700"
+          v-ripple
+        />
+      </q-tabs>
+      <q-tabs align="right" v-else>
+        <q-route-tab
+          exact
+          to="/Profile"
+          label="Профиль"
           class="montserrat-700"
           v-ripple
         />
@@ -52,7 +61,12 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
+import { useStore } from 'vuex';
+
+const store = useStore()
+
+const token = computed(() => store.state.moduleAuth.userAuth)
 
     const leftDrawerOpen = ref(false)
 
