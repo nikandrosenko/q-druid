@@ -19,12 +19,15 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { useMutation } from "@vue/apollo-composable";
 import gql from "graphql-tag";
 import { ApolloClient } from "@apollo/client/core";
 import { getClientOptions } from "src/apollo/index";
 import { provideApolloClient } from "@vue/apollo-composable";
+import { useStore } from 'vuex'
+
+const store = useStore()
 
 const apolloClient = new ApolloClient(getClientOptions());
 
@@ -55,18 +58,17 @@ const signIn = async () => {
   {
     variables: {
       "input": {
-		  "login": emailModel.value,
+		  "login": emailModel.value.toLowerCase(),
 		  "password": passwordModel.value
       }
 }
   })
 
-
+  const token = computed(() => store.getters['moduleAuth/USER_AUTH'])
 
   signInUser().then(res => {
       if (!res.errors) {
-        localStorage.setItem('Token', res.data.userSignIn.record.token_type);
-        console.log(localStorage.getItem('Token'))
+        store.dispatch('moduleAuth/AUTH_USER_DATA_RESPONSE_TOKEN', res.data.userSignIn.record)
       } else {
         console.log(2)
       }
@@ -77,7 +79,6 @@ const signIn = async () => {
       }
    })
 
-  // window.localStorage.setItem(key, value);
 }
 
 
