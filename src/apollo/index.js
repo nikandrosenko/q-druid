@@ -2,7 +2,7 @@ import { createHttpLink, InMemoryCache } from "@apollo/client/core";
 import { setContext } from "@apollo/client/link/context";
 export /* async */ function getClientOptions(/* {app, router, ...} */ options) {
   const httpLink = createHttpLink({
-    uri: process.env.GRAPHQL_URI || "https://app.stud.druid.1t.ru",
+    uri: process.env.GRAPHQL_URI || "https://app.stud.druid.1t.ru/graphql",
   });
   const authLink = setContext((_, { headers }) => {
     const token = sessionStorage.getItem("token");
@@ -25,6 +25,7 @@ export /* async */ function getClientOptions(/* {app, router, ...} */ options) {
     // General options.
     {
       link: authLink.concat(httpLink),
+      // link: httpLink,
       cache: new InMemoryCache(),
     },
     // Specific Quasar mode options.
