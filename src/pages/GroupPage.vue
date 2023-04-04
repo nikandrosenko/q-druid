@@ -2,7 +2,7 @@
   <div class="q-pa-md">
     <q-card class="my-card" flat bordered>
       <q-card-section>
-        <div class="text-h6">{{ page.page.title }}</div>
+        <div class="text-h6">{{ page.title }}</div>
         <div class="text-subtitle2">by John Doe</div>
       </q-card-section>
       <q-markup-table>
@@ -29,17 +29,15 @@ import gql from 'graphql-tag';
 import { computed } from "vue";
 import { getPage, getGroupSubjects } from "src/graphql/queries";
 
+const group_id = 6579648768563146067;
+const id = 5901342623205784345;
 
 const { result: page } = useQuery(getPage, {
-  id: id,
-});
+  id: id});
 console.log(page.id)
 
-const subjectId = computed(() => page.value.page.object.id);
-console.log(subjectId)
-
 const { result: subjects } = useQuery(getGroupSubjects, {
-  group_id: subjectId,
+  group_id: page?.subject?.id,
 });
 console.log(group_id)
 

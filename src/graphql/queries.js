@@ -51,8 +51,8 @@ export const pages = gql`
   }
 `;
 export const getPage = gql`
-  query {
-    page(id: "5901342623205784345") {
+  query getPage($id: String!) {
+    page(id: $id) {
       id
       parent_id
       page_type
@@ -66,9 +66,32 @@ export const getPage = gql`
       is_block
       created_at
       updated_at
+      object {
+        id
+        type_id
+      }
     }
   }
 `;
+// export const getPage = gql`
+//   query {
+//     page(id: "5901342623205784345") {
+//       id
+//       parent_id
+//       page_type
+//       title
+//       content
+//       icon
+//       level
+//       is_public
+//       position
+//       config
+//       is_block
+//       created_at
+//       updated_at
+//     }
+//   }
+// `;
 export const getModuleById = gql``;
 export const getSubject = gql``;
 export const getGroupSubjects = gql`
@@ -92,14 +115,6 @@ export const getGroupSubjects = gql`
           email
         }
         group {
-          id
-          name
-        }
-        property6 {
-          id
-          name
-        }
-        property3 {
           id
           name
         }
