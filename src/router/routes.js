@@ -5,19 +5,14 @@ const routes = [
     children: [
       { path: "", name: "home", component: () => import("pages/MainPage.vue") },
       {
-        path: "page/:id",
-        name: "page",
-        component: () => import("pages/Page.vue"),
-      },
-      {
-        path: "subject/:id",
-        name: "subject",
-        component: () => import("pages/SubjectPage.vue"),
-      },
-      {
-        path: "group/:id",
+        path: "/group",
         name: "group",
         component: () => import("pages/GroupPage.vue"),
+      },
+      {
+        path: "/:id",
+        name: "page",
+        component: () => import("pages/Page.vue"),
       },
     ],
   },

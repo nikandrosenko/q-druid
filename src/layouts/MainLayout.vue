@@ -30,6 +30,14 @@
           icon="account_circle"
           v-ripple
         />
+        <q-btn
+          round
+          exact
+          to="/group"
+          color="primary"
+          icon="account_circle"
+          v-ripple
+        />
       </q-list>
     </q-drawer>
 

@@ -4,9 +4,11 @@
       :nodes="treePages"
       node-key="label"
       no-connectors
+      no-selection-unset
+      selected-color="primary"
+      color="black"
       v-model:selected="selected"
       v-model:expanded="expanded"
-      color="primary"
     />
   </q-list>
 </template>
@@ -26,21 +28,15 @@ const expanded = ref([]);
 const rout = ref("");
 
 const myclick = (node) => {
-  if (currentSpacePages?.value?.rootPages?.data.__typename === "Page") {
-    rout.value = "page";
-  }
   router.push({
     name: "page",
     params: { id: node.id },
   });
-  console.log(node.id, node.label);
 };
 
 const { result: currentSpacePages, onResult } = useQuery(pages);
 onResult(() => {
-  console.log(currentSpacePages?.value?.rootPages?.data);
   parentPages.value = currentSpacePages?.value?.rootPages?.data;
-  console.log(parentPages.value);
   parentPages.value.forEach((page) => {
     let treeElem = {
       id: page.id,
@@ -59,8 +55,13 @@ onResult(() => {
     };
     treePages.value.push(treeElem);
   });
-  expanded.value.push(treePages.value[0].label);
   selected.value = treePages.value[0].label;
-  console.log(treePages.value[0].label);
+  expanded.value.push(selected.value);
 });
 </script>
+
+<style lang="scss" scoped>
+.selected {
+  background-color: #000;
+}
+</style>
