@@ -4,7 +4,7 @@
       clickable
       class="flex items-center q-pa-sm rounded-borders cursor-pointer"
     >
-      <q-icon name="person" />
+      <q-icon name="list_alt" size="1.6em" />
 
       <q-item-section class="q-ml-sm">
         {{ subject?.fullname?.first_name }} {{ subject?.fullname?.last_name }}

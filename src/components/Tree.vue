@@ -5,7 +5,7 @@
         clickable
         class="cursor-pointer rounded-borders q-pa-sm flex items-center"
       >
-        <div>
+        <div class="flex items-center">
           <q-icon
             @click.prevent="toggleShowChildren"
             :class="dropDownIconClass"
@@ -13,9 +13,10 @@
             name="keyboard_arrow_right"
           />
 
-          <q-icon v-if="page.icon" :name="page.icon" />
-
-          {{ page.title }}
+          <q-icon size="1.6em" v-if="page.icon" :name="page.icon" />
+          <q-item-section class="q-ml-sm">
+            {{ page.title }}
+          </q-item-section>
         </div>
       </q-item>
     </router-link>
@@ -33,7 +34,7 @@
 </template>
 
 <script setup>
-import { computed, ref, watch } from "vue";
+import { computed, ref } from "vue";
 import { useQuery } from "@vue/apollo-composable";
 import { getGroupSubjects } from "src/graphql/queries";
 import TreeMenu from "./TreeMenu.vue";
@@ -46,25 +47,21 @@ const { page } = defineProps({
 const { result: subjects } = useQuery(getGroupSubjects, {
   group_id: page?.object?.id,
 });
-
-// console.log(typeof page, page);
-
+console.log(page);
 const showChildren = ref(false);
 
 const isSubjects = computed(() => subjects.value?.get_group.subject.length);
-
 const isChildrens = computed(() => page.children?.data.length);
 
 const dropDownIconClass = computed(() =>
   (isSubjects.value || isChildrens.value) && showChildren.value
-    ? "icon text-h6 drop-down-icon-rotated"
+    ? "icon text-h6 drop-down-icon__rotated"
     : "icon text-h6 drop-down-icon"
 );
-
 const childrenItemsClass = computed(() =>
   (isSubjects.value || isChildrens.value) && showChildren.value
-    ? "ml-md children-wrapper-expanded"
-    : "ml-md children-wrapper-collapsed"
+    ? "q-ml-lg children-wrapper__collapsed"
+    : "q-ml-lg children-wrapper__expanded"
 );
 
 const toggleShowChildren = () => {
@@ -82,22 +79,22 @@ a {
 }
 .children-wrapper {
   overflow: hidden;
-}
-.children-wrapper-collapsed {
-  @extend .children-wrapper;
-  max-height: 0;
-  transition: max-height 0.35s ease-out;
-}
-.children-wrapper-expanded {
-  @extend .children-wrapper;
-  max-height: 999px;
-  transition: max-height 0.67s ease-in;
+  &__collapsed {
+    @extend .children-wrapper;
+    max-height: 0;
+    transition: max-height 0.3s ease-out;
+  }
+  &__expanded {
+    @extend .children-wrapper;
+    max-height: 999px;
+    transition: max-height 0.6s ease-in;
+  }
 }
 .drop-down-icon {
-  transition: transform 0.37s ease-in;
-}
-.drop-down-icon-rotated {
-  transition: transform 0.37s ease-out;
-  transform: rotate(90deg);
+  transition: transform 0.3s ease-in;
+  &__rotated {
+    transition: transform 0.3s ease-out;
+    transform: rotate(90deg);
+  }
 }
 </style>
