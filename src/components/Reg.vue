@@ -9,26 +9,24 @@
           label="Имя"
         />
       </div>
-
       <div>
-        <p>Фамилия</p>
+        <p class="q-mt-md">Фамилия</p>
         <q-input
           standout="bg-teal text-white"
           v-model="surnameModel"
           label="Фамилия"
         />
       </div>
-
       <div>
-        <p>Почта</p>
+        <p class="q-mt-md">Почта</p>
         <q-input
           standout="bg-teal text-white"
           v-model="emailModel"
           label="Почта"
         />
       </div>
-
       <q-btn
+        class="q-mt-md"
         color="teal"
         text-color="white"
         label="Зарегистрироваться"
@@ -36,24 +34,28 @@
       />
     </form>
   </div>
-
   <div class="flex column items-center">
     <form @submit.prevent="userSignUpSetPassword">
       <div>
         <p>Код</p>
         <q-input standout="bg-teal text-white" v-model="codModel" label="Код" />
       </div>
-
       <div>
-        <p>Пароль</p>
+        <p class="q-mt-md">Пароль</p>
         <q-input
+          class="q-mt-md"
           standout="bg-teal text-white"
           v-model="passwordModel"
           label="Пароль"
         />
       </div>
-
-      <q-btn color="teal" text-color="white" label="Отправить" type="submit" />
+      <q-btn
+        class="q-mt-md"
+        color="teal"
+        text-color="white"
+        label="Отправить"
+        type="submit"
+      />
     </form>
   </div>
 </template>

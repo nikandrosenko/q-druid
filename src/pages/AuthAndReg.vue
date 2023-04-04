@@ -1,11 +1,14 @@
 <template>
-  <q-page class="row items-center justify-evenly">
+  <div class="fullscreen row items-center justify-evenly">
     <Auth />
     <Reg />
-  </q-page>
+  </div>
 </template>
 
 <script setup>
 import Auth from "src/components/Auth.vue";
 import Reg from "src/components/Reg.vue";
+import { provideApolloClient } from "@vue/apollo-composable";
+import apolloClient from "src/apollo/client";
+provideApolloClient(apolloClient);
 </script>

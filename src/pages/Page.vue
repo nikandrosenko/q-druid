@@ -7,7 +7,6 @@
       <section class="text-h4 q-mb-lg">
         {{ page?.page.title }}
       </section>
-      <section class="text-h5">Участники:</section>
     </div>
   </q-page>
 </template>

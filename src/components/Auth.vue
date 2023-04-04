@@ -9,17 +9,21 @@
           label="Почта"
         />
       </div>
-
       <div>
-        <p>Пароль</p>
+        <p class="q-mt-md">Пароль</p>
         <q-input
           standout="bg-teal text-white"
           v-model="passwordModel"
           label="Пароль"
         />
       </div>
-
-      <q-btn color="teal" text-color="white" label="Войти" type="submit" />
+      <q-btn
+        class="q-mt-md"
+        color="teal"
+        text-color="white"
+        label="Войти"
+        type="submit"
+      />
     </form>
   </div>
 </template>
@@ -29,7 +33,9 @@ import { ref } from "vue";
 import { useStore } from "vuex";
 import { useMutation } from "@vue/apollo-composable";
 import gql from "graphql-tag";
+import { useRouter } from "vue-router";
 
+const router = useRouter();
 const store = useStore();
 
 const emailModel = ref("");
@@ -84,6 +90,8 @@ const signIn = async () => {
       }
     });
 
-  // window.localStorage.setItem(key, value);
+  router.push({
+    name: "home",
+  });
 };
 </script>

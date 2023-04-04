@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="hHh Lpr fFf">
+  <q-layout view="hHr LpR fFr">
     <q-header elevated>
       <q-toolbar>
         <q-btn
@@ -13,29 +13,23 @@
 
         <q-toolbar-title> Приложение на платформе Druid </q-toolbar-title>
       </q-toolbar>
-
-      <q-tabs align="right">
-        <q-route-tab
-          exact
-          to="/Auth"
-          label="Вход"
-          class="montserrat-700"
-          v-ripple
-        />
-        <q-route-tab
-          exact
-          to="/TreeTest"
-          label="Тест"
-          class="montserrat-700"
-          v-ripple
-        />
-      </q-tabs>
     </q-header>
 
     <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
       <q-list>
-        <!-- <q-item-label header> Будущая древовидная навигация </q-item-label> -->
         <TreeMenu :pages="currentSpacePages?.rootPages?.data" />
+      </q-list>
+    </q-drawer>
+    <q-drawer side="right" :mini="miniState" show-if-above bordered>
+      <q-list class="column q-mt-sm items-center">
+        <q-btn
+          round
+          exact
+          to="/auth"
+          color="primary"
+          icon="account_circle"
+          v-ripple
+        />
       </q-list>
     </q-drawer>
 
@@ -58,11 +52,11 @@ import apolloClient from "src/apollo/client";
 
 provideApolloClient(apolloClient);
 
+const miniState = ref(true);
+
 const { result: currentSpacePages } = useQuery(pages);
-// console.log(currentSpacePages);
 
 const leftDrawerOpen = ref(false);
-
 const toggleLeftDrawer = () => {
   leftDrawerOpen.value = !leftDrawerOpen.value;
 };
