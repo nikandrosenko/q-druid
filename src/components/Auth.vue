@@ -28,7 +28,7 @@
 import { ref } from "vue";
 import { useStore } from "vuex";
 import { useMutation } from "@vue/apollo-composable";
-// import gql from "graphql-tag";
+import gql from "graphql-tag";
 
 const store = useStore();
 
