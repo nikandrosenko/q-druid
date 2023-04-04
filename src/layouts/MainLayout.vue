@@ -17,7 +17,7 @@
 
     <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
       <q-list>
-        <TreeMenu :pages="currentSpacePages?.rootPages?.data" />
+        <Tree />
       </q-list>
     </q-drawer>
     <q-drawer side="right" :mini="miniState" show-if-above bordered>
@@ -35,7 +35,7 @@
 
     <q-page-container>
       <router-view v-slot="{ Component }">
-        <keep-alive>
+        <keep-alive :key="$route.fullPath">
           <component :is="Component" />
         </keep-alive>
       </router-view>
@@ -45,16 +45,16 @@
 
 <script setup>
 import { ref } from "vue";
-import TreeMenu from "src/components/TreeMenu.vue";
+import Tree from "src/components/Tree.vue";
 import { provideApolloClient, useQuery } from "@vue/apollo-composable";
-import { pages } from "src/graphql/queries";
+// import { pages } from "src/graphql/queries";
 import apolloClient from "src/apollo/client";
 
 provideApolloClient(apolloClient);
 
 const miniState = ref(true);
 
-const { result: currentSpacePages } = useQuery(pages);
+// console.log(currentSpacePages);
 
 const leftDrawerOpen = ref(false);
 const toggleLeftDrawer = () => {

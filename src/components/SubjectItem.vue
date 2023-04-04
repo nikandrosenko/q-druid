@@ -4,6 +4,7 @@
       clickable
       class="flex items-center q-pa-sm rounded-borders cursor-pointer"
     >
+      <q-icon size="1.6em" class="invisible" />
       <q-icon name="list_alt" size="1.6em" />
 
       <q-item-section class="q-ml-sm">
