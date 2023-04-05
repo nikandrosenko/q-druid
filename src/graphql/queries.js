@@ -116,7 +116,7 @@ export const getGroupSubjects = gql`
 
 export const getResponsibleGroupSubjects = gql`
   query getGroupSubjects {
-    get_group(id: "4579859626660313705") {
+    get_group(id: "4641879356844738186") {
       id
       author_id
       name
@@ -141,7 +141,7 @@ export const getResponsibleGroupSubjects = gql`
 
 export const getExecutorGroupSubjects = gql`
   query getGroupSubjects {
-    get_group(id: "7007095239370065289") {
+    get_group(id: "3550141303697212414") {
       id
       author_id
       name
@@ -252,6 +252,7 @@ export const getModulesAll = gql`
     }
   }
 `;
+
 export const getModuleById = gql`
   query getModuleById($module_id: String!) {
     get_type2(id: $module_id) {

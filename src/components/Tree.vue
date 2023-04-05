@@ -1,63 +1,67 @@
 <template>
-  <div class="q-pa-md q-gutter-sm">
+  <q-list>
     <q-tree
-      :nodes="simple"
+      :nodes="treePages"
       node-key="label"
       no-connectors
+      no-selection-unset
+      selected-color="primary"
+      color="black"
+      v-model:selected="selected"
       v-model:expanded="expanded"
     />
-  </div>
+  </q-list>
 </template>
 
-<script>
+<script setup>
 import { ref } from "vue";
+import { pages } from "src/graphql/queries";
+import { useQuery } from "@vue/apollo-composable";
+import { useRouter } from "vue-router";
 
-export default {
-  setup() {
-    return {
-      expanded: ref([
-        "Satisfied customers (with avatar)",
-        "Good food (with icon)",
-      ]),
+const router = useRouter();
 
-      simple: [
-        {
-          label: "Satisfied customers (with avatar)",
-          avatar: "https://cdn.quasar.dev/img/boy-avatar.png",
-          children: [
-            {
-              label: "Good food (with icon)",
-              icon: "restaurant_menu",
-              children: [
-                { label: "Quality ingredients" },
-                { label: "Good recipe" },
-              ],
-            },
-            {
-              label: "Good service (disabled node with icon)",
-              icon: "room_service",
-              disabled: true,
-              children: [
-                { label: "Prompt attention" },
-                { label: "Professional waiter" },
-              ],
-            },
-            {
-              label: "Pleasant surroundings (with icon)",
-              icon: "photo",
-              children: [
-                {
-                  label: "Happy atmosphere (with image)",
-                  img: "https://cdn.quasar.dev/img/logo_calendar_128px.png",
-                },
-                { label: "Good table presentation" },
-                { label: "Pleasing decor" },
-              ],
-            },
-          ],
-        },
-      ],
-    };
-  },
+const treePages = ref([]);
+const parentPages = ref([]);
+const selected = ref();
+const expanded = ref([]);
+const rout = ref("");
+
+const myclick = (node) => {
+  router.push({
+    name: "page",
+    params: { id: node.id },
+  });
 };
+
+const { result: currentSpacePages, onResult } = useQuery(pages);
+onResult(() => {
+  parentPages.value = currentSpacePages?.value?.rootPages?.data;
+  parentPages.value.forEach((page) => {
+    let treeElem = {
+      id: page.id,
+      label: page.title,
+      icon: page.icon,
+      handler: (node) => myclick(node),
+      children: page.children.data.map((elem) => {
+        elem = {
+          id: elem.id,
+          label: elem.title,
+          icon: elem.icon,
+          handler: (node) => myclick(node),
+        };
+        return elem;
+      }),
+    };
+    treePages.value.push(treeElem);
+  });
+  selected.value = treePages.value[0].label;
+  expanded.value.push(selected.value);
+});
 </script>
+
+<style lang="scss" scoped>
+.selected {
+  background-color: #000;
+}
+</style>
