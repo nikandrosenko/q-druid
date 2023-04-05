@@ -26,16 +26,19 @@
 <script setup>
 import { useQuery } from '@vue/apollo-composable';
 import { getPage, getGroupSubjects } from "src/graphql/queries";
+import {useRoute} from "vue-router/dist/vue-router";
 
 const group_id = '6579648768563146067';
-const id = '5901342623205784345';
+// const id = '6272730201780481324';
+const route = useRoute();
+const id = route.params.id;
 
 const { result: page } = useQuery(getPage, {
   id: id});
-// console.log(page.id)
-// const { result: subjects } = useQuery(getGroupSubjects, {
-//   group_id: page?.subject?.id,
-// });
-// console.log(group_id)
+console.log(id)
+const { result: subjects } = useQuery(getGroupSubjects, {
+  group_id: group_id,
+});
+console.log(group_id)
 
 </script>
