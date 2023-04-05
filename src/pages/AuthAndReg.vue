@@ -30,9 +30,12 @@
 import Auth from 'src/components/Auth.vue';
 import Reg from 'src/components/Reg.vue'
 import { ref } from 'vue';
+import { provideApolloClient } from "@vue/apollo-composable";
+import apolloClient from "src/apollo/client";
 
 const swipeReg = ref(true)
 
+provideApolloClient(apolloClient);
 </script>
 
 <style lang="scss">

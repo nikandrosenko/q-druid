@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
+  <q-layout view="hHr LpR fFr">
     <q-header elevated>
       <q-toolbar>
         <q-btn
@@ -11,66 +11,61 @@
           @click="toggleLeftDrawer"
         />
 
-        <q-toolbar-title>
-          Quasar App
-        </q-toolbar-title>
-
-        <div>Quasar v{{ $q.version }}</div>
+        <q-toolbar-title> Приложение на платформе Druid </q-toolbar-title>
       </q-toolbar>
-
-      <q-tabs align="right"  v-if="token.length === 0">
-        <q-route-tab
-          exact
-          to="/Auth"
-          label="Регистрация/Авторизация"
-          class="montserrat-700"
-          v-ripple
-        />
-      </q-tabs>
-      <q-tabs align="right" v-else>
-        <q-route-tab
-          exact
-          to="/Profile"
-          label="Профиль"
-          class="montserrat-700"
-          v-ripple
-        />
-      </q-tabs>
 
     </q-header>
 
-    <q-drawer
-      v-model="leftDrawerOpen"
-      show-if-above
-      bordered
-    >
+    <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
       <q-list>
-        <q-item-label
-          header
-        >
-          Essential Links
-        </q-item-label>
-
+        <Tree />
+      </q-list>
+    </q-drawer>
+    <q-drawer side="right" :mini="miniState" show-if-above bordered>
+      <q-list class="column q-mt-sm items-center">
+        <q-btn
+          round
+          exact
+          to="/auth"
+          color="primary"
+          icon="account_circle"
+          v-ripple
+        />
+        <q-btn
+          round
+          exact
+          to="/group"
+          color="primary"
+          icon="account_circle"
+          v-ripple
+        />
       </q-list>
     </q-drawer>
 
     <q-page-container>
-      <router-view />
+      <router-view v-slot="{ Component }">
+        <keep-alive :key="$route.fullPath">
+          <component :is="Component" />
+        </keep-alive>
+      </router-view>
     </q-page-container>
   </q-layout>
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
-import { useStore } from 'vuex';
+import { ref } from 'vue'
+import Tree from "src/components/Tree.vue";
+import { provideApolloClient } from "@vue/apollo-composable";
+import apolloClient from "src/apollo/client";
 
-const store = useStore()
+provideApolloClient(apolloClient);
 
-const token = computed(() => store.state.moduleAuth.userAuth)
+const miniState = ref(true);
 
-    const leftDrawerOpen = ref(false)
+// console.log(currentSpacePages);
 
-    const toggleLeftDrawer = () => {
-        leftDrawerOpen.value = !leftDrawerOpen.value
-      }
+const leftDrawerOpen = ref(false);
+const toggleLeftDrawer = () => {
+  leftDrawerOpen.value = !leftDrawerOpen.value;
+};
 </script>

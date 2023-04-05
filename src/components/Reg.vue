@@ -9,40 +9,62 @@
 <div class="flex column items-center" v-if="swipeRegPassword===1">
     <form @submit.prevent="signUp" >
       <div>
-      <p>Имя</p>
-      <q-input standout="bg-teal text-white" v-model="nameModel" label="Имя" />
-    </div>
-
-    <div>
-      <p>Фамилия</p>
-    <q-input  standout="bg-teal text-white" v-model="surnameModel" label="Фамилия" />
-    </div>
-
-    <div>
-      <p>Почта</p>
-    <q-input  standout="bg-teal text-white" v-model="emailModel" label="Почта" />
-    </div>
-
-    <q-btn color="teal" text-color="white" label="Зарегестрироваться" type="submit"/>
+        <p>Имя</p>
+        <q-input
+          standout="bg-teal text-white"
+          v-model="nameModel"
+          label="Имя"
+        />
+      </div>
+      <div>
+        <p class="q-mt-md">Фамилия</p>
+        <q-input
+          standout="bg-teal text-white"
+          v-model="surnameModel"
+          label="Фамилия"
+        />
+      </div>
+      <div>
+        <p class="q-mt-md">Почта</p>
+        <q-input
+          standout="bg-teal text-white"
+          v-model="emailModel"
+          label="Почта"
+        />
+      </div>
+      <q-btn
+        class="q-mt-md"
+        color="teal"
+        text-color="white"
+        label="Зарегистрироваться"
+        type="submit"
+      />
     </form>
-
   </div>
 
   <div class="flex column items-center" v-else-if="swipeRegPassword===2">
-    <form @submit.prevent="userSignUpSetPassword">
+    <form @submit.prevent="userSignUpSetPass">
       <div>
-      <p>Код</p>
-      <q-input standout="bg-teal text-white" v-model="codModel" label="Код" />
-    </div>
-
-    <div>
-      <p>Пароль</p>
-      <q-input standout="bg-teal text-white" v-model="passwordModel" label="Пароль" />
-    </div>
-
-    <q-btn color="teal" text-color="white" label="Отправить" type="submit"/>
+        <p>Код</p>
+        <q-input standout="bg-teal text-white" v-model="codModel" label="Код" />
+      </div>
+      <div>
+        <p class="q-mt-md">Пароль</p>
+        <q-input
+          class="q-mt-md"
+          standout="bg-teal text-white"
+          v-model="passwordModel"
+          label="Пароль"
+        />
+      </div>
+      <q-btn
+        class="q-mt-md"
+        color="teal"
+        text-color="white"
+        label="Отправить"
+        type="submit"
+      />
     </form>
-
   </div>
 
   <div v-else-if="swipeRegPassword===3" class="flex justify-center">
@@ -56,20 +78,11 @@
 
 import { ref, onMounted } from 'vue';
 import { useMutation } from "@vue/apollo-composable";
-import gql from "graphql-tag";
-import { ApolloClient } from "@apollo/client/core";
-import { getClientOptions } from "src/apollo/index";
-import { provideApolloClient } from "@vue/apollo-composable";
-
-const apolloClient = new ApolloClient(getClientOptions());
-
-function provideApolloClientFunction() {
-  provideApolloClient(apolloClient);
-}
+import { userSignUp, userSignUpSetPassword } from 'src/graphql/mutations.js'
 
 onMounted(() => {
   if(localStorage.getItem('UserRegId')){
-    swipeRegPassword.value = 2
+    swipeRegPassword.value = 1
   }
 })
 
@@ -86,28 +99,13 @@ const regIndicatorEnd = ref(false)
 
 const signUp = async () => {
 
-  provideApolloClientFunction()
-
-  const { mutate: signUpUser } = useMutation(gql`
-  mutation UserSignUp($input: UserSignUpInput!) {
-  userSignUp(input: $input) {
-		recordId
-		record {
-			id
-			email
-			registration_passed
-			name
-			surname
-		}
-		status
-  }
-}`,
+  const { mutate: signUpUser } = useMutation(userSignUp,
   {
     variables: {
-      "input": {
-      "name": nameModel.value,
-      "surname": surnameModel.value,
-      "email": emailModel.value
+      input: {
+      name: nameModel.value,
+      surname: surnameModel.value,
+      email: emailModel.value
 	  }
 }
   })
@@ -118,43 +116,36 @@ const signUp = async () => {
         localStorage.setItem('UserRegId', res.data.userSignUp.record.id);
         regIndicatorOne.value = true
       } else {
-        console.log(res.errors)
+        console.log(res.errors);
       }
-  })
-  .catch(e => {
+    })
+    .catch((e) => {
       if (e.graphQLErrors) {
-          console.log(e.graphQLErrors)
+        console.log(e.graphQLErrors);
       }
-   })
+    });
+};
 
-}
+const userSignUpSetPass = async () => {
 
-const userSignUpSetPassword = async () => {
-
-provideApolloClientFunction()
-
-const { mutate: userSignUpSetPassword } = useMutation(gql`
-mutation UserSignUpSetPassword($input: UserSignUpSetPasswordInput!) {
-  userSignUpSetPassword(input: $input) {
-		status
-  }
-}`,
-{
-  variables: {
-    "input": {
-    "user_id": localStorage.getItem('UserRegId'),
-		"code": codModel.value,
-		"password": passwordModel.value
+  const { mutate: userSignUpSecondStep } = useMutation(userSignUpSetPassword,
+    {
+      variables: {
+        input: {
+          user_id: localStorage.getItem("UserRegId"),
+          code: codModel.value,
+          password: passwordModel.value,
+        },
+      },
     }
-	}
-})
+  );
 
-userSignUpSetPassword().then(res => {
+  userSignUpSecondStep().then(res => {
   console.log(res.data)
     if (!res.errors) {
+      localStorage.setItem('UserRegId', '');
       swipeRegPassword.value = 3
       regIndicatorEnd.value = true
-      localStorage.setItem('UserRegId', '');
     } else {
       console.log(2)
     }

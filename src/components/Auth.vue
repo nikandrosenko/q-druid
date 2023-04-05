@@ -2,16 +2,28 @@
   <div class="flex column items-center">
     <form @submit.prevent="signIn">
       <div>
-      <p>Почта</p>
-      <q-input standout="bg-teal text-white" v-model="emailModel" label="Почта" />
-    </div>
-
-    <div>
-      <p>Пароль</p>
-    <q-input  standout="bg-teal text-white" v-model="passwordModel" label="Пароль" />
-    </div>
-
-    <q-btn color="teal" text-color="white" label="Войти" type="submit"/>
+        <p>Почта</p>
+        <q-input
+          standout="bg-teal text-white"
+          v-model="emailModel"
+          label="Почта"
+        />
+      </div>
+      <div>
+        <p class="q-mt-md">Пароль</p>
+        <q-input
+          standout="bg-teal text-white"
+          v-model="passwordModel"
+          label="Пароль"
+        />
+      </div>
+      <q-btn
+        class="q-mt-md"
+        color="teal"
+        text-color="white"
+        label="Войти"
+        type="submit"
+      />
     </form>
 
     <div id="buttonDiv"></div>
@@ -23,11 +35,8 @@
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router'
 import { useMutation } from "@vue/apollo-composable";
-import gql from "graphql-tag";
-import { ApolloClient } from "@apollo/client/core";
-import { getClientOptions } from "src/apollo/index";
-import { provideApolloClient } from "@vue/apollo-composable";
 import { useStore } from 'vuex'
+import { userSignIn, userSignInSocialNetwork } from 'src/graphql/mutations.js'
 
 
 const store = useStore()
@@ -54,88 +63,61 @@ const router = useRouter()
         )
 
         const routProfile = () => {
-        router.replace({ path: '/' })
+        router.replace({ name: 'home' })
       }
 
-const apolloClient = new ApolloClient(getClientOptions());
 
-function provideApolloClientFunction() {
-  provideApolloClient(apolloClient);
-}
-
-const emailModel = ref('')
-const passwordModel = ref('')
+const emailModel = ref("");
+const passwordModel = ref("");
 
 const signIn = async () => {
 
-  provideApolloClientFunction()
-
-  const { mutate: signInUser } = useMutation(gql`
-  mutation UserSignIn($input: UserSignInInput!) {
-  userSignIn(input: $input) {
-		recordId
-		record {
-			token_type
-			expires_in
-			access_token
-			refresh_token
-		}
-		status
-  }
-}`,
+  const { mutate: signInUser } = useMutation(userSignIn,
   {
     variables: {
-      "input": {
-		  "login": emailModel.value.toLowerCase(),
-		  "password": passwordModel.value
+      input: {
+		  login: emailModel.value.toLowerCase(),
+		  password: passwordModel.value
       }
-}
-  })
+      },
+    }
+  );
 
   signInUser().then(res => {
       if (!res.errors) {
-        store.dispatch('moduleAuth/AUTH_USER_DATA_RESPONSE_TOKEN', res.data.userSignIn.record)
+        console.log(res.data.userSignIn)
+        store.dispatch('moduleAuth/AUTH_USER_DATA_RESPONSE_TOKEN', res.data.userSignIn.record.access_token)
+        localStorage.setItem("userId", res.data.userSignIn.recordId);
         routProfile()
       } else {
-        console.log(2)
+        console.log(2);
       }
-  })
-  .catch(e => {
-      if (e.graphQLErrors) {
-          console.log(e.graphQLErrors)
+    })
+    .catch((e) => {
+      if (e) {
+        console.log(e);
       }
    })
 
 }
 
+
 const signInFromGoogle = async (JWTTokenGoogle) => {
 
-provideApolloClientFunction()
-
-const { mutate: signInUser } = useMutation(gql`
-mutation UserSignInSocialNetwork($input: UserSignInSocialNetworkInput!) {
-  userSignInSocialNetwork(input: $input) {
-    recordId
-		record {
-			token_type
-			expires_in
-			access_token
-		}
-		status
-  }
-}`,
+const { mutate: signInUserSocialNetwork } = useMutation(userSignInSocialNetwork,
 {
   variables: {
-    "input": {
-		"access_token": JWTTokenGoogle,
-		"network": "google"
+    input: {
+		access_token: JWTTokenGoogle,
+		network: "google"
 	}
 }
 })
 
-signInUser().then(res => {
+signInUserSocialNetwork().then(res => {
     if (!res.errors) {
-      store.dispatch('moduleAuth/AUTH_USER_DATA_RESPONSE_TOKEN', res.data.userSignIn.record)
+      store.dispatch('moduleAuth/AUTH_USER_DATA_RESPONSE_TOKEN', res.data.userSignIn.record.access_token)
+      localStorage.setItem("userId", res.data.userSignIn.recordId);
       routProfile()
     } else {
       console.log(2)
