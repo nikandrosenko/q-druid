@@ -27,68 +27,70 @@
     </form>
 
     <div id="buttonDiv"></div>
-
   </div>
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue';
-import { useRouter } from 'vue-router'
+import { onMounted, ref } from "vue";
+import { useRouter } from "vue-router";
 import { useMutation } from "@vue/apollo-composable";
-import { useStore } from 'vuex'
-import { userSignIn, userSignInSocialNetwork } from 'src/graphql/mutations.js'
+import { useStore } from "vuex";
+import { userSignIn, userSignInSocialNetwork } from "src/graphql/mutations.js";
 
+const store = useStore();
+const router = useRouter();
 
-const store = useStore()
-const router = useRouter()
+const handleCredentialResponse = (response) => {
+  console.log("Encoded JWT ID token: " + response.credential);
+  signInFromGoogle(String(response.credential));
+};
 
-  const handleCredentialResponse = (response) => {
-          console.log("Encoded JWT ID token: " + response.credential);
-          signInFromGoogle(String(response.credential))
-        }
+onMounted(() => {
+  google.accounts.id.initialize({
+    client_id:
+      "657923009459-arg62iseulaj74kosjp2ntv41268o5pq.apps.googleusercontent.com",
+    callback: handleCredentialResponse,
+  });
 
-        onMounted(() => {
-        google.accounts.id.initialize({
-          client_id: "657923009459-arg62iseulaj74kosjp2ntv41268o5pq.apps.googleusercontent.com",
-          callback: handleCredentialResponse
-        });
+  google.accounts.id.renderButton(
+    document.getElementById("buttonDiv"),
+    { theme: "outline", size: "large" } // customization attributes
+  );
 
-        google.accounts.id.renderButton(
-          document.getElementById("buttonDiv"),
-            { theme: "outline", size: "large" }  // customization attributes
-          );
+  google.accounts.id.prompt(); // also display the One Tap dialog
+});
 
-          google.accounts.id.prompt(); // also display the One Tap dialog
-        }
-        )
-
-        const routProfile = () => {
-        router.replace({ name: 'home' })
-      }
-
+const routProfile = () => {
+  router.replace({ name: "home" });
+};
 
 const emailModel = ref("");
 const passwordModel = ref("");
 
 const signIn = async () => {
-
-  const { mutate: signInUser } = useMutation(userSignIn,
-  {
+  const { mutate: signInUser } = useMutation(userSignIn, {
     variables: {
       input: {
-		  login: emailModel.value.toLowerCase(),
-		  password: passwordModel.value
-      }
+        login: emailModel.value.toLowerCase(),
+        password: passwordModel.value,
       },
-    }
-  );
+    },
+  });
 
-  signInUser().then(res => {
+  signInUser()
+    .then((res) => {
       if (!res.errors) {
-        console.log(res.data.userSignIn)
-        store.dispatch('moduleAuth/AUTH_USER_DATA_RESPONSE_TOKEN', res.data.userSignIn.record.access_token)
+        console.log(res.data.userSignIn);
+        store.dispatch(
+          "moduleAuth/AUTH_USER_DATA_RESPONSE_TOKEN",
+          res.data.userSignIn.record.access_token
+        );
         localStorage.setItem("userId", res.data.userSignIn.recordId);
-        routProfile()
+        sessionStorage.setItem(
+          "token",
+          res.data.userSignIn.record.access_token
+        );
+        routProfile();
       } else {
         console.log(2);
       }
@@ -97,44 +99,45 @@ const signIn = async () => {
       if (e) {
         console.log(e);
       }
-   })
-
-}
-
+    });
+};
 
 const signInFromGoogle = async (JWTTokenGoogle) => {
-
-const { mutate: signInUserSocialNetwork } = useMutation(userSignInSocialNetwork,
-{
-  variables: {
-    input: {
-		access_token: JWTTokenGoogle,
-		network: "google"
-	}
-}
-})
-
-signInUserSocialNetwork().then(res => {
-    if (!res.errors) {
-      store.dispatch('moduleAuth/AUTH_USER_DATA_RESPONSE_TOKEN', res.data.userSignIn.record.access_token)
-      localStorage.setItem("userId", res.data.userSignIn.recordId);
-      routProfile()
-    } else {
-      console.log(2)
+  const { mutate: signInUserSocialNetwork } = useMutation(
+    userSignInSocialNetwork,
+    {
+      variables: {
+        input: {
+          access_token: JWTTokenGoogle,
+          network: "google",
+        },
+      },
     }
-})
-.catch(e => {
-    if (e.graphQLErrors) {
-        console.log(e.graphQLErrors)
-    }
- })
+  );
 
-}
-
+  signInUserSocialNetwork()
+    .then((res) => {
+      if (!res.errors) {
+        store.dispatch(
+          "moduleAuth/AUTH_USER_DATA_RESPONSE_TOKEN",
+          res.data.userSignIn.record.access_token
+        );
+        localStorage.setItem("userId", res.data.userSignIn.recordId);
+        routProfile();
+      } else {
+        console.log(2);
+      }
+    })
+    .catch((e) => {
+      if (e.graphQLErrors) {
+        console.log(e.graphQLErrors);
+      }
+    });
+};
 </script>
 
 <style lang="scss">
-  #buttonDiv{
-    width: 200px;
-  }
+#buttonDiv {
+  width: 200px;
+}
 </style>

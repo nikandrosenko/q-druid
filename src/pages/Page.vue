@@ -19,6 +19,8 @@ import { useRoute } from "vue-router";
 const route = useRoute();
 const id = route.params.id;
 
+console.log(id);
+
 const { result: page, loading } = useQuery(getPage, {
   id: id,
 });
