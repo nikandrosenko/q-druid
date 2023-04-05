@@ -25,7 +25,6 @@ const treePages = ref([]);
 const parentPages = ref([]);
 const selected = ref();
 const expanded = ref([]);
-const rout = ref("");
 
 const myclick = (node) => {
   router.push({
@@ -59,9 +58,3 @@ onResult(() => {
   expanded.value.push(selected.value);
 });
 </script>
-
-<style lang="scss" scoped>
-.selected {
-  background-color: #000;
-}
-</style>
