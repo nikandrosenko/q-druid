@@ -5,7 +5,6 @@
   <q-page v-else class="q-pa-md">
     <div>
       <section class="text-h4 q-mb-lg">
-        {{ page?.page.title }}
         <group-page/>
       </section>
     </div>
