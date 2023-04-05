@@ -13,6 +13,7 @@
 
         <q-toolbar-title> Приложение на платформе Druid </q-toolbar-title>
       </q-toolbar>
+
     </q-header>
 
     <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
@@ -52,10 +53,9 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref } from 'vue'
 import Tree from "src/components/Tree.vue";
-import { provideApolloClient, useQuery } from "@vue/apollo-composable";
-// import { pages } from "src/graphql/queries";
+import { provideApolloClient } from "@vue/apollo-composable";
 import apolloClient from "src/apollo/client";
 
 provideApolloClient(apolloClient);
