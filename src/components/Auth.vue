@@ -89,6 +89,7 @@ const signIn = async () => {
           res.data.userSignIn.record.access_token
         );
         routProfile();
+        rigin / Module;
       } else {
         console.log(2);
       }
