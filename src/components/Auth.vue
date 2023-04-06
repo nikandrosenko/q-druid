@@ -86,8 +86,8 @@ const signIn = async () => {
   signInUser().then(res => {
       if (!res.errors) {
         console.log(res.data.userSignIn)
-        store.dispatch('moduleAuth/AUTH_USER_DATA_RESPONSE_TOKEN', res.data.userSignIn.record.access_token)
         localStorage.setItem("userId", res.data.userSignIn.recordId);
+        sessionStorage.setItem('token', res.data.userSignIn.record.access_token)
         routProfile()
       } else {
         console.log(2);
@@ -116,8 +116,8 @@ const { mutate: signInUserSocialNetwork } = useMutation(userSignInSocialNetwork,
 
 signInUserSocialNetwork().then(res => {
     if (!res.errors) {
-      store.dispatch('moduleAuth/AUTH_USER_DATA_RESPONSE_TOKEN', res.data.userSignIn.record.access_token)
       localStorage.setItem("userId", res.data.userSignIn.recordId);
+      sessionStorage.setItem('token', res.data.userSignIn.record.access_token)
       routProfile()
     } else {
       console.log(2)

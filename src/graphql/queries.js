@@ -208,8 +208,8 @@ export const getPage = gql`
 `;
 
 export const getModulesAll = gql`
-  query getModules {
-    paginate_type2(page: 1, perPage: 100) {
+   query getModules {
+    paginate_type1(page: 1, perPage: 100) {
       data {
         id
         type_id
@@ -219,23 +219,22 @@ export const getModulesAll = gql`
         created_at
         updated_at
         name
-        property4 {
+        property5 {
           id
           fullname {
             first_name
-            middle_name
             last_name
           }
-        }
-        property5 {
-          date
-          time
         }
         property6 {
           date
           time
         }
         property7 {
+          date
+          time
+        }
+        property4 {
           id
         }
       }

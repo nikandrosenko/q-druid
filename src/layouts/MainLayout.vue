@@ -34,7 +34,7 @@
         <q-btn
           round
           exact
-          to="/group"
+          to="/module"
           color="primary"
           icon="account_circle"
           v-ripple

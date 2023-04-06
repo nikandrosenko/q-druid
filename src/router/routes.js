@@ -19,6 +19,10 @@ const routes = [
         name: "group",
         component: () => import("pages/GroupPage.vue"),
       },
+      {
+        path: "module",
+        component: () => import("components/Module.vue"),
+      },
     ],
   },
   {
