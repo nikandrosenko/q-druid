@@ -102,3 +102,65 @@ export const userUpdate = gql`
     }
   }
 `;
+export const createModule = gql`
+  mutation ($input: create_type1_input!) {
+    create_type1(input: $input) {
+      status
+      recordId
+      record {
+        id
+        type_id
+        author_id
+        level
+        position
+        created_at
+        updated_at
+        name
+        property5 {
+          id
+          user_id
+          fullname {
+            first_name
+            last_name
+          }
+        }
+        property6 {
+          date
+          time
+        }
+        property7 {
+          date
+          time
+        }
+        property4 {
+          name
+          property1
+          property2 {
+            fullname {
+              first_name
+              last_name
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+export const updateModule = gql`
+  mutation ($input: update_type1_input!, $id: String!) {
+    update_type1(id: $id, input: $input) {
+      status
+      recordId
+      record {
+        id
+        type_id
+        author_id
+        level
+        position
+        created_at
+        updated_at
+        name
+      }
+    }
+  }
+`;
