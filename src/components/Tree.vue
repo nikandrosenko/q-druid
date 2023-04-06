@@ -14,7 +14,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { pages } from "src/graphql/queries";
 import { useQuery } from "@vue/apollo-composable";
 import { useRouter } from "vue-router";
@@ -35,7 +35,7 @@ const myclick = (node) => {
   });
 };
 
-const { result: currentSpacePages, onResult } = useQuery(pages);
+const { result: currentSpacePages, onResult, refetch } = useQuery(pages);
 onResult(() => {
   parentPages.value = currentSpacePages?.value?.rootPages?.data;
   parentPages.value.forEach((page) => {
@@ -60,5 +60,8 @@ onResult(() => {
   keyedPages.value = _.sortBy(treePages.value, ["label", "position"]);
   selected.value = keyedPages.value[0].label;
   expanded.value.push(selected.value);
+});
+onMounted(() => {
+  if (currentSpacePages.value) refetch();
 });
 </script>
