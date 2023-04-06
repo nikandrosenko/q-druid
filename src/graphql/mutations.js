@@ -102,7 +102,6 @@ export const userUpdate = gql`
     }
   }
 `;
-
 export const createModule = gql`
   mutation ($input: create_type1_input!) {
     create_type1(input: $input) {
@@ -252,7 +251,6 @@ export const createPermissionRule = gql`
     }
   }
 `;
-
 export const updateModule = gql`
   mutation ($input: update_type2_input!, $id: String!) {
     update_type2(id: $id, input: $input) {

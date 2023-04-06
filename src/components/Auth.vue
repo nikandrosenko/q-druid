@@ -82,43 +82,52 @@ const signIn = async () => {
   signInUser()
     .then((res) => {
       if (!res.errors) {
-        console.log(res.data.userSignIn)
+        console.log(res.data.userSignIn);
         localStorage.setItem("userId", res.data.userSignIn.recordId);
-        sessionStorage.setItem('token', res.data.userSignIn.record.access_token)
-        routProfile()
+        sessionStorage.setItem(
+          "token",
+          res.data.userSignIn.record.access_token
+        );
+        routProfile();
       } else {
         console.log(2);
       }
     })
     .catch((e) => {
-      if (e) {
-        console.log(e);
-      }
+      console.log(e);
     });
 };
 
 const signInFromGoogle = async (JWTTokenGoogle) => {
-
-const { mutate: signInUserSocialNetwork } = useMutation(userSignInSocialNetwork,
-{
-  variables: {
-    input: {
-		access_token: JWTTokenGoogle,
-		network: "google"
-	}
-}
-})
-
-signInUserSocialNetwork().then(res => {
-    if (!res.errors) {
-      localStorage.setItem("userId", res.data.userSignIn.recordId);
-      sessionStorage.setItem('token', res.data.userSignIn.record.access_token)
-      routProfile()
-    } else {
-      console.log(2)
+  const { mutate: signInUserSocialNetwork } = useMutation(
+    userSignInSocialNetwork,
+    {
+      variables: {
+        input: {
+          access_token: JWTTokenGoogle,
+          network: "google",
+        },
+      },
     }
-});
-
+  );
+  signInUserSocialNetwork()
+    .then((res) => {
+      if (!res.errors) {
+        localStorage.setItem("userId", res.data.userSignIn.recordId);
+        sessionStorage.setItem(
+          "token",
+          res.data.userSignIn.record.access_token
+        );
+        routProfile();
+      } else {
+        console.log(2);
+      }
+    })
+    .catch((e) => {
+      if (e.graphQLErrors) {
+        console.log(e.graphQLErrors);
+      }
+    });
 };
 </script>
 
