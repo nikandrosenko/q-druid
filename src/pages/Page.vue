@@ -5,7 +5,7 @@
   <q-page v-else class="q-pa-md">
     <div>
       <section class="text-h4 q-mb-lg">
-        {{ page?.page.title }}
+        <group-page />
       </section>
     </div>
   </q-page>
@@ -15,9 +15,12 @@
 import { getPage } from "src/graphql/queries";
 import { useQuery } from "@vue/apollo-composable";
 import { useRoute } from "vue-router";
+import GroupPage from "src/components/GroupPage.vue";
 
 const route = useRoute();
 const id = route.params.id;
+
+// console.log(id);
 
 const { result: page, loading } = useQuery(getPage, {
   id: id,

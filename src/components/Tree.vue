@@ -1,51 +1,49 @@
 <template>
   <q-list>
     <q-tree
-      :nodes="treePages"
+      :nodes="keyedPages"
       node-key="label"
       no-connectors
+      no-selection-unset
+      selected-color="primary"
+      color="black"
       v-model:selected="selected"
       v-model:expanded="expanded"
-      color="primary"
     />
   </q-list>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { pages } from "src/graphql/queries";
 import { useQuery } from "@vue/apollo-composable";
 import { useRouter } from "vue-router";
+import _ from "lodash";
 
 const router = useRouter();
 
 const treePages = ref([]);
+const keyedPages = ref([]);
 const parentPages = ref([]);
 const selected = ref();
 const expanded = ref([]);
-const rout = ref("");
 
 const myclick = (node) => {
-  if (currentSpacePages?.value?.rootPages?.data.__typename === "Page") {
-    rout.value = "page";
-  }
   router.push({
     name: "page",
     params: { id: node.id },
   });
-  console.log(node.id, node.label);
 };
 
-const { result: currentSpacePages, onResult } = useQuery(pages);
+const { result: currentSpacePages, onResult, refetch } = useQuery(pages);
 onResult(() => {
-  console.log(currentSpacePages?.value?.rootPages?.data);
   parentPages.value = currentSpacePages?.value?.rootPages?.data;
-  console.log(parentPages.value);
   parentPages.value.forEach((page) => {
     let treeElem = {
       id: page.id,
       label: page.title,
       icon: page.icon,
+      position: page.position,
       handler: (node) => myclick(node),
       children: page.children.data.map((elem) => {
         elem = {
@@ -59,8 +57,11 @@ onResult(() => {
     };
     treePages.value.push(treeElem);
   });
-  expanded.value.push(treePages.value[0].label);
-  selected.value = treePages.value[0].label;
-  console.log(treePages.value[0].label);
+  keyedPages.value = _.sortBy(treePages.value, ["label", "position"]);
+  selected.value = keyedPages.value[0].label;
+  expanded.value.push(selected.value);
+});
+onMounted(() => {
+  if (currentSpacePages.value) refetch();
 });
 </script>

@@ -1,5 +1,12 @@
 import gql from "graphql-tag";
 
+export const userGroupInviteUser = gql`
+  mutation userGroupInviteUser($input: UserGroupInviteUserInput!) {
+    userGroupInviteUser(input: $input) {
+      status
+    }
+  }
+`;
 export const userSignIn = gql`
   mutation UserSignIn($input: UserSignInInput!) {
     userSignIn(input: $input) {
@@ -140,7 +147,65 @@ export const createModule = gql`
     }
   }
 `;
+export const createTask = gql`
+  mutation ($input: create_type2_input!) {
+    create_type2(input: $input) {
+      status
+      recordId
+      record {
+        id
+        type_id
+        author_id
+        level
+        position
+        created_at
+        updated_at
+        name
+        property1
+        property2 {
+          id
+          user_id
+          fullname {
+            first_name
+            last_name
+          }
+        }
+        property4 {
+          id
+        }
+      }
+    }
+  }
+`;
 
+export const updateTask = gql`
+  mutation ($id: String!, $input: update_type1_input!) {
+    update_type2(id: $id, input: $input) {
+      status
+      recordId
+      record {
+        id
+        type_id
+        author_id
+        level
+        position
+        created_at
+        updated_at
+        name
+        property1
+        property2 {
+          id
+          user_id
+          fullname {
+            first_name
+            last_name
+          }
+        }
+        property3
+      }
+    }
+  }
+`;
 export const createPage = gql`
   mutation ($input: PageCreateInput!) {
     pageCreate(input: $input) {
@@ -203,6 +268,27 @@ export const updateModule = gql`
         updated_at
         name
       }
+    }
+  }
+`;
+export const deleteModule = gql`
+  mutation deleteModule($module_id: String!) {
+    delete_type1(id: $module_id) {
+      recordId
+    }
+  }
+`;
+export const deleteTask = gql`
+  mutation deleteTask($task_id: String!) {
+    delete_type2(id: $task_id) {
+      recordId
+    }
+  }
+`;
+export const deletePage = gql`
+  mutation deletePage($page_id: String!) {
+    pageDelete(id: $page_id) {
+      recordId
     }
   }
 `;
