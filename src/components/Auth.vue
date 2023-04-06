@@ -89,15 +89,12 @@ const signIn = async () => {
           res.data.userSignIn.record.access_token
         );
         routProfile();
-        rigin / Module;
       } else {
         console.log(2);
       }
     })
     .catch((e) => {
-      if (e) {
-        console.log(e);
-      }
+      console.log(e);
     });
 };
 
