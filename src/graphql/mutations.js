@@ -1,5 +1,12 @@
 import gql from "graphql-tag";
 
+export const userGroupInviteUser = gql`
+  mutation userGroupInviteUser($input: UserGroupInviteUserInput!) {
+    userGroupInviteUser(input: $input) {
+      status
+    }
+  }
+`;
 export const userSignIn = gql`
   mutation UserSignIn($input: UserSignInInput!) {
     userSignIn(input: $input) {
