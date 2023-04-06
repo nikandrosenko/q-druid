@@ -141,6 +141,52 @@ export const createModule = gql`
   }
 `;
 
+export const createPage = gql`
+  mutation ($input: PageCreateInput!) {
+    pageCreate(input: $input) {
+      recordId
+      status
+      record {
+        parent_id
+        page_type
+        title
+        content
+        icon
+        level
+        is_public
+        position
+        config
+        created_at
+        updated_at
+        object {
+          id
+          type_id
+        }
+      }
+    }
+  }
+`;
+
+export const createPermissionRule = gql`
+  mutation permissionRuleCreate($input: PermissionRuleCreateInput!) {
+    permissionRuleCreate(input: $input) {
+      recordId
+      status
+      record {
+        id
+        author_id
+        level
+        model_type
+        model_id
+        config
+        owner_id
+        owner_type
+        created_at
+        updated_at
+      }
+    }
+  }
+`;
 
 export const updateModule = gql`
   mutation ($input: update_type2_input!, $id: String!) {
