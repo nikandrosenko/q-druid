@@ -6,6 +6,7 @@
         <q-input
           standout="bg-teal text-white"
           v-model="emailModel"
+          type="email"
           label="Почта"
         />
       </div>
@@ -14,6 +15,7 @@
         <q-input
           standout="bg-teal text-white"
           v-model="passwordModel"
+          type="password"
           label="Пароль"
         />
       </div>
