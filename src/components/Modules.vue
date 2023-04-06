@@ -5,13 +5,23 @@
           <div class="text-h6">Создать модуль</div>
         </q-card-section>
 
-        <form @submit.prevent="creatingModule">
+        <form @submit.prevent="creatingModule" v-if="moduleUpdateCreate">
           <q-input v-model="moduleName" label="Имя модуля" />
           <q-select v-model="modelUserModule" :options="optionsUserModule" label="Ответственный" />
 
         <q-card-actions align="right" class="text-primary">
           <q-btn flat label="Отмена" v-close-popup />
           <q-btn flat label="Создать" v-close-popup type="submit"/>
+        </q-card-actions>
+      </form>
+
+      <form @submit.prevent="updatingModule" v-else>
+          <q-input v-model="moduleName" label="Имя модуля" />
+          <q-select v-model="modelUserModule" :options="optionsUserModule" label="Ответственный" />
+
+        <q-card-actions align="right" class="text-primary">
+          <q-btn flat label="Отмена" v-close-popup />
+          <q-btn flat label="Изменить" v-close-popup type="submit"/>
         </q-card-actions>
       </form>
       </q-card>
@@ -31,7 +41,11 @@
     />
   </div>
 
-    </div>
+  <div>
+    
+  </div>
+
+  </div>
 
 
 </template>
@@ -41,6 +55,8 @@ import { useMutation, useQuery } from '@vue/apollo-composable';
 import { ref } from 'vue';
 import { createModule, createPermissionRule, createPage } from 'src/graphql/mutations.js'
 import { getModulesAll, getGroupSubjects } from 'src/graphql/queries.js'
+
+  const moduleUpdateCreate = ref(true)
 
   const { result, loading } = useQuery(getModulesAll)
 
@@ -57,7 +73,7 @@ import { getModulesAll, getGroupSubjects } from 'src/graphql/queries.js'
   const groupSubjectUsers = ref(groupSubject?.value?.get_group.subject.map((el) => {
     return {
       label: `${el.fullname.first_name} ${el.fullname.last_name}`,
-      value: el.user_id
+      value: el.id
     }
   }))
   const optionsUserModule = groupSubjectUsers.value
@@ -89,9 +105,9 @@ const columns = [
     const { mutate: createdModule } = useMutation(createModule,
     {
     input:{
-        name: moduleName,
+        name: moduleName.value,
           property5: {
-            "8044196206941661177": "8212866342665324878"
+            "8044196206941661177": modelUserModule.value.value
           },
           property6: {
             date: "01.01.2023",
@@ -107,11 +123,11 @@ const columns = [
 
    const { mutate: creatingPage } = useMutation(createPage, {
     input: {
-      title: createdModule.create_type1.record.name,
+      title: createdModule?.value?.create_type1.record.name,
       parent_id: "3642539153476219801",
       object: {
-        id: createdModule.create_type1.recordId,
-        type_id: createdModule.create_type1.record.type_id,
+        id: createdModule?.value?.create_type1.recordId,
+        type_id: createdModule?.value?.create_type1.record.type_id,
       },
     },
   });
@@ -121,9 +137,9 @@ const columns = [
   const { data: createdPermissionRuleForPage } = creatingPermissionRule( {
     input: {
       model_type: "page",
-      model_id: creatingPage.pageCreate.recordId,
+      model_id: creatingPage?.value?.pageCreate.recordId,
       owner_type: "subject",
-      owner_id: modelUserModule.value,
+      owner_id: modelUserModule.value.value,
       level: 5,
     },
   });
@@ -131,7 +147,7 @@ const columns = [
   const { data: createdPermissionRuleForModuleObject } = creatingPermissionRule( {
       input: {
         model_type: "object",
-        model_id: createdModule.create_type1.recordId,
+        model_id: createdModule?.value?.create_type1.recordId,
         owner_type: "subject",
         owner_id: modelUserModule.value,
         level: 5,
