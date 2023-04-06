@@ -1,22 +1,22 @@
 <template>
   <div class="q-pa-md">
-<!--    <pre>{{ page }}</pre>-->
     <q-card class="my-card" flat bordered>
       <q-card-section>
         <div class="text-h6">{{ page?.page.title }}</div>
-        <div class="text-subtitle2">by John Doe</div>
       </q-card-section>
       <q-markup-table>
         <thead>
         <tr>
-          <th class="text-left">Участник</th>
-          <th class="text-right">Вторая колонна</th>
+          <th class="text-left">Имя</th>
+          <th class="text-left">Фамилия</th>
+          <th class="text-left">Почта</th>
         </tr>
         </thead>
-        <tbody v-for="user in subjects" :key="user.id">
+        <tbody v-for="user in tableUsers" :key="user.id">
         <tr>
-          <td>{{ user.subject.fullname.first_name }}</td>
-          <td>{{ user.subject.fullname.last_name }}</td>
+          <td>{{ user.fullname.first_name }}</td>
+          <td>{{ user.fullname.last_name }}</td>
+          <td>{{ user.email.email }}</td>
         </tr>
         </tbody>
       </q-markup-table>
@@ -27,18 +27,23 @@
 import { useQuery } from '@vue/apollo-composable';
 import { getPage, getGroupSubjects } from "src/graphql/queries";
 import {useRoute} from "vue-router/dist/vue-router";
+import {computed, ref} from "vue";
 
-const group_id = '6579648768563146067';
-// const id = '6272730201780481324';
 const route = useRoute();
 const id = route.params.id;
 
 const { result: page } = useQuery(getPage, {
   id: id});
 console.log(id)
-const { result: subjects } = useQuery(getGroupSubjects, {
-  group_id: group_id,
+
+const subjectId = computed(() => page.value?.page?.object.id);
+const tableUsers = ref([]);
+const { result, onResult  } = useQuery(getGroupSubjects, {
+  group_id: subjectId,
 });
-console.log(group_id)
+onResult(() => {
+  tableUsers.value = result.value.get_group.subject;
+  console.log(tableUsers.value);
+});
 
 </script>
