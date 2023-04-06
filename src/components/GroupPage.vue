@@ -1,5 +1,26 @@
 <template>
   <div class="q-pa-md">
+    <q-card style="border: 1px solid gray" class="my-card" flat bordered>
+      <q-card-section>
+        <div class="text-h6">{{ page?.page.title }}</div>
+      </q-card-section>
+      <q-markup-table>
+        <thead>
+          <tr>
+            <th style="border: 1px solid gray" class="text-left">Имя</th>
+            <th style="border: 1px solid gray" class="text-left">Фамилия</th>
+            <th style="border: 1px solid gray" class="text-left">Почта</th>
+          </tr>
+        </thead>
+        <tbody v-for="user in tableUsers" :key="user.id">
+          <tr>
+            <td style="border: 1px solid gray">{{ user.fullname.first_name }}</td>
+            <td style="border: 1px solid gray">{{ user.fullname.last_name }}</td>
+            <td style="border: 1px solid gray">{{ user.email.email }}</td>
+          </tr>
+        </tbody>
+      </q-markup-table>
+    </q-card>
     <div class="q-pa-md q-gutter-sm">
       <q-btn label="Пригласить участника" color="primary" @click="prompt = true" />
       <q-dialog v-model="prompt" persistent>
@@ -25,27 +46,6 @@
         </q-card>
       </q-dialog>
     </div>
-    <q-card style="border: 1px solid gray" class="my-card" flat bordered>
-      <q-card-section>
-        <div class="text-h6">{{ page?.page.title }}</div>
-      </q-card-section>
-      <q-markup-table>
-        <thead>
-          <tr>
-            <th style="border: 1px solid gray" class="text-left">Имя</th>
-            <th style="border: 1px solid gray" class="text-left">Фамилия</th>
-            <th style="border: 1px solid gray" class="text-left">Почта</th>
-          </tr>
-        </thead>
-        <tbody v-for="user in tableUsers" :key="user.id">
-          <tr>
-            <td style="border: 1px solid gray">{{ user.fullname.first_name }}</td>
-            <td style="border: 1px solid gray">{{ user.fullname.last_name }}</td>
-            <td style="border: 1px solid gray">{{ user.email.email }}</td>
-          </tr>
-        </tbody>
-      </q-markup-table>
-    </q-card>
   </div>
 </template>
 <script setup>
