@@ -13,7 +13,6 @@
 
         <q-toolbar-title> Приложение на платформе Druid </q-toolbar-title>
       </q-toolbar>
-
     </q-header>
 
     <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
@@ -27,14 +26,6 @@
           round
           exact
           to="/auth"
-          color="primary"
-          icon="account_circle"
-          v-ripple
-        />
-        <q-btn
-          round
-          exact
-          to="/group"
           color="primary"
           icon="account_circle"
           v-ripple
@@ -53,7 +44,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref } from "vue";
 import Tree from "src/components/Tree.vue";
 import { provideApolloClient } from "@vue/apollo-composable";
 import apolloClient from "src/apollo/client";
@@ -61,8 +52,6 @@ import apolloClient from "src/apollo/client";
 provideApolloClient(apolloClient);
 
 const miniState = ref(true);
-
-// console.log(currentSpacePages);
 
 const leftDrawerOpen = ref(false);
 const toggleLeftDrawer = () => {
