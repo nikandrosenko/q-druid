@@ -27,24 +27,32 @@
 import { useQuery } from "@vue/apollo-composable";
 import { getPage, getGroupSubjects } from "src/graphql/queries";
 import { useRoute } from "vue-router/dist/vue-router";
-import { computed, ref } from "vue";
+import { computed, ref, watch, onMounted } from "vue";
+
+const id = ref("");
 
 const route = useRoute();
-const id = route.params.id;
+
+const defId = () => {
+  id.value = route.params.id;
+};
 
 const { result: page } = useQuery(getPage, {
   id: id,
 });
-// console.log(id);
 
 const subjectId = computed(() => page.value?.page?.object.id);
 const tableUsers = ref([]);
 
-const { result, onResult } = useQuery(getGroupSubjects, {
+const { result: subjects, onResult } = useQuery(getGroupSubjects, {
   group_id: subjectId,
 });
+
 onResult(() => {
-  tableUsers.value = result.value.get_group.subject;
-  // console.log(tableUsers.value);
+  tableUsers.value = subjects.value?.get_group.subject;
+});
+
+onMounted(() => {
+  defId();
 });
 </script>
