@@ -79,10 +79,10 @@
 <script setup>
 import {useMutation, useQuery} from '@vue/apollo-composable';
 import { getPage, getGroupSubjects } from "src/graphql/queries";
-// import { userGroupInviteUser } from "src/graphql/mutations";
+import { userGroupInviteUser } from "src/graphql/mutations";
 import {useRoute} from "vue-router/dist/vue-router";
 import {computed, ref} from "vue";
-import gql from "graphql-tag";
+// import gql from "graphql-tag";
 
 const inviteUser = ref(false);
 const route = useRoute();
@@ -122,7 +122,7 @@ const onSubmit = async () => {
       name: req.value.name,
       surname: req.value.surname,
       email: req.value.email,
-      page_group_id: id,
+      page_group_id: id.value,
     },
   });
   console.log(data.userGroupInviteUser.status);
@@ -134,15 +134,6 @@ const resetForm = () => {
     (req.value.name = "");
 };
 
-// const { mutate: onSubmit } = useMutation(userGroupInviteUser,{
-//     input: {
-//       email: req.value.email,
-//       name: req.value.name,
-//       surname: req.value.surname,
-//       page_group_id: id
-//     }
-//   }
-// )
 
 
 </script>
