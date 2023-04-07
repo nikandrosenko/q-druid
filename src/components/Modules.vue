@@ -220,7 +220,7 @@ const moduleDelete = async (moduleId, pageId) => {
 
 const delModule = ref();
 
-const { result: pageData, refetch } = useQuery(getPagesModule, {
+const { result: pageData } = useQuery(getPagesModule, {
   id: "3642539153476219801",
 });
 

@@ -321,6 +321,7 @@ query getPage($id: String!) {
     }
     children {
       data {
+      id
         object {
         id
         }
