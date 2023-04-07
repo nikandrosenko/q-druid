@@ -3,7 +3,7 @@
 <div class="flex column items-center" v-if="swipeRegPassword===1">
     <form @submit.prevent="signUp" >
       <div>
-        <p style="margin-top: 10px;">Имя</p>
+        <p style="margin: 30px 0 5px;">Имя</p>
         <q-input
           standout="bg-primary text-white"
           v-model="nameModel"
@@ -11,7 +11,7 @@
         />
       </div>
       <div>
-        <p class="q-mt-md">Фамилия</p>
+        <p style="margin: 16px 0 5px;" class="q-mt-md">Фамилия</p>
         <q-input
           standout="bg-primary text-white"
           v-model="surnameModel"
@@ -19,7 +19,7 @@
         />
       </div>
       <div>
-        <p class="q-mt-md">Почта</p>
+        <p style="margin: 16px 0 5px;" class="q-mt-md">Почта</p>
         <q-input
           standout="bg-primary text-white"
           v-model="emailModel"
@@ -27,6 +27,7 @@
         />
       </div>
       <q-btn
+        style="margin-top: 30px;"
         class="q-mt-md"
         color="primary"
         text-color="white"

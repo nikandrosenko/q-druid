@@ -2,7 +2,7 @@
   <div class="flex column items-center">
     <form @submit.prevent="signIn">
       <div>
-        <p style="margin-top: 10px;">Почта</p>
+        <p style="margin: 30px 0 5px;">Почта</p>
         <q-input
           standout="bg-primary text-white"
           v-model="emailModel"
@@ -11,7 +11,7 @@
         />
       </div>
       <div>
-        <p class="q-mt-md">Пароль</p>
+        <p style="margin: 16px 0 5px;" class="q-mt-md" >Пароль</p>
         <q-input
           standout="bg-primary text-white"
           v-model="passwordModel"
@@ -20,7 +20,7 @@
         />
       </div>
       <q-btn
-        style="margin-bottom: 20px;"
+        style="margin: 40px 0 20px 0;"
         class="q-mt-md"
         color="primary"
         text-color="white"
