@@ -4,9 +4,9 @@
       <q-markup-table>
         <thead>
           <tr>
-            <th style="border: 1px solid gray" class="text-left">Имя</th>
-            <th style="border: 1px solid gray" class="text-left">Фамилия</th>
-            <th style="border: 1px solid gray" class="text-left">Почта</th>
+            <th style="border: 1px solid gray" class="text-left"><strong>Имя</strong></th>
+            <th style="border: 1px solid gray" class="text-left"><strong>Фамилия</strong></th>
+            <th style="border: 1px solid gray" class="text-left"><strong>Почта</strong></th>
           </tr>
         </thead>
         <tbody v-for="user in tableUsers" :key="user.id">
