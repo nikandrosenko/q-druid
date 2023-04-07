@@ -298,3 +298,33 @@ export const getModuleById = gql`
     }
   }
 `;
+
+export const getPagesModule = gql`
+query getPage($id: String!) {
+  page(id: $id) {
+    id
+    parent_id
+    page_type
+    title
+    content
+    icon
+    level
+    is_public
+    position
+    config
+    is_block
+    created_at
+    updated_at
+    object {
+      id
+      type_id
+    }
+    children {
+      data {
+        object {
+        id
+        }
+      }
+    }
+  }
+}`

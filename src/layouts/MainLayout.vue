@@ -30,11 +30,10 @@
           icon="account_circle"
           v-ripple
         />
-
         <q-btn
           round
           exact
-          to="/module"
+          to="/modules"
           color="primary"
           icon="account_circle"
           v-ripple

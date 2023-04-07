@@ -10,7 +10,7 @@ const routes = [
         component: () => import("pages/Page.vue"),
       },
       {
-        path: "module",
+        path: "/modules",
         component: () => import("components/Modules.vue"),
       },
     ],
