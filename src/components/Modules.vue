@@ -65,7 +65,6 @@ onResult2(() => {
 const prompt = ref(false);
 const moduleName = ref("");
 const modelUserModule = ref("");
-// const optionsUserModule = groupSubjectUsers.value;
 const columns = [
   {
     name: "name",
@@ -118,6 +117,7 @@ const moduleCreate = async () => {
     input: {
       title: createdModule.create_type1.record.name,
       parent_id: "3642539153476219801",
+      icon: "list_alt",
       object: {
         id: createdModule.create_type1.recordId,
         type_id: createdModule.create_type1.record.type_id,

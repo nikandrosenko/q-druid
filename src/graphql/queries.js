@@ -199,6 +199,18 @@ export const getPage = gql`
       is_block
       created_at
       updated_at
+      children {
+        data {
+          id
+          title
+          page_type
+          object {
+            id
+
+            type_id
+          }
+        }
+      }
       object {
         id
         type_id
@@ -208,7 +220,7 @@ export const getPage = gql`
 `;
 
 export const getModulesAll = gql`
-   query getModules {
+  query getModules {
     paginate_type1(page: 1, perPage: 100) {
       data {
         id
