@@ -85,7 +85,7 @@ import {
 } from "src/graphql/queries.js";
 const rows = ref();
 const groupSubjectUsers = ref();
-const { result, loading, onResult } = useQuery(getModulesAll);
+const { result, loading, onResult, refetch } = useQuery(getModulesAll);
 const { result: groupSubject, onResult: onResultGetGroup } = useQuery(
   getGroupSubjects,
   {
@@ -230,5 +230,7 @@ const moduleDeleteElement = (index) => {
   );
 
   moduleDelete(index, delModule.value.id);
+
+  refetch();
 };
 </script>
