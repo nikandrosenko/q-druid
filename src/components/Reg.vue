@@ -1,17 +1,11 @@
 <template>
 
-<div class="flex justify-around q-mt-xs">
-  <div @click="swipeRegPassword=1" :style="regIndicatorOne ? 'background: green' : 'background: white'" class="step">1</div>
-  <div @click="swipeRegPassword=2" :style="regIndicatorEnd ? 'background: green' : 'background: white'" class="step">2</div>
-  <div @click="swipeRegPassword=3" :style="regIndicatorEnd ? 'background: green' : 'background: white'" class="step">3</div>
-</div>
-
 <div class="flex column items-center" v-if="swipeRegPassword===1">
     <form @submit.prevent="signUp" >
       <div>
         <p>Имя</p>
         <q-input
-          standout="bg-teal text-white"
+          standout="bg-primary text-white"
           v-model="nameModel"
           label="Имя"
         />
@@ -19,7 +13,7 @@
       <div>
         <p class="q-mt-md">Фамилия</p>
         <q-input
-          standout="bg-teal text-white"
+          standout="bg-primary text-white"
           v-model="surnameModel"
           label="Фамилия"
         />
@@ -27,14 +21,14 @@
       <div>
         <p class="q-mt-md">Почта</p>
         <q-input
-          standout="bg-teal text-white"
+          standout="bg-primary text-white"
           v-model="emailModel"
           label="Почта"
         />
       </div>
       <q-btn
         class="q-mt-md"
-        color="teal"
+        color="primary"
         text-color="white"
         label="Зарегистрироваться"
         type="submit"
@@ -59,7 +53,7 @@
       </div>
       <q-btn
         class="q-mt-md"
-        color="teal"
+        color="primary"
         text-color="white"
         label="Отправить"
         type="submit"

@@ -4,7 +4,7 @@
       <div>
         <p>Почта</p>
         <q-input
-          standout="bg-teal text-white"
+          standout="bg-primary text-white"
           v-model="emailModel"
           type="email"
           label="Почта"
@@ -13,7 +13,7 @@
       <div>
         <p class="q-mt-md">Пароль</p>
         <q-input
-          standout="bg-teal text-white"
+          standout="bg-primary text-white"
           v-model="passwordModel"
           type="password"
           label="Пароль"
@@ -21,7 +21,7 @@
       </div>
       <q-btn
         class="q-mt-md"
-        color="teal"
+        color="primary"
         text-color="white"
         label="Войти"
         type="submit"
