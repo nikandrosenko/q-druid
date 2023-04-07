@@ -85,7 +85,9 @@ import {
   createPermissionRule,
   createPage,
   deleteModule,
-  deletePage
+  deletePage,
+  updateModule,
+  updatePage
 } from "src/graphql/mutations.js";
 import { getModulesAll, getGroupSubjects, getPagesModule } from "src/graphql/queries.js";
 
@@ -244,6 +246,34 @@ const moduleDeleteElement = (id) => {
 
 }
 
+const { mutate: updatingModule } = useMutation(updateModule);
+const { mutate: updatingPage } = useMutation(updatePage);
+
+const updatedModule = ref()
+
+const moduleUpdate = async (moduleId, pageId) => {
+  const { data: updateM } = await updatingModule({
+    id: moduleId,
+    input: {
+      name: moduleNameUpdate.value,
+      property5: {
+        "8044196206941661177": modelUserModuleUpdate.value.value,
+      }
+    }
+  });
+
+  const { data: updateP } = await updatingPage({
+    id: pageId,
+    input: {
+      name: moduleNameUpdate.value,
+    }
+  });
+
+  console.log(updateM, updateP)
+
+  refetch()
+}
+
 const moduleUpdateElementForm = (index) => {
   moduleNameUpdate.value = rows.value[index].name
   modelUserModuleUpdate.value = {
@@ -255,7 +285,9 @@ const moduleUpdateElementForm = (index) => {
 
 const moduleUpdateElement = (id) => {
 
+  updatedModule.value = pageData?.value?.page.children.data.find(el => el.object.id == id )
 
-  console.log(id)
+  moduleUpdate(id, updateModule.value.id)
+
 }
 </script>
