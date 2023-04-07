@@ -252,8 +252,8 @@ export const createPermissionRule = gql`
   }
 `;
 export const updateModule = gql`
-  mutation ($input: update_type2_input!, $id: String!) {
-    update_type2(id: $id, input: $input) {
+  mutation ($input: update_type1_input!, $id: String!) {
+    update_type1(id: $id, input: $input) {
       status
       recordId
       record {
@@ -269,6 +269,31 @@ export const updateModule = gql`
     }
   }
 `;
+
+
+export const updatePage = gql`
+mutation updatePage($id: String!, $input: PageUpdateInput!) {
+  pageUpdate(id: $id, input: $input) {
+      recordId
+      record {
+        parent_id
+        page_type
+        title
+        content
+        icon
+        level
+        is_public
+				is_block
+        position
+        config
+        created_at
+        updated_at
+      }
+      status
+  }
+}
+`;
+
 export const deleteModule = gql`
   mutation deleteModule($module_id: String!) {
     delete_type1(id: $module_id) {
