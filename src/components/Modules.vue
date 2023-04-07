@@ -202,12 +202,12 @@ const moduleCreate = async () => {
   const { mutate: creatingPage } = useMutation(createPage);
   const { data: createdPage } = await creatingPage({
     input: {
-      title: createdModule?.value?.create_type1.record.name,
+      title: createdModule.create_type1.record.name,
       parent_id: "3642539153476219801",
       icon: "list_alt",
       object: {
-        id: createdModule?.value?.create_type1.recordId,
-        type_id: createdModule?.value?.create_type1.record.type_id,
+        id: createdModule.create_type1.recordId,
+        type_id: createdModule.create_type1.record.type_id,
       },
     },
   });
@@ -227,7 +227,7 @@ const moduleCreate = async () => {
     await creatingPermissionRule({
       input: {
         model_type: "object",
-        model_id: createdModule?.value?.create_type1.recordId,
+        model_id: createdModule.create_type1.recordId,
         owner_type: "subject",
         owner_id: modelUserModule.value.value,
         level: 5,
@@ -288,11 +288,11 @@ const moduleUpdate = async (moduleId, pageId) => {
       },
     },
   });
-
+  console.log(moduleNameUpdate.value);
   const { data: updateP } = await updatingPage({
     id: pageId,
     input: {
-      name: moduleNameUpdate.value,
+      title: moduleNameUpdate.value,
     },
   });
 
@@ -313,7 +313,8 @@ const moduleUpdateElement = (id) => {
   updatedModule.value = pageData?.value?.page.children.data.find(
     (el) => el.object.id == id
   );
+  console.log(id);
 
-  moduleUpdate(id, updateModule.value.id);
+  moduleUpdate(id, updatedModule.value.id);
 };
 </script>
