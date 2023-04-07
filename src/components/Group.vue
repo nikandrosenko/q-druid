@@ -42,6 +42,8 @@
               autofocus
               placeholder="Имя"
               @keyup.enter="prompt = false"
+              lazy-rules
+              :rules="[required]"
             />
           </q-card-section>
           <q-card-section class="q-pt-none">
@@ -51,6 +53,8 @@
               autofocus
               placeholder="Фамилия"
               @keyup.enter="prompt = false"
+              lazy-rules
+              :rules="[required]"
             />
           </q-card-section>
           <q-card-section class="q-pt-none">
@@ -60,6 +64,8 @@
               autofocus
               placeholder="Почта"
               @keyup.enter="prompt = false"
+              lazy-rules
+              :rules="[required]"
             />
           </q-card-section>
 
@@ -78,7 +84,9 @@ import { getPage, getGroupSubjects } from "src/graphql/queries";
 import { useRoute } from "vue-router/dist/vue-router";
 import { computed, ref, onMounted } from "vue";
 import { userGroupInviteUser } from "src/graphql/mutations";
+import { useValidators } from "src/use/validators";
 
+const { required } = useValidators();
 const id = ref("");
 const route = useRoute();
 const prompt = ref(false);

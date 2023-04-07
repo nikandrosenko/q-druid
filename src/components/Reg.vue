@@ -8,6 +8,8 @@
           standout="bg-primary text-white"
           v-model="nameModel"
           label="Имя"
+          lazy-rules
+          :rules="[required]"
         />
       </div>
       <div>
@@ -16,6 +18,8 @@
           standout="bg-primary text-white"
           v-model="surnameModel"
           label="Фамилия"
+          lazy-rules
+          :rules="[required]"
         />
       </div>
       <div>
@@ -24,6 +28,8 @@
           standout="bg-primary text-white"
           v-model="emailModel"
           label="Почта"
+          lazy-rules
+          :rules="[required]"
         />
       </div>
       <q-btn
@@ -74,7 +80,9 @@
 import { ref, onMounted } from 'vue';
 import { useMutation } from "@vue/apollo-composable";
 import { userSignUp, userSignUpSetPassword } from 'src/graphql/mutations.js'
+import { useValidators } from "src/use/validators";
 
+const { required } = useValidators();
 onMounted(() => {
   if(localStorage.getItem('UserRegId')){
     swipeRegPassword.value = 1

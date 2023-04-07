@@ -8,6 +8,8 @@
           v-model="emailModel"
           type="email"
           label="Почта"
+          lazy-rules
+          :rules="[required]"
         />
       </div>
       <div>
@@ -17,6 +19,8 @@
           v-model="passwordModel"
           type="password"
           label="Пароль"
+          lazy-rules
+          :rules="[required]"
         />
       </div>
       <q-btn
@@ -39,7 +43,9 @@ import { useRouter } from "vue-router";
 import { useMutation } from "@vue/apollo-composable";
 import { useStore } from "vuex";
 import { userSignIn, userSignInSocialNetwork } from "src/graphql/mutations.js";
+import { useValidators } from "src/use/validators";
 
+const { required } = useValidators();
 const store = useStore();
 const router = useRouter();
 
