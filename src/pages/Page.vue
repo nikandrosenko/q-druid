@@ -7,8 +7,8 @@
       {{ page.value?.title }}
     </div>
     <section class="text-h4 q-mb-lg">
-      <group-page />
-      <modules />
+      <group-page v-if="typeId === '4148214827964057161'" />
+      <modules v-if="typeId === '4819869896194502672'" />
     </section>
   </q-page>
 </template>
@@ -22,12 +22,12 @@ import GroupPage from "src/components/GroupPage.vue";
 import Modules from "src/components/Modules.vue";
 
 const route = useRoute();
-const id = route.params.id;
+const id = ref("");
 const typeId = ref("");
 
-// onMounted(() => {
-//   id.value = route.params.id;
-// });
+onMounted(() => {
+  id.value = route.params.id;
+});
 
 // console.log(id);
 
@@ -41,26 +41,19 @@ const {
 
 onResult(() => {
   // console.log(page.value?.page.object.type_id);
-  // typeId.value = page.value?.page.object.type_id;
+  typeId.value = page.value?.page.object.type_id;
   // console.log(typeId.value);
-  if (page.value.page.object.type_id === "4148214827964057161")
-    console.log("Это группа");
-  if (page.value.page.object.type_id === "4402508105138320402")
-    console.log("Это модуль");
-  if (page.value.page.object.type_id === "7792914758758546861")
-    console.log("Это задача");
-  if (page.value.page.object.type_id === "4819869896194502672")
-    console.log("Это модули");
-  if (page.value.page.object.type_id === "6056878233713674988")
-    console.log("Это мои задачи");
+  if (typeId.value === "4148214827964057161") console.log("Это группа");
+  if (typeId.value === "4402508105138320402") console.log("Это модуль");
+  if (typeId.value === "7792914758758546861") console.log("Это задача");
+  if (typeId.value === "4819869896194502672") console.log("Это модули");
+  if (typeId.value === "6056878233713674988") console.log("Это мои задачи");
 });
 
-// const isGroup = () => {
-//   if (typeId.value === "4148214827964057161") {
-//     console.log("SSSS");
-//     return true;
-//   }
-// };
+const isGroup = () => {
+  typeId === "4148214827964057161" ? true : false;
+};
+console.log(isGroup());
 // const isModules = () => {
 //   if (typeId.value === "4819869896194502672") {
 //     console.log("SSSS");
