@@ -24,7 +24,7 @@
         />
       </div>
       <q-btn
-        style="margin: 40px 0 20px 0;"
+        style="margin: 20px 0 20px 0;"
         class="q-mt-md"
         color="primary"
         text-color="white"

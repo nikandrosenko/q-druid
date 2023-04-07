@@ -13,7 +13,7 @@
         />
       </div>
       <div>
-        <p style="margin: 16px 0 5px;" class="q-mt-md">Фамилия</p>
+        <p style="margin: 10px 0 5px;" class="q-mt-md">Фамилия</p>
         <q-input
           standout="bg-primary text-white"
           v-model="surnameModel"
@@ -23,7 +23,7 @@
         />
       </div>
       <div>
-        <p style="margin: 16px 0 5px;" class="q-mt-md">Почта</p>
+        <p style="margin: 10px 0 5px;" class="q-mt-md">Почта</p>
         <q-input
           standout="bg-primary text-white"
           v-model="emailModel"
@@ -33,7 +33,7 @@
         />
       </div>
       <q-btn
-        style="margin-top: 30px;"
+        style="margin-top: 0;"
         class="q-mt-md"
         color="primary"
         text-color="white"
