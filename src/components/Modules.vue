@@ -2,10 +2,11 @@
   <q-dialog v-model="prompt">
     <q-card style="min-width: 350px">
       <q-card-section>
-        <div class="text-h6">Создать модуль</div>
+        <div v-if="updateDeleteType.bool" class="text-h6">Создать модуль</div>
+        <div v-else class="text-h6">Изменить модуль</div>
       </q-card-section>
 
-      <form @submit.prevent="moduleCreate">
+      <form @submit.prevent="moduleCreate" v-if="updateDeleteType.bool">
         <q-input v-model="moduleName" label="Имя модуля" />
         <q-select
           v-model="modelUserModule"
@@ -18,11 +19,24 @@
           <q-btn flat label="Создать" v-close-popup type="submit" />
         </q-card-actions>
       </form>
+      <form @submit.prevent="moduleUpdateElement(updateDeleteType.id);" v-else>
+        <q-input v-model="moduleNameUpdate" label="Имя модуля" />
+        <q-select
+          v-model="modelUserModuleUpdate"
+          :options="groupSubjectUsers"
+          label="Ответственный"
+        />
+
+        <q-card-actions align="right" class="text-primary">
+          <q-btn flat label="Отмена" v-close-popup />
+          <q-btn flat label="Изменить" v-close-popup type="submit" />
+        </q-card-actions>
+      </form>
     </q-card>
   </q-dialog>
 
   <div class="q-ma-xl">
-    <q-btn label="Создать" color="primary" @click="prompt = true" />
+    <q-btn label="Создать" color="primary" @click="{prompt = true; updateDeleteType.bool = true}" />
 
     <div v-if="loading">
       <p>Загрузка</p>
@@ -44,10 +58,10 @@
       </template>
 
       <template v-slot:body="props">
-        <q-tr :props="props" :key="`m_${props.row.index}`">
+        <q-tr :props="props">
           <q-td auto-width>
-            <q-btn size="sm" color="primary" round dense @click="moduleDeleteElement(props.row.index)" icon="clear" />
-            <q-btn size="sm" color="primary" round dense @click="props.expand = !props.expand" icon="create" />
+            <q-btn size="sm" color="primary" round dense @click="moduleDeleteElement(props.row.id)" icon="clear" />
+            <q-btn size="sm" color="primary" round dense @click="{updateDeleteType.bool = false; updateDeleteType.id = props.row.id; prompt = true; moduleUpdateElementForm(props.row.index)}" icon="create" />
           </q-td>
           <q-td
             v-for="col in props.cols"
@@ -74,8 +88,13 @@ import {
   deletePage
 } from "src/graphql/mutations.js";
 import { getModulesAll, getGroupSubjects, getPagesModule } from "src/graphql/queries.js";
+
 const rows = ref();
 const groupSubjectUsers = ref();
+const updateDeleteType = ref({
+  bool: true,
+  id: ''
+})
 const { result, loading, onResult, refetch } = useQuery(getModulesAll);
 const { result: groupSubject, onResult: onResultGetGroup } = useQuery(
   getGroupSubjects,
@@ -85,7 +104,7 @@ const { result: groupSubject, onResult: onResultGetGroup } = useQuery(
 );
 
 onResult(() => {
-  rows.value = result?.value?.paginate_type1?.data.map((el) => ({...el, index: el.id}));
+  rows.value = result?.value?.paginate_type1?.data.map((el, i) => ({...el, id: el.id, index: i}));
 });
 
 onResultGetGroup(() => {
@@ -100,6 +119,8 @@ onResultGetGroup(() => {
 const prompt = ref(false);
 const moduleName = ref("");
 const modelUserModule = ref("");
+const moduleNameUpdate = ref("")
+const modelUserModuleUpdate = ref("")
 
 const columns = [
   {
@@ -213,13 +234,28 @@ const { result: pageData } = useQuery(getPagesModule, {
   id: "3642539153476219801"
 })
 
-const moduleDeleteElement = (index) => {
+const moduleDeleteElement = (id) => {
 
-    delModule.value = pageData?.value?.page.children.data.find(el => el.object.id == index )
+    delModule.value = pageData?.value?.page.children.data.find(el => el.object.id == id )
 
-    moduleDelete(index, delModule.value.id)
+    moduleDelete(id, delModule.value.id)
 
     refetch()
 
+}
+
+const moduleUpdateElementForm = (index) => {
+  moduleNameUpdate.value = rows.value[index].name
+  modelUserModuleUpdate.value = {
+    label: `${rows.value[index].property5.fullname.first_name} ${rows.value[index].property5.fullname.last_name}`,
+    value:  rows.value[index].property5.id
+  }
+
+}
+
+const moduleUpdateElement = (id) => {
+
+
+  console.log(id)
 }
 </script>
