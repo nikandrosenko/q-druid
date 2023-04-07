@@ -3,7 +3,7 @@
 <div class="flex column items-center" v-if="swipeRegPassword===1">
     <form @submit.prevent="signUp" >
       <div>
-        <p>Имя</p>
+        <p style="margin-top: 10px;">Имя</p>
         <q-input
           standout="bg-primary text-white"
           v-model="nameModel"

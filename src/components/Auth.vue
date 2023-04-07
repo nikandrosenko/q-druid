@@ -2,7 +2,7 @@
   <div class="flex column items-center">
     <form @submit.prevent="signIn">
       <div>
-        <p>Почта</p>
+        <p style="margin-top: 10px;">Почта</p>
         <q-input
           standout="bg-primary text-white"
           v-model="emailModel"
@@ -20,6 +20,7 @@
         />
       </div>
       <q-btn
+        style="margin-bottom: 20px;"
         class="q-mt-md"
         color="primary"
         text-color="white"
