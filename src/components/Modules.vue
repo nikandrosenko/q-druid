@@ -28,7 +28,37 @@
       <p>Загрузка</p>
     </div>
     <div v-else class="q-pa-md">
-      <q-table :rows="rows" :columns="columns" row-key="name" />
+      <q-table :rows="rows" :columns="columns" row-key="index" >
+
+        <template v-slot:header="props">
+        <q-tr :props="props">
+          <q-th auto-width />
+          <q-th
+            v-for="col in props.cols"
+            :key="col.name"
+            :props="props"
+          >
+            {{ col.label }}
+          </q-th>
+        </q-tr>
+      </template>
+
+      <template v-slot:body="props">
+        <q-tr :props="props" :key="`m_${props.row.index}`">
+          <q-td auto-width>
+            <q-btn size="sm" color="primary" round dense @click="moduleDeleteElement(props.row.index)" icon="clear" />
+            <q-btn size="sm" color="primary" round dense @click="props.expand = !props.expand" icon="create" />
+          </q-td>
+          <q-td
+            v-for="col in props.cols"
+            :key="col.name"
+            :props="props"
+          >
+            {{ col.value }}
+          </q-td>
+        </q-tr>
+      </template>
+    </q-table>
     </div>
   </div>
 </template>
@@ -40,21 +70,25 @@ import {
   createModule,
   createPermissionRule,
   createPage,
+  deleteModule,
+  deletePage
 } from "src/graphql/mutations.js";
-import { getModulesAll, getGroupSubjects } from "src/graphql/queries.js";
+import { getModulesAll, getGroupSubjects, getPagesModule } from "src/graphql/queries.js";
 const rows = ref();
 const groupSubjectUsers = ref();
 const { result, loading, onResult } = useQuery(getModulesAll);
-const { result: groupSubject, onResult: onResult2 } = useQuery(
+const { result: groupSubject, onResult: onResultGetGroup } = useQuery(
   getGroupSubjects,
   {
     group_id: "3163550221139005516",
   }
 );
+
 onResult(() => {
-  rows.value = result?.value?.paginate_type1?.data;
+  rows.value = result?.value?.paginate_type1?.data.map((el) => ({...el, index: el.id}));
 });
-onResult2(() => {
+
+onResultGetGroup(() => {
   groupSubjectUsers.value = groupSubject?.value?.get_group.subject.map((el) => {
     return {
       label: `${el.fullname.first_name} ${el.fullname.last_name}`,
@@ -62,6 +96,7 @@ onResult2(() => {
     };
   });
 });
+
 const prompt = ref(false);
 const moduleName = ref("");
 const modelUserModule = ref("");
@@ -156,4 +191,33 @@ const moduleCreate = async () => {
   };
 
 };
+
+const { mutate: deletingModule } = useMutation(deleteModule);
+const { mutate: deletingPage } = useMutation(deletePage);
+
+const moduleDelete = async (moduleId, pageId) => {
+  const { data: delM } = await deletingModule({
+    module_id: moduleId,
+  });
+
+  const { data: delP } = await deletingPage({
+    page_id: pageId,
+  });
+
+  console.log(delM, delP);
+};
+
+const delModule = ref()
+
+const { result: pageData, refetch } = useQuery(getPagesModule, {
+  id: "3642539153476219801"
+})
+
+const moduleDeleteElement = (index) => {
+
+    delModule.value = pageData?.value?.page.children.data.find(el => el.object.id == index )
+
+    moduleDelete(index, delModule.value.id)
+
+}
 </script>
