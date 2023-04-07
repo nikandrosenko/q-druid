@@ -23,7 +23,6 @@
 
   <div class="q-ma-xl">
     <q-btn label="Создать" color="primary" @click="prompt = true" />
-
     <div v-if="loading">
       <p>Загрузка</p>
     </div>
@@ -70,7 +69,7 @@
 
 <script setup>
 import { useMutation, useQuery } from "@vue/apollo-composable";
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import {
   createModule,
   createPermissionRule,
@@ -233,4 +232,7 @@ const moduleDeleteElement = (index) => {
 
   refetch();
 };
+onMounted(() => {
+  if (result) refetch();
+});
 </script>

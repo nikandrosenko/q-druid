@@ -1,26 +1,54 @@
 <template>
-  <div>
-    <q-dialog v-model="prompt">
-      <q-card style="min-width: 350px">
-        <q-card-section>
-          <div class="text-h6">Создать модуль</div>
-        </q-card-section>
-
-        <form @submit.prevent="moduleCreate">
-          <q-input v-model="moduleName" label="Имя модуля" />
-          <q-select
-            v-model="modelUserModule"
-            :options="groupSubjectUsers"
-            label="Ответственный"
-          />
-
-          <q-card-actions align="right" class="text-primary">
-            <q-btn flat label="Отмена" v-close-popup />
-            <q-btn flat label="Создать" v-close-popup type="submit" />
-          </q-card-actions>
-        </form>
-      </q-card>
-    </q-dialog>
-  </div>
+  <q-page class="q-ma-xl">
+    <div v-if="loading">
+      <p>Загрузка</p>
+    </div>
+    <div v-else class="q-pa-md">
+      <q-table :rows="rows" :columns="columns" row-key="name" />
+    </div>
+  </q-page>
 </template>
-<script setup></script>
+<script setup>
+import { ref, onMounted } from "vue";
+import { useQuery } from "@vue/apollo-composable";
+import { getTasksAll } from "src/graphql/queries.js";
+const rows = ref();
+const columns = [
+  {
+    name: "name",
+    required: true,
+    label: "Название",
+    align: "left",
+    field: (row) => row.name,
+    format: (val) => `${val}`,
+    sortable: true,
+  },
+  {
+    name: "description",
+    label: "Описание",
+    field: (row) => `${row.property1}`,
+  },
+  {
+    name: "first_name",
+    label: "Исполнитель",
+    field: (row) =>
+      `${row.property2.fullname.first_name} ${row.property2.fullname.last_name}`,
+  },
+  {
+    name: "status",
+    label: "Статус",
+    field: (row) => `${row.property3}`,
+  },
+];
+
+const { result, loading, onResult, refetch } = useQuery(getTasksAll);
+onResult(() => {
+  rows.value = result?.value?.paginate_type2?.data.map((el) => ({
+    ...el,
+    index: el.id,
+  }));
+});
+onMounted(() => {
+  if (result) refetch();
+});
+</script>

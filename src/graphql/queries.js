@@ -300,32 +300,80 @@ export const getModuleById = gql`
 `;
 
 export const getPagesModule = gql`
-query getPage($id: String!) {
-  page(id: $id) {
-    id
-    parent_id
-    page_type
-    title
-    content
-    icon
-    level
-    is_public
-    position
-    config
-    is_block
-    created_at
-    updated_at
-    object {
+  query getPage($id: String!) {
+    page(id: $id) {
       id
-      type_id
-    }
-    children {
-      data {
-      id
-        object {
+      parent_id
+      page_type
+      title
+      content
+      icon
+      level
+      is_public
+      position
+      config
+      is_block
+      created_at
+      updated_at
+      object {
         id
+        type_id
+      }
+      children {
+        data {
+          id
+          object {
+            id
+          }
         }
       }
     }
   }
-}`
+`;
+
+export const getTasksAll = gql`
+  query getTasks {
+    paginate_type2(page: 1, perPage: 100) {
+      data {
+        id
+        type_id
+        author_id
+        level
+        position
+        created_at
+        updated_at
+        name
+        property1
+        property2 {
+          id
+          fullname {
+            first_name
+            last_name
+          }
+        }
+        property3
+        property4 {
+          id
+          name
+          property5 {
+            id
+            fullname {
+              first_name
+              last_name
+            }
+          }
+        }
+      }
+      paginatorInfo {
+        perPage
+        currentPage
+        lastPage
+        total
+        count
+        from
+        to
+        hasMorePages
+      }
+    }
+  }
+`;

@@ -1,9 +1,6 @@
 <template>
   <div class="q-pa-md">
     <q-card style="border: 1px solid gray" class="my-card" flat bordered>
-      <q-card-section>
-        <div class="text-h6">{{ page?.page.title }}</div>
-      </q-card-section>
       <q-markup-table>
         <thead>
           <tr>
@@ -14,15 +11,23 @@
         </thead>
         <tbody v-for="user in tableUsers" :key="user.id">
           <tr>
-            <td style="border: 1px solid gray">{{ user.fullname.first_name }}</td>
-            <td style="border: 1px solid gray">{{ user.fullname.last_name }}</td>
+            <td style="border: 1px solid gray">
+              {{ user.fullname.first_name }}
+            </td>
+            <td style="border: 1px solid gray">
+              {{ user.fullname.last_name }}
+            </td>
             <td style="border: 1px solid gray">{{ user.email.email }}</td>
           </tr>
         </tbody>
       </q-markup-table>
     </q-card>
     <div class="q-pa-md q-gutter-sm">
-      <q-btn label="Пригласить участника" color="primary" @click="prompt = true" />
+      <q-btn
+        label="Пригласить участника"
+        color="primary"
+        @click="prompt = true"
+      />
       <q-dialog v-model="prompt" persistent>
         <q-card style="min-width: 350px">
           <q-card-section>
@@ -30,13 +35,32 @@
           </q-card-section>
 
           <q-card-section class="q-pt-none">
-            <q-input square dense v-model="req.name" autofocus placeholder="Имя" @keyup.enter="prompt = false" />
+            <q-input
+              square
+              dense
+              v-model="req.name"
+              autofocus
+              placeholder="Имя"
+              @keyup.enter="prompt = false"
+            />
           </q-card-section>
           <q-card-section class="q-pt-none">
-            <q-input dense v-model="req.surname" autofocus placeholder="Фамилия" @keyup.enter="prompt = false" />
+            <q-input
+              dense
+              v-model="req.surname"
+              autofocus
+              placeholder="Фамилия"
+              @keyup.enter="prompt = false"
+            />
           </q-card-section>
           <q-card-section class="q-pt-none">
-            <q-input dense v-model="req.email" autofocus placeholder="Почта" @keyup.enter="prompt = false" />
+            <q-input
+              dense
+              v-model="req.email"
+              autofocus
+              placeholder="Почта"
+              @keyup.enter="prompt = false"
+            />
           </q-card-section>
 
           <q-card-actions align="right" class="text-primary">

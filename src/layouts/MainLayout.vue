@@ -12,6 +12,15 @@
         />
 
         <q-toolbar-title> Приложение на платформе Druid </q-toolbar-title>
+        <q-btn
+          round
+          exact
+          dense
+          to="/auth"
+          color="black"
+          icon="account_circle"
+          v-ripple
+        />
       </q-toolbar>
     </q-header>
 
@@ -26,14 +35,6 @@
           round
           exact
           to="/auth"
-          color="primary"
-          icon="account_circle"
-          v-ripple
-        />
-        <q-btn
-          round
-          exact
-          to="/modules"
           color="primary"
           icon="account_circle"
           v-ripple

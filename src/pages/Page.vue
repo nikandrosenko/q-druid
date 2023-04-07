@@ -3,12 +3,13 @@
     Загрузка...
   </q-page>
   <q-page v-else class="q-pa-md">
-    <div>
-      {{ page.value?.title }}
+    <div class="text-h2">
+      {{ page?.page.title }}
     </div>
     <section class="text-h4 q-mb-lg">
-      <group-page v-if="typeId === '4148214827964057161'" />
+      <group v-if="typeId === '4148214827964057161'" />
       <modules v-if="typeId === '4819869896194502672'" />
+      <tasks v-if="typeId === '6056878233713674988'" />
     </section>
   </q-page>
 </template>
@@ -18,8 +19,9 @@ import { getPage } from "src/graphql/queries";
 import { useQuery } from "@vue/apollo-composable";
 import { useRoute } from "vue-router";
 import { ref, onMounted } from "vue";
-import GroupPage from "src/components/GroupPage.vue";
+import Group from "src/components/Group.vue";
 import Modules from "src/components/Modules.vue";
+import Tasks from "src/components/Tasks.vue";
 
 const route = useRoute();
 const id = ref("");
@@ -28,8 +30,6 @@ const typeId = ref("");
 onMounted(() => {
   id.value = route.params.id;
 });
-
-// console.log(id);
 
 const {
   result: page,
@@ -40,24 +40,11 @@ const {
 });
 
 onResult(() => {
-  // console.log(page.value?.page.object.type_id);
   typeId.value = page.value?.page.object.type_id;
-  // console.log(typeId.value);
   if (typeId.value === "4148214827964057161") console.log("Это группа");
   if (typeId.value === "4402508105138320402") console.log("Это модуль");
   if (typeId.value === "7792914758758546861") console.log("Это задача");
   if (typeId.value === "4819869896194502672") console.log("Это модули");
   if (typeId.value === "6056878233713674988") console.log("Это мои задачи");
 });
-
-const isGroup = () => {
-  typeId === "4148214827964057161" ? true : false;
-};
-console.log(isGroup());
-// const isModules = () => {
-//   if (typeId.value === "4819869896194502672") {
-//     console.log("SSSS");
-//     return true;
-//   }
-// };
 </script>

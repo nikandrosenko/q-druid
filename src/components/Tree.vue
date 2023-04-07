@@ -14,14 +14,15 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import { pages } from "src/graphql/queries";
 import { useQuery } from "@vue/apollo-composable";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import _ from "lodash";
 
 const router = useRouter();
-
+const route = useRoute();
+const id = ref("");
 const treePages = ref([]);
 const keyedPages = ref([]);
 const parentPages = ref([]);
@@ -58,10 +59,21 @@ onResult(() => {
     treePages.value.push(treeElem);
   });
   keyedPages.value = _.sortBy(treePages.value, ["label", "position"]);
+  // selected.value = keyedPages.value[0].label;
+  // console.log(keyedPages.value);
+  // console.log(id.value);
   selected.value = keyedPages.value[0].label;
+  // console.log(
+  //   _.find(keyedPages.value, (o) => {
+  //     return o.children[0].id === route.params.id;
+  //   })
+  // );
   expanded.value.push(selected.value);
 });
 onMounted(() => {
   if (currentSpacePages.value) refetch();
 });
+// watch(currentSpacePages, () => {
+//   refetch();
+// });
 </script>
