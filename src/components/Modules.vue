@@ -85,11 +85,20 @@
         </q-card-actions>
       </form>
       <form @submit.prevent="moduleUpdateElement(updateDeleteType.id)" v-else>
-        <q-input v-model="moduleNameUpdate" label="Имя модуля" />
+        <q-input
+        filled
+        v-model="moduleNameUpdate"
+        label="Имя модуля"
+        class="q-pa-md"
+        :rules="[required]"
+        />
         <q-select
+          class="q-pa-md"
+          filled
           v-model="modelUserModuleUpdate"
           :options="groupSubjectUsers"
           label="Ответственный"
+          :rules="[requiredSelect]"
         />
 
         <div class="q-pt-md q-px-md" style="max-width: 500px">
@@ -368,6 +377,8 @@ const moduleCreate = async () => {
         level: 5,
       },
     });
+
+    refetch()
 
   return {
     createdModule,
