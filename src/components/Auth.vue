@@ -2,7 +2,7 @@
   <div class="flex column items-center">
     <form @submit.prevent="signIn">
       <div>
-        <p style="margin: 30px 0 5px;">Почта</p>
+        <p style="margin: 30px 0 5px">Почта</p>
         <q-input
           standout="bg-primary text-white"
           v-model="emailModel"
@@ -13,7 +13,7 @@
         />
       </div>
       <div>
-        <p style="margin: 16px 0 5px;" class="q-mt-md" >Пароль</p>
+        <p style="margin: 16px 0 5px" class="q-mt-md">Пароль</p>
         <q-input
           standout="bg-primary text-white"
           v-model="passwordModel"
@@ -24,7 +24,7 @@
         />
       </div>
       <q-btn
-        style="margin: 20px 0 20px 0;"
+        style="margin: 20px 0 20px 0"
         class="q-mt-md"
         color="primary"
         text-color="white"
@@ -90,7 +90,7 @@ const signIn = async () => {
     .then((res) => {
       if (!res.errors) {
         console.log(res.data.userSignIn);
-        localStorage.setItem("userId", res.data.userSignIn.recordId);
+        // localStorage.setItem("userId", res.data.userSignIn.recordId);
         sessionStorage.setItem(
           "token",
           res.data.userSignIn.record.access_token
@@ -120,7 +120,7 @@ const signInFromGoogle = async (JWTTokenGoogle) => {
   signInUserSocialNetwork()
     .then((res) => {
       if (!res.errors) {
-        localStorage.setItem("userId", res.data.userSignIn.recordId);
+        // localStorage.setItem("userId", res.data.userSignIn.recordId);
         sessionStorage.setItem(
           "token",
           res.data.userSignIn.record.access_token
