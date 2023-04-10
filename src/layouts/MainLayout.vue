@@ -29,18 +29,6 @@
         <Tree />
       </q-list>
     </q-drawer>
-    <q-drawer side="right" :mini="miniState" show-if-above bordered>
-      <q-list class="column q-mt-sm items-center">
-        <q-btn
-          round
-          exact
-          to="/auth"
-          color="primary"
-          icon="account_circle"
-          v-ripple
-        />
-      </q-list>
-    </q-drawer>
 
     <q-page-container>
       <router-view v-slot="{ Component }">
