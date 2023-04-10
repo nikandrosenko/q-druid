@@ -1,10 +1,10 @@
 <template>
   <q-dialog v-model="prompt">
     <q-form style="min-width: 500px" @submit.prevent="taskCreate">
-      <q-input v-model="form.name" type="text" label="Название" />
-      <q-input v-model="form.description" type="text" label="Описание" />
+      <q-input v-model="taskName" type="text" label="Название" />
+      <q-input v-model="taskDescription" type="text" label="Описание" />
       <q-select
-        v-model="form.executor"
+        v-model="taskExecutor"
         label="Исполнитель"
         :options="groupSubjectUsers"
       />
@@ -17,6 +17,7 @@
 import { useMutation, useQuery } from "@vue/apollo-composable";
 import { ref, onMounted, computed } from "vue";
 import { getExecutorGroupSubjects, getModuleById } from "src/graphql/queries";
+import { createTask } from "src/graphql/mutations";
 const prompt = ref(false);
 const taskName = ref("");
 const taskDescription = ref("");
@@ -47,17 +48,18 @@ const groupSubjectUsers = computed(() =>
   }))
 );
 
-const taskCreate = async (form, moduleId) => {
+const taskCreate = async () => {
+  const { mutate: creatingTask } = useMutation(createTask);
   const { data: createdTask } = await creatingTask({
     input: {
-      name: taskName,
-      property1: taskDescription,
+      name: taskName.value,
+      property1: taskDescription.value,
       property2: {
-        "8044196206941661177": taskExecutor.value.value,
+        [process.env.SUBJECT_ID]: taskExecutor.value.value,
       },
-      property3: "7530914918500818452",
+      property3: [process.env.APPOINTED_ID],
       property4: {
-        "4402508105138320402": moduleId, // Доделать
+        [process.env.MODULE_ID]: moduleId, // Доделать
       },
     },
   });
