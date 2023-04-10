@@ -92,6 +92,62 @@
           label="Ответственный"
         />
 
+        <div class="q-pt-md q-px-md" style="max-width: 500px">
+            <q-input readonly filled v-model="dateAndTimeUpdateStart" label="Начало" :rules="[required]">
+              <template v-slot:prepend>
+                <q-icon name="event" class="cursor-pointer">
+                  <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                    <q-date v-model="dateUpdate.dateUpdateStart" mask="DD.MM.YYYY">
+                      <div class="row items-center justify-end">
+                        <q-btn v-close-popup label="Close" color="primary" flat />
+                      </div>
+                    </q-date>
+                  </q-popup-proxy>
+                </q-icon>
+              </template>
+
+              <template v-slot:append>
+                <q-icon name="access_time" class="cursor-pointer">
+                  <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                    <q-time v-model="dateUpdate.timeUpdateStart" mask="HH:mm:ss" format24h>
+                      <div class="row items-center justify-end">
+                        <q-btn v-close-popup label="Close" color="primary" flat />
+                      </div>
+                    </q-time>
+                  </q-popup-proxy>
+                </q-icon>
+              </template>
+            </q-input>
+          </div>
+
+          <div class="q-pt-md q-px-md" style="max-width: 500px">
+            <q-input readonly filled v-model="dateAndTimeUpdateEnd" label="Конец" :rules="[required]">
+              <template v-slot:prepend>
+                <q-icon name="event" class="cursor-pointer">
+                  <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                    <q-date v-model="dateUpdate.dateUpdateEnd" mask="DD.MM.YYYY">
+                      <div class="row items-center justify-end">
+                        <q-btn v-close-popup label="Close" color="primary" flat />
+                      </div>
+                    </q-date>
+                  </q-popup-proxy>
+                </q-icon>
+              </template>
+
+              <template v-slot:append>
+                <q-icon name="access_time" class="cursor-pointer">
+                  <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                    <q-time v-model="dateUpdate.timeUpdateEnd" mask="HH:mm:ss" format24h>
+                      <div class="row items-center justify-end">
+                        <q-btn v-close-popup label="Close" color="primary" flat />
+                      </div>
+                    </q-time>
+                  </q-popup-proxy>
+                </q-icon>
+              </template>
+            </q-input>
+          </div>
+
         <q-card-actions align="right" class="text-primary">
           <q-btn flat label="Отмена" v-close-popup />
           <q-btn flat label="Изменить" v-close-popup type="submit" />
@@ -366,6 +422,14 @@ const moduleUpdate = async (moduleId, pageId) => {
       property5: {
         "8044196206941661177": modelUserModuleUpdate.value.value,
       },
+      property6: {
+        date: dateUpdate.value.dateUpdateStart,
+        time: dateUpdate.value.timeUpdateStart,
+      },
+      property7: {
+        date: dateUpdate.value.dateUpdateEnd,
+        time: dateUpdate.value.timeUpdateEnd,
+      },
     },
   });
   console.log(moduleNameUpdate.value);
@@ -381,7 +445,19 @@ const moduleUpdate = async (moduleId, pageId) => {
   refetch();
 };
 
+const dateUpdate = ref()
+
+const dateAndTimeUpdateEnd = computed(() => `${dateUpdate.value.dateUpdateEnd} ${dateUpdate.value.timeUpdateEnd}`)
+const dateAndTimeUpdateStart = computed(() =>`${dateUpdate.value.dateUpdateStart} ${dateUpdate.value.timeUpdateStart}`)
+
 const moduleUpdateElementForm = (index) => {
+  dateUpdate.value = {
+  dateUpdateEnd: rows.value[index].property7.date,
+  dateUpdateStart: rows.value[index].property6.date,
+  timeUpdateStart: rows.value[index].property6.time,
+  timeUpdateEnd: rows.value[index].property7.time,
+  }
+
   moduleNameUpdate.value = rows.value[index].name;
   modelUserModuleUpdate.value = {
     label: `${rows.value[index].property5.fullname.first_name} ${rows.value[index].property5.fullname.last_name}`,
