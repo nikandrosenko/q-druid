@@ -7,9 +7,9 @@
       {{ page?.page.title }}
     </div>
     <section class="text-h4 q-mb-lg">
-      <group v-if="typeId === '4148214827964057161'" />
-      <modules v-if="typeId === '4819869896194502672'" />
-      <tasks v-if="typeId === '6056878233713674988'" />
+      <group v-if="pageType === 'Группа'" />
+      <modules v-if="pageType === 'Модули'" />
+      <tasks v-if="pageType === 'Задачи'" />
     </section>
   </q-page>
 </template>
@@ -18,33 +18,49 @@
 import { getPage } from "src/graphql/queries";
 import { useQuery } from "@vue/apollo-composable";
 import { useRoute } from "vue-router";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import Group from "src/components/Group.vue";
 import Modules from "src/components/Modules.vue";
 import Tasks from "src/components/Tasks.vue";
 
 const route = useRoute();
 const id = ref("");
-const typeId = ref("");
 
-onMounted(() => {
-  id.value = route.params.id;
-});
-
-const {
-  result: page,
-  loading,
-  onResult,
-} = useQuery(getPage, {
+const { result: page, loading } = useQuery(getPage, {
   id: id,
 });
 
-onResult(() => {
-  typeId.value = page.value?.page.object.type_id;
-  if (typeId.value === "4148214827964057161") console.log("Это группа");
-  if (typeId.value === "4402508105138320402") console.log("Это модуль");
-  if (typeId.value === "7792914758758546861") console.log("Это задача");
-  if (typeId.value === "4819869896194502672") console.log("Это модули");
-  if (typeId.value === "6056878233713674988") console.log("Это мои задачи");
+const pageType = ref("");
+
+const pageTypeUpdate = () => {
+  const page_type_id = page.value?.page.object.type_id;
+  switch (page_type_id) {
+    case process.env.GROUP_ID:
+      pageType.value = "Группа";
+      break;
+    case process.env.MODULES_ID:
+      pageType.value = "Модули";
+      break;
+    case process.env.MODULE_ID:
+      pageType.value = "Модуль";
+      break;
+    case process.env.TASKS_ID:
+      pageType.value = "Задачи";
+      break;
+    case process.env.TASK_ID:
+      pageType.value = "Задача";
+      break;
+  }
+};
+
+onMounted(() => {
+  id.value = route.params.id;
+  if (pageType.value) return;
+  pageTypeUpdate();
+});
+
+watch(page, (value) => {
+  if (!value) return;
+  pageTypeUpdate();
 });
 </script>
