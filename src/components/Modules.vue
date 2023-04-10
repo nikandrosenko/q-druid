@@ -7,12 +7,77 @@
       </q-card-section>
 
       <form @submit.prevent="moduleCreate" v-if="updateDeleteType.bool">
-        <q-input v-model="moduleName" label="Имя модуля" />
+        <q-input
+        filled
+        v-model="moduleName"
+        label="Имя модуля"
+        class="q-pa-md"
+        :rules="[required]"
+        />
         <q-select
+          class="q-pa-md"
+          filled
           v-model="modelUserModule"
           :options="groupSubjectUsers"
           label="Ответственный"
+          :rules="[requiredSelect]"
         />
+
+          <div class="q-pt-md q-px-md" style="max-width: 500px">
+            <q-input readonly filled v-model="dateAndTimeCreateStart" label="Начало" :rules="[required]">
+              <template v-slot:prepend>
+                <q-icon name="event" class="cursor-pointer">
+                  <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                    <q-date v-model="dateCreate.dateCreateStart" mask="DD.MM.YYYY">
+                      <div class="row items-center justify-end">
+                        <q-btn v-close-popup label="Close" color="primary" flat />
+                      </div>
+                    </q-date>
+                  </q-popup-proxy>
+                </q-icon>
+              </template>
+
+              <template v-slot:append>
+                <q-icon name="access_time" class="cursor-pointer">
+                  <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                    <q-time v-model="dateCreate.timeCreateStart" mask="HH:mm:ss" format24h>
+                      <div class="row items-center justify-end">
+                        <q-btn v-close-popup label="Close" color="primary" flat />
+                      </div>
+                    </q-time>
+                  </q-popup-proxy>
+                </q-icon>
+              </template>
+            </q-input>
+          </div>
+
+          <div class="q-pt-md q-px-md" style="max-width: 500px">
+            <q-input readonly filled v-model="dateAndTimeCreateEnd" label="Конец" :rules="[required]">
+              <template v-slot:prepend>
+                <q-icon name="event" class="cursor-pointer">
+                  <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                    <q-date v-model="dateCreate.dateCreateEnd" mask="DD.MM.YYYY">
+                      <div class="row items-center justify-end">
+                        <q-btn v-close-popup label="Close" color="primary" flat />
+                      </div>
+                    </q-date>
+                  </q-popup-proxy>
+                </q-icon>
+              </template>
+
+              <template v-slot:append>
+                <q-icon name="access_time" class="cursor-pointer">
+                  <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                    <q-time v-model="dateCreate.timeCreateEnd" mask="HH:mm:ss" format24h>
+                      <div class="row items-center justify-end">
+                        <q-btn v-close-popup label="Close" color="primary" flat />
+                      </div>
+                    </q-time>
+                  </q-popup-proxy>
+                </q-icon>
+              </template>
+            </q-input>
+          </div>
 
         <q-card-actions align="right" class="text-primary">
           <q-btn flat label="Отмена" v-close-popup />
@@ -99,7 +164,7 @@
 
 <script setup>
 import { useMutation, useQuery } from "@vue/apollo-composable";
-import { ref, onMounted } from "vue";
+import { computed, ref } from "vue";
 import {
   createModule,
   createPermissionRule,
@@ -108,13 +173,27 @@ import {
   deletePage,
   updateModule,
   updatePage,
+  updatePermissionRule
 } from "src/graphql/mutations.js";
 import {
   getModulesAll,
   getGroupSubjects,
   getPagesModule,
 } from "src/graphql/queries.js";
+import { useValidators, useValidatorsSelect } from "src/use/validators.js";
 
+const dateCreate = ref({
+  dateCreateEnd: '01.01.2021',
+  dateCreateStart: '01.01.2021',
+  timeCreateStart: '00:00:00',
+  timeCreateEnd: '00:00:00',
+})
+
+const dateAndTimeCreateEnd = computed(() => `${dateCreate.value.dateCreateEnd} ${dateCreate.value.timeCreateEnd}`)
+const dateAndTimeCreateStart = computed(() =>`${dateCreate.value.dateCreateStart} ${dateCreate.value.timeCreateStart}`)
+
+const { required } = useValidators();
+const { requiredSelect } = useValidatorsSelect();
 const rows = ref();
 const groupSubjectUsers = ref();
 const updateDeleteType = ref({
@@ -189,12 +268,12 @@ const moduleCreate = async () => {
         "8044196206941661177": modelUserModule.value.value,
       },
       property6: {
-        date: "01.01.2023",
-        time: "01:00:00",
+        date: dateCreate.value.dateCreateStart,
+        time: dateCreate.value.timeCreateStart,
       },
       property7: {
-        date: "01.01.2023",
-        time: "23:59:00",
+        date: dateCreate.value.dateCreateEnd,
+        time: dateCreate.value.timeCreateEnd,
       },
     },
   });
@@ -275,6 +354,7 @@ const moduleDeleteElement = (id) => {
 
 const { mutate: updatingModule } = useMutation(updateModule);
 const { mutate: updatingPage } = useMutation(updatePage);
+const { mutate: updatingPermissionRule } = useMutation(updatePermissionRule)
 
 const updatedModule = ref();
 

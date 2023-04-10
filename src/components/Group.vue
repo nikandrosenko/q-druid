@@ -84,7 +84,7 @@ import { getPage, getGroupSubjects } from "src/graphql/queries";
 import { useRoute } from "vue-router/dist/vue-router";
 import { computed, ref, onMounted } from "vue";
 import { userGroupInviteUser } from "src/graphql/mutations";
-import { useValidators } from "src/use/validators";
+import { useValidators } from "src/use/validators.js";
 
 const { required } = useValidators();
 const id = ref("");

@@ -41,12 +41,10 @@
 import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useMutation } from "@vue/apollo-composable";
-import { useStore } from "vuex";
 import { userSignIn, userSignInSocialNetwork } from "src/graphql/mutations.js";
-import { useValidators } from "src/use/validators";
+import { useValidators } from "src/use/validators.js";
 
 const { required } = useValidators();
-const store = useStore();
 const router = useRouter();
 
 const handleCredentialResponse = (response) => {
