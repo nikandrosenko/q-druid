@@ -2,26 +2,31 @@
   <div class="flex column items-center">
     <form @submit.prevent="signIn">
       <div>
-        <p>Почта</p>
+        <p style="margin: 30px 0 5px;">Почта</p>
         <q-input
-          standout="bg-teal text-white"
+          standout="bg-primary text-white"
           v-model="emailModel"
           type="email"
           label="Почта"
+          lazy-rules
+          :rules="[required]"
         />
       </div>
       <div>
-        <p class="q-mt-md">Пароль</p>
+        <p style="margin: 16px 0 5px;" class="q-mt-md" >Пароль</p>
         <q-input
-          standout="bg-teal text-white"
+          standout="bg-primary text-white"
           v-model="passwordModel"
           type="password"
           label="Пароль"
+          lazy-rules
+          :rules="[required]"
         />
       </div>
       <q-btn
+        style="margin: 20px 0 20px 0;"
         class="q-mt-md"
-        color="teal"
+        color="primary"
         text-color="white"
         label="Войти"
         type="submit"
@@ -38,7 +43,9 @@ import { useRouter } from "vue-router";
 import { useMutation } from "@vue/apollo-composable";
 import { useStore } from "vuex";
 import { userSignIn, userSignInSocialNetwork } from "src/graphql/mutations.js";
+import { useValidators } from "src/use/validators";
 
+const { required } = useValidators();
 const store = useStore();
 const router = useRouter();
 

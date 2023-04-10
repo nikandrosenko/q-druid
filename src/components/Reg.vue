@@ -1,40 +1,41 @@
 <template>
 
-<div class="flex justify-around q-mt-xs">
-  <div @click="swipeRegPassword=1" :style="regIndicatorOne ? 'background: green' : 'background: white'" class="step">1</div>
-  <div @click="swipeRegPassword=2" :style="regIndicatorEnd ? 'background: green' : 'background: white'" class="step">2</div>
-  <div @click="swipeRegPassword=3" :style="regIndicatorEnd ? 'background: green' : 'background: white'" class="step">3</div>
-</div>
-
 <div class="flex column items-center" v-if="swipeRegPassword===1">
     <form @submit.prevent="signUp" >
       <div>
-        <p>Имя</p>
+        <p style="margin: 30px 0 5px;">Имя</p>
         <q-input
-          standout="bg-teal text-white"
+          standout="bg-primary text-white"
           v-model="nameModel"
           label="Имя"
+          lazy-rules
+          :rules="[required]"
         />
       </div>
       <div>
-        <p class="q-mt-md">Фамилия</p>
+        <p style="margin: 10px 0 5px;" class="q-mt-md">Фамилия</p>
         <q-input
-          standout="bg-teal text-white"
+          standout="bg-primary text-white"
           v-model="surnameModel"
           label="Фамилия"
+          lazy-rules
+          :rules="[required]"
         />
       </div>
       <div>
-        <p class="q-mt-md">Почта</p>
+        <p style="margin: 10px 0 5px;" class="q-mt-md">Почта</p>
         <q-input
-          standout="bg-teal text-white"
+          standout="bg-primary text-white"
           v-model="emailModel"
           label="Почта"
+          lazy-rules
+          :rules="[required]"
         />
       </div>
       <q-btn
+        style="margin-top: 0;"
         class="q-mt-md"
-        color="teal"
+        color="primary"
         text-color="white"
         label="Зарегистрироваться"
         type="submit"
@@ -59,7 +60,7 @@
       </div>
       <q-btn
         class="q-mt-md"
-        color="teal"
+        color="primary"
         text-color="white"
         label="Отправить"
         type="submit"
@@ -79,7 +80,9 @@
 import { ref, onMounted } from 'vue';
 import { useMutation } from "@vue/apollo-composable";
 import { userSignUp, userSignUpSetPassword } from 'src/graphql/mutations.js'
+import { useValidators } from "src/use/validators";
 
+const { required } = useValidators();
 onMounted(() => {
   if(localStorage.getItem('UserRegId')){
     swipeRegPassword.value = 1

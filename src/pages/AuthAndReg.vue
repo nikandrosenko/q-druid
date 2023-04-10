@@ -1,5 +1,5 @@
 <template>
-<div class="flex justify-center content-center">
+<div style="height: 700px;" class="flex justify-center content-center">
 
   <div class="wrapper-page">
     <q-tabs align="center">
@@ -42,9 +42,10 @@ provideApolloClient(apolloClient);
   .wrapper-page{
     border: 1px solid rgba(0, 0, 0, 0.445);
     border-radius: 25px;
-    height: 450px;
+    height: 500px;
     width: 60%;
     display: flex;
     flex-direction: column;
+    padding-top: 30px;
   }
 </style>
