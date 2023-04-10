@@ -42,8 +42,23 @@ module.exports = configure(function (ctx) {
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-webpack/quasar-config-js#Property%3A-build
     build: {
-      vueRouterMode: "hash", // available values: 'hash', 'history'
+      vueRouterMode: "history", // available values: 'hash', 'history'
 
+      env: {
+        GRAPHQL_URI: "https://app.stud.druid.1t.ru/graphiql",
+        FILE_STORAGE_URI: "https://cdn.stud.druid.1t.ru",
+        RABBITMQ_WEBSTOMP_URI: "wss://stud.druid.1t.ru/ws",
+
+        SUBJECT_ID: "8044196206941661177",
+        MODULE_ID: "4402508105138320402",
+        MODULE_PAGE_ID: "3642539153476219801",
+
+        OWNER_ID: "5571026735801383150",
+
+        APPOINTED_ID: "7530914918500818452",
+        COMPLETED_ID: "4783614762677696914",
+        FINISHED_ID: "2279276921981023538",
+      },
       // transpile: false,
       // publicPath: '/',
 
