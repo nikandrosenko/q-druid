@@ -1,27 +1,5 @@
 <template>
   <div class="q-pa-md">
-    <q-card style="border: 1px solid gray" class="my-card" flat bordered>
-      <q-markup-table>
-        <thead>
-          <tr>
-            <th style="border: 1px solid gray" class="text-left"><strong>Имя</strong></th>
-            <th style="border: 1px solid gray" class="text-left"><strong>Фамилия</strong></th>
-            <th style="border: 1px solid gray" class="text-left"><strong>Почта</strong></th>
-          </tr>
-        </thead>
-        <tbody v-for="user in tableUsers" :key="user.id">
-          <tr>
-            <td style="border: 1px solid gray">
-              {{ user.fullname.first_name }}
-            </td>
-            <td style="border: 1px solid gray">
-              {{ user.fullname.last_name }}
-            </td>
-            <td style="border: 1px solid gray">{{ user.email.email }}</td>
-          </tr>
-        </tbody>
-      </q-markup-table>
-    </q-card>
     <div class="q-pa-md q-gutter-sm">
       <q-btn
         label="Пригласить участника"
@@ -76,6 +54,34 @@
         </q-card>
       </q-dialog>
     </div>
+    <q-card style="border: 1px solid gray" class="my-card" flat bordered>
+      <q-markup-table>
+        <thead>
+          <tr>
+            <th style="border: 1px solid gray" class="text-left">
+              <strong>Имя</strong>
+            </th>
+            <th style="border: 1px solid gray" class="text-left">
+              <strong>Фамилия</strong>
+            </th>
+            <th style="border: 1px solid gray" class="text-left">
+              <strong>Почта</strong>
+            </th>
+          </tr>
+        </thead>
+        <tbody v-for="user in tableUsers" :key="user.id">
+          <tr>
+            <td style="border: 1px solid gray">
+              {{ user.fullname.first_name }}
+            </td>
+            <td style="border: 1px solid gray">
+              {{ user.fullname.last_name }}
+            </td>
+            <td style="border: 1px solid gray">{{ user.email.email }}</td>
+          </tr>
+        </tbody>
+      </q-markup-table>
+    </q-card>
   </div>
 </template>
 <script setup>

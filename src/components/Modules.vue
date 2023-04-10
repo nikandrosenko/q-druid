@@ -317,4 +317,8 @@ const moduleUpdateElement = (id) => {
 
   moduleUpdate(id, updatedModule.value.id);
 };
+
+onMounted(() => {
+  if (!rows.value) refetch();
+});
 </script>

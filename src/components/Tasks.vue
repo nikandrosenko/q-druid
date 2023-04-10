@@ -49,6 +49,6 @@ onResult(() => {
   }));
 });
 onMounted(() => {
-  if (result) refetch();
+  if (!rows.value) refetch();
 });
 </script>
