@@ -10,7 +10,7 @@ import {
   createPermissionRule,
 } from "src/graphql/mutations";
 import { getModuleById } from "src/graphql/queries";
-import apolloClient from "src/apollo/apollo-client";
+import apolloClient from "src/apollo/client";
 
 provideApolloClient(apolloClient);
 

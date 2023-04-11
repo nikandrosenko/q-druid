@@ -3,7 +3,7 @@
     <Form
       :dataUpdate="dataUpdate"
       :updateDeleteType="updateDeleteType"
-      @Create="moduleCreate"
+      @Create="moduleCreateModules"
       @Update="moduleUpdateElement"
     />
   </q-dialog>
@@ -72,24 +72,20 @@
 </template>
 
 <script setup>
-import { useMutation, useQuery } from "@vue/apollo-composable";
 import { ref, onMounted } from "vue";
-import {
-  createModule,
-  createPermissionRule,
-  createPage,
-  deleteModule,
-  deletePage,
-  updateModule,
-  updatePage,
-  updatePermissionRule,
-} from "src/graphql/mutations.js";
-import { getModulesAll, getPagesModule } from "src/graphql/queries.js";
 import Form from "./Form.vue";
+import moduleApi from 'src/sdk/module.js'
+import { getModulesAll, getPagesModule } from "src/graphql/queries.js";
+import { useQuery } from "@vue/apollo-composable";
 
-const rows = ref();
 
 const { result, loading, onResult, refetch } = useQuery(getModulesAll);
+
+const { result: pageData } = useQuery(getPagesModule, {
+        id: process.env.MODULES_PAGE_ID,
+      });
+
+const rows = ref();
 
 onResult(() => {
   rows.value = result?.value?.paginate_type1?.data.map((el, i) => ({
@@ -136,144 +132,21 @@ const columns = [
   },
 ];
 
-const moduleCreate = async (emitValue) => {
-  console.log(emitValue.emitValue.date.value);
-
-  const { mutate: creatingModule } = useMutation(createModule);
-  const { data: createdModule } = await creatingModule({
-    input: {
-      name: emitValue.emitValue.moduleName.value,
-      property5: {
-        [process.env.SUBJECT_ID]:
-          emitValue.emitValue.modelUserModule.value.value,
-      },
-      property6: {
-        date: emitValue.emitValue.date.value.dateStart,
-        time: emitValue.emitValue.date.value.timeStart,
-      },
-      property7: {
-        date: emitValue.emitValue.date.value.dateEnd,
-        time: emitValue.emitValue.date.value.timeEnd,
-      },
-    },
-  });
-
-  const { mutate: creatingPage } = useMutation(createPage);
-  const { data: createdPage } = await creatingPage({
-    input: {
-      title: createdModule.create_type1.record.name,
-      parent_id: process.env.MODULES_PAGE_ID,
-      icon: "list_alt",
-      object: {
-        id: createdModule.create_type1.recordId,
-        type_id: createdModule.create_type1.record.type_id,
-      },
-    },
-  });
-
-  const { mutate: creatingPermissionRule } = useMutation(createPermissionRule);
-  const { data: createdPermissionRuleForPage } = await creatingPermissionRule({
-    input: {
-      model_type: "page",
-      model_id: createdPage.pageCreate.recordId,
-      owner_type: "subject",
-      owner_id: emitValue.emitValue.modelUserModule.value.value,
-      level: 5,
-    },
-  });
-
-  const { data: createdPermissionRuleForModuleObject } =
-    await creatingPermissionRule({
-      input: {
-        model_type: "object",
-        model_id: createdModule.create_type1.recordId,
-        owner_type: "subject",
-        owner_id: emitValue.emitValue.modelUserModule.value.value,
-        level: 5,
-      },
-    });
-
-  refetch();
-
-  return {
-    createdModule,
-    createdPage,
-    createdPermissionRuleForPage,
-    createdPermissionRuleForModuleObject,
-  };
-};
-
-const { mutate: deletingModule } = useMutation(deleteModule);
-const { mutate: deletingPage } = useMutation(deletePage);
-
-const moduleDelete = async (moduleId, pageId) => {
-  const { data: delM } = await deletingModule({
-    module_id: moduleId,
-  });
-
-  const { data: delP } = await deletingPage({
-    page_id: pageId,
-  });
-
-  return {
-    delM,
-    delP,
-  };
-};
-
 const delModule = ref();
 
-const { result: pageData } = useQuery(getPagesModule, {
-  id: process.env.MODULES_PAGE_ID,
-});
 
 const moduleDeleteElement = (id) => {
   delModule.value = pageData?.value?.page.children.data.find(
     (el) => el.object.id == id
   );
 
-  moduleDelete(id, delModule.value.id);
+  moduleApi.moduleDelete(id, delModule.value.id);
 
-  refetch();
+  refetch()
+
 };
-
-const { mutate: updatingModule } = useMutation(updateModule);
-const { mutate: updatingPage } = useMutation(updatePage);
-const { mutate: updatingPermissionRule } = useMutation(updatePermissionRule);
 
 const updatedModule = ref();
-
-const moduleUpdate = async (moduleId, pageId, emitValue) => {
-  const { data: updateM } = await updatingModule({
-    id: moduleId,
-    input: {
-      name: emitValue.emitValue.moduleName.value,
-      property5: {
-        [process.env.SUBJECT_ID]:
-          emitValue.emitValue.modelUserModule.value.value,
-      },
-      property6: {
-        date: emitValue.emitValue.date.value.dateStart,
-        time: emitValue.emitValue.date.value.timeStart,
-      },
-      property7: {
-        date: emitValue.emitValue.date.value.dateEnd,
-        time: emitValue.emitValue.date.value.timeEnd,
-      },
-    },
-  });
-
-  const { data: updateP } = await updatingPage({
-    id: pageId,
-    input: {
-      title: emitValue.emitValue.moduleName.value,
-    },
-  });
-
-  console.log(updateM, updateP);
-
-  refetch();
-};
 
 const moduleUpdateElementForm = (index) => {
   if (updateDeleteType.value.bool) {
@@ -306,15 +179,25 @@ const moduleUpdateElementForm = (index) => {
   }
 };
 
+const moduleCreateModules = (emitValue) => {
+
+  moduleApi.moduleCreate(emitValue)
+
+  refetch()
+}
+
 const moduleUpdateElement = (emitValue) => {
   updatedModule.value = pageData?.value?.page.children.data.find(
     (el) => el.object.id == emitValue.emitValue.id
   );
 
-  moduleUpdate(emitValue.emitValue.id, updatedModule.value.id, emitValue);
+  moduleApi.moduleUpdate(emitValue.emitValue.id, updatedModule.value.id, emitValue);
+
+  refetch()
 };
 
 onMounted(() => {
   if (!rows.value) refetch();
 });
+
 </script>
