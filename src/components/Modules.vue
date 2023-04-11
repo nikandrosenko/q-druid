@@ -144,7 +144,8 @@ const moduleCreate = async (emitValue) => {
     input: {
       name: emitValue.emitValue.moduleName.value,
       property5: {
-        "8044196206941661177": emitValue.emitValue.modelUserModule.value.value,
+        [process.env.SUBJECT_ID]:
+          emitValue.emitValue.modelUserModule.value.value,
       },
       property6: {
         date: emitValue.emitValue.date.value.dateStart,
@@ -161,7 +162,7 @@ const moduleCreate = async (emitValue) => {
   const { data: createdPage } = await creatingPage({
     input: {
       title: createdModule.create_type1.record.name,
-      parent_id: "3642539153476219801",
+      parent_id: process.env.MODULES_PAGE_ID,
       icon: "list_alt",
       object: {
         id: createdModule.create_type1.recordId,
@@ -223,7 +224,7 @@ const moduleDelete = async (moduleId, pageId) => {
 const delModule = ref();
 
 const { result: pageData } = useQuery(getPagesModule, {
-  id: "3642539153476219801",
+  id: process.env.MODULES_PAGE_ID,
 });
 
 const moduleDeleteElement = (id) => {
@@ -248,7 +249,8 @@ const moduleUpdate = async (moduleId, pageId, emitValue) => {
     input: {
       name: emitValue.emitValue.moduleName.value,
       property5: {
-        "8044196206941661177": emitValue.emitValue.modelUserModule.value.value,
+        [process.env.SUBJECT_ID]:
+          emitValue.emitValue.modelUserModule.value.value,
       },
       property6: {
         date: emitValue.emitValue.date.value.dateStart,
