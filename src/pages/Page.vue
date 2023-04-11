@@ -7,8 +7,15 @@
       {{ page?.page.title }}
     </div>
     <section class="text-h4 q-mb-lg">
-      <group v-if="pageType === 'Группа'" />
+      <group
+        v-if="pageType === 'Группа'"
+        :page="page"
+        :subjectId="subjectId"
+        :id="id"
+        @refresh="refresh"
+      />
       <modules v-if="pageType === 'Модули'" />
+      <module v-if="pageType === 'Модуль'" :page="page" />
       <tasks v-if="pageType === 'Задачи'" />
     </section>
   </q-page>
@@ -18,9 +25,10 @@
 import { getPage } from "src/graphql/queries";
 import { useQuery } from "@vue/apollo-composable";
 import { useRoute } from "vue-router";
-import { ref, onMounted, watch } from "vue";
+import { ref, onMounted, watch, computed } from "vue";
 import Group from "src/components/Group.vue";
 import Modules from "src/components/Modules.vue";
+import Module from "src/components/Module.vue";
 import Tasks from "src/components/Tasks.vue";
 
 const route = useRoute();
@@ -29,6 +37,16 @@ const id = ref("");
 const { result: page, loading } = useQuery(getPage, {
   id: id,
 });
+
+const subjectId = computed(() => page.value?.page?.object.id);
+
+const defId = () => {
+  id.value = route.params.id;
+};
+
+const refresh = () => {
+  console.log("Кек");
+};
 
 const pageType = ref("");
 
@@ -54,7 +72,7 @@ const pageTypeUpdate = () => {
 };
 
 onMounted(() => {
-  id.value = route.params.id;
+  defId();
   if (pageType.value) return;
   pageTypeUpdate();
 });

@@ -180,6 +180,7 @@ const columns = [
   },
 ];
 
+console.log(modelUserModule.value.value);
 const moduleCreate = async () => {
   const { mutate: creatingModule } = useMutation(createModule);
   const { data: createdModule } = await creatingModule({

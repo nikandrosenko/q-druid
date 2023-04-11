@@ -86,29 +86,28 @@
 </template>
 <script setup>
 import { useQuery, useMutation } from "@vue/apollo-composable";
-import { getPage, getGroupSubjects } from "src/graphql/queries";
-import { useRoute } from "vue-router/dist/vue-router";
-import { computed, ref, onMounted } from "vue";
+import { getGroupSubjects } from "src/graphql/queries";
+import { ref, onMounted } from "vue";
 import { userGroupInviteUser } from "src/graphql/mutations";
 import { useValidators } from "src/use/validators";
 
-const { required } = useValidators();
-const id = ref("");
-const route = useRoute();
-const prompt = ref(false);
-
-const defId = () => {
-  id.value = route.params.id;
-};
-
-const { result: page } = useQuery(getPage, {
-  id: id,
+const { page, subjectId, id } = defineProps({
+  page: Object,
+  subjectId: String,
+  id: String,
 });
 
-const subjectId = computed(() => page.value?.page?.object.id);
+const { required } = useValidators();
+
+const prompt = ref(false);
+
 const tableUsers = ref([]);
 
-const { result: subjects, onResult } = useQuery(getGroupSubjects, {
+const {
+  result: subjects,
+  onResult,
+  refetch,
+} = useQuery(getGroupSubjects, {
   group_id: subjectId,
 });
 
@@ -130,10 +129,10 @@ const { mutate: onSubmit } = useMutation(userGroupInviteUser, {
     email: req.value.email,
     name: req.value.name,
     surname: req.value.surname,
-    page_group_id: id.value,
+    page_group_id: page.id,
   },
 });
 onMounted(() => {
-  defId();
+  refetch();
 });
 </script>

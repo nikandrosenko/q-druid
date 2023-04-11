@@ -12,6 +12,7 @@
 import { ref, onMounted } from "vue";
 import { useQuery } from "@vue/apollo-composable";
 import { getTasksAll } from "src/graphql/queries.js";
+
 const rows = ref();
 const columns = [
   {
@@ -38,6 +39,11 @@ const columns = [
     name: "status",
     label: "Статус",
     field: (row) => `${row.property3}`,
+  },
+  {
+    name: "module",
+    label: "Модуль",
+    field: (row) => `${row.property4.name}`,
   },
 ];
 
