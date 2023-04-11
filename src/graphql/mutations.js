@@ -251,6 +251,28 @@ export const createPermissionRule = gql`
     }
   }
 `;
+
+export const updatePermissionRule = gql`
+ mutation permissionRuleUpdate($id: String!, $input: PermissionRuleUpdateInput!) {
+    permissionRuleUpdate(id: $id, input: $input) {
+      recordId
+      status
+      record {
+        id
+        author_id
+        level
+        model_type
+        model_id
+        config
+        owner_id
+        owner_type
+        created_at
+        updated_at
+      }
+    }
+  }
+`;
+
 export const updateModule = gql`
   mutation ($input: update_type1_input!, $id: String!) {
     update_type1(id: $id, input: $input) {
@@ -270,10 +292,9 @@ export const updateModule = gql`
   }
 `;
 
-
 export const updatePage = gql`
-mutation updatePage($id: String!, $input: PageUpdateInput!) {
-  pageUpdate(id: $id, input: $input) {
+  mutation updatePage($id: String!, $input: PageUpdateInput!) {
+    pageUpdate(id: $id, input: $input) {
       recordId
       record {
         parent_id
@@ -283,15 +304,15 @@ mutation updatePage($id: String!, $input: PageUpdateInput!) {
         icon
         level
         is_public
-				is_block
+        is_block
         position
         config
         created_at
         updated_at
       }
       status
+    }
   }
-}
 `;
 
 export const deleteModule = gql`

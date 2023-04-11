@@ -54,7 +54,7 @@ module.exports = configure(function (ctx) {
         SUBJECT_ID: "8044196206941661177",
 
         MODULE_ID: "4402508105138320402",
-        MODULE_PAGE_ID: "3642539153476219801",
+        MODULES_PAGE_ID: "3642539153476219801",
         MODULES_ID: "4819869896194502672",
 
         TASK_ID: "7792914758758546861",
@@ -111,7 +111,7 @@ module.exports = configure(function (ctx) {
       // directives: [],
 
       // Quasar plugins
-      plugins: [],
+      plugins: ["Notify"],
     },
 
     // animations: 'all', // --- includes all animations

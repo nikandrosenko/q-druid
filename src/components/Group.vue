@@ -1,30 +1,5 @@
 <template>
   <div class="q-pa-md">
-    <div class="q-ma-xl">
-      <q-table :rows="rows" :columns="columns" row-key="name"/>
-    </div>
-<!--    <q-card class="my-card" flat bordered>-->
-<!--      <q-markup-table>-->
-<!--        <thead>-->
-<!--          <tr>-->
-<!--            <th class="text-left"><strong>Имя</strong></th>-->
-<!--            <th class="text-left"><strong>Фамилия</strong></th>-->
-<!--            <th class="text-left"><strong>Почта</strong></th>-->
-<!--          </tr>-->
-<!--        </thead>-->
-<!--        <tbody v-for="user in tableUsers" :key="user.id">-->
-<!--          <tr>-->
-<!--            <td style="border: 1px solid gray">-->
-<!--              {{ user.fullname.first_name }}-->
-<!--            </td>-->
-<!--            <td style="border: 1px solid gray">-->
-<!--              {{ user.fullname.last_name }}-->
-<!--            </td>-->
-<!--            <td style="border: 1px solid gray">{{ user.email.email }}</td>-->
-<!--          </tr>-->
-<!--        </tbody>-->
-<!--      </q-markup-table>-->
-<!--    </q-card>-->
     <div class="q-pa-md q-gutter-sm">
       <q-btn
         label="Пригласить участника"
@@ -36,7 +11,6 @@
           <q-card-section>
             <div class="text-h6">Пригласить участника</div>
           </q-card-section>
-
           <q-card-section class="q-pt-none">
             <q-input
               square
@@ -79,67 +53,68 @@
         </q-card>
       </q-dialog>
     </div>
+    <q-card style="border: 1px solid gray" class="my-card" flat bordered>
+      <q-markup-table>
+        <thead>
+          <tr>
+            <th style="border: 1px solid gray" class="text-left">
+              <strong>Имя</strong>
+            </th>
+            <th style="border: 1px solid gray" class="text-left">
+              <strong>Фамилия</strong>
+            </th>
+            <th style="border: 1px solid gray" class="text-left">
+              <strong>Почта</strong>
+            </th>
+          </tr>
+        </thead>
+        <tbody v-for="user in tableUsers" :key="user.id">
+          <tr>
+            <td style="border: 1px solid gray">
+              {{ user.fullname.first_name }}
+            </td>
+            <td style="border: 1px solid gray">
+              {{ user.fullname.last_name }}
+            </td>
+            <td style="border: 1px solid gray">{{ user.email.email }}</td>
+          </tr>
+        </tbody>
+      </q-markup-table>
+    </q-card>
   </div>
 </template>
 <script setup>
 import { useQuery, useMutation } from "@vue/apollo-composable";
-import { getPage, getGroupSubjects } from "src/graphql/queries";
-import { useRoute } from "vue-router/dist/vue-router";
-import { computed, ref, onMounted } from "vue";
+import { getGroupSubjects } from "src/graphql/queries";
+import { ref, onMounted } from "vue";
 import { userGroupInviteUser } from "src/graphql/mutations";
-import { useValidators } from "src/use/validators";
+import { useValidators } from "src/use/validators.js";
+import { useQuasar } from "quasar";
 
-const { required } = useValidators();
-const id = ref("");
-const route = useRoute();
-const prompt = ref(false);
-const defId = () => {
-  id.value = route.params.id;
-};
-
-const { result: page } = useQuery(getPage, {
-  id: id,
+const { page, subjectId, id } = defineProps({
+  page: Object,
+  subjectId: String,
+  id: String,
 });
 
-const subjectId = computed(() => page.value?.page?.object.id);
-const tableUsers = ref([]);;
-const rows = ref();
-const columns = [
-  {
-    name: "name",
-    required: true,
-    label: "Название",
-    align: "left",
-    format: (val) => `${val}`,
-    sortable: true,
-    field: (row) =>
-      `${row.fullname.first_name}`,
-  },
-  {
-    name: "last_name",
-    label: "Фамилия",
-    field: (row) =>
-      `${row.fullname.last_name}`,
-  },
-  {
-    name: "email",
-    label: "Почта",
-    field: (row) =>
-      `${row.email.email}`,
-  },
-];
+const $q = useQuasar();
 
-const { result: subjects, onResult } = useQuery(getGroupSubjects, {
+const { required } = useValidators();
+
+const prompt = ref(false);
+
+const tableUsers = ref([]);
+
+const {
+  result: subjects,
+  onResult,
+  refetch,
+} = useQuery(getGroupSubjects, {
   group_id: subjectId,
 });
 
 onResult(() => {
   tableUsers.value = subjects.value?.get_group.subject;
-  rows.value = subjects.value?.get_group.subject.map((el) => ({
-    ...el,
-    index: el.id,
-  }));
-  console.log(rows.value)
 });
 
 const req = ref({
@@ -151,15 +126,33 @@ const req = ref({
 const resetForm = () => {
   (req.value.email = ""), (req.value.surname = ""), (req.value.name = "");
 };
-const { mutate: onSubmit } = useMutation(userGroupInviteUser, {
-  input: {
-    email: req.value.email,
-    name: req.value.name,
-    surname: req.value.surname,
-    page_group_id: id.value,
-  },
-});
+
+const { mutate: inviteUser } = useMutation(userGroupInviteUser);
+const userInvite = async () => {
+  const { data } = await inviteUser({
+    input: {
+      email: req.value.email,
+      name: req.value.name,
+      surname: req.value.surname,
+      page_group_id: id,
+    },
+  });
+
+  return data;
+};
+const onSubmit = async () => {
+  try {
+    await userInvite();
+    $q.notify({
+      type: "positive",
+      message: "Пользователь приглашён",
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 onMounted(() => {
-  defId();
+  refetch();
 });
 </script>

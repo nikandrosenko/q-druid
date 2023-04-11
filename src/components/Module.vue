@@ -1,5 +1,8 @@
 <template>
-  <q-page class="q-ma-xl">
+  <q-page class="q-pa-md">
+    <div class="flex">
+      <TaskCreate :page="page" />
+    </div>
     <div v-if="loading">
       <p>Загрузка</p>
     </div>
@@ -8,12 +11,35 @@
     </div>
   </q-page>
 </template>
+
 <script setup>
-import { ref, onMounted } from "vue";
 import { useQuery } from "@vue/apollo-composable";
-import { getTasksAll } from "src/graphql/queries.js";
+import { getModuleById } from "src/graphql/queries";
+import { onMounted, ref } from "vue";
+import TaskCreate from "./TaskCreate.vue";
+
+const { page } = defineProps({
+  page: Object,
+});
 
 const rows = ref();
+
+const {
+  result: resultModule,
+  refetch,
+  loading,
+  onResult,
+} = useQuery(getModuleById, {
+  module_id: page.page.object?.id,
+});
+
+onResult(() => {
+  rows.value = resultModule?.value?.get_type1?.property4.map((el) => ({
+    ...el,
+    id: el.id,
+  }));
+});
+
 const columns = [
   {
     name: "name",
@@ -40,20 +66,8 @@ const columns = [
     label: "Статус",
     field: (row) => `${row.property3}`,
   },
-  {
-    name: "module",
-    label: "Модуль",
-    field: (row) => `${row.property4.name}`,
-  },
 ];
 
-const { result, loading, onResult, refetch } = useQuery(getTasksAll);
-onResult(() => {
-  rows.value = result?.value?.paginate_type2?.data.map((el) => ({
-    ...el,
-    index: el.id,
-  }));
-});
 onMounted(() => {
   if (!rows.value) refetch();
 });
