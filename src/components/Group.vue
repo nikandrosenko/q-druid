@@ -11,7 +11,6 @@
           <q-card-section>
             <div class="text-h6">Пригласить участника</div>
           </q-card-section>
-
           <q-card-section class="q-pt-none">
             <q-input
               square
@@ -90,12 +89,15 @@ import { getGroupSubjects } from "src/graphql/queries";
 import { ref, onMounted } from "vue";
 import { userGroupInviteUser } from "src/graphql/mutations";
 import { useValidators } from "src/use/validators";
+import { useQuasar } from "quasar";
 
 const { page, subjectId, id } = defineProps({
   page: Object,
   subjectId: String,
   id: String,
 });
+
+const $q = useQuasar();
 
 const { required } = useValidators();
 
@@ -124,14 +126,32 @@ const req = ref({
 const resetForm = () => {
   (req.value.email = ""), (req.value.surname = ""), (req.value.name = "");
 };
-const { mutate: onSubmit } = useMutation(userGroupInviteUser, {
-  input: {
-    email: req.value.email,
-    name: req.value.name,
-    surname: req.value.surname,
-    page_group_id: page.id,
-  },
-});
+
+const { mutate: inviteUser } = useMutation(userGroupInviteUser);
+const userInvite = async () => {
+  const { data } = await inviteUser({
+    input: {
+      email: req.value.email,
+      name: req.value.name,
+      surname: req.value.surname,
+      page_group_id: id,
+    },
+  });
+
+  return data;
+};
+const onSubmit = async () => {
+  try {
+    await userInvite();
+    $q.notify({
+      type: "positive",
+      message: "Пользователь приглашён",
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 onMounted(() => {
   refetch();
 });

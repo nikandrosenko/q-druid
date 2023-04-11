@@ -1,7 +1,7 @@
 <template>
   <q-page class="q-pa-md">
     <div class="flex">
-      <q-btn color="primary" icon="check" label="OK" />
+      <TaskCreate :page="page" />
     </div>
     <div v-if="loading">
       <p>Загрузка</p>
@@ -16,6 +16,7 @@
 import { useQuery } from "@vue/apollo-composable";
 import { getModuleById } from "src/graphql/queries";
 import { onMounted, ref } from "vue";
+import TaskCreate from "./TaskCreate.vue";
 
 const { page } = defineProps({
   page: Object,

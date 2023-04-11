@@ -1,44 +1,49 @@
 <template>
   <q-dialog v-model="prompt">
-    <q-form style="min-width: 500px" @submit.prevent="taskCreate">
-      <q-input v-model="taskName" type="text" label="Название" />
-      <q-input v-model="taskDescription" type="text" label="Описание" />
-      <q-select
-        v-model="taskExecutor"
-        label="Исполнитель"
-        :options="groupSubjectUsers"
-      />
-      <q-btn color="primary" :label="'Создать задачу'" type="submit" />
-    </q-form>
+    <q-card style="min-width: 350px">
+      <q-form style="min-width: 500px" @submit.prevent="taskCreate">
+        <q-input v-model="task.name" type="text" label="Название" />
+        <q-input v-model="task.description" type="text" label="Описание" />
+        <q-select
+          v-model="task.executor"
+          label="Исполнитель"
+          :options="groupSubjectUsers"
+        />
+        <q-btn color="primary" :label="'Отмена'" v-close-popup />
+        <q-btn
+          color="primary"
+          :label="'Создать задачу'"
+          type="submit"
+          v-close-popup
+        />
+      </q-form>
+    </q-card>
   </q-dialog>
   <q-btn label="Создать задачу" color="primary" @click="prompt = true" />
 </template>
 <script setup>
 import { useMutation, useQuery } from "@vue/apollo-composable";
 import { ref, onMounted, computed } from "vue";
-import { getExecutorGroupSubjects, getModuleById } from "src/graphql/queries";
-import { createTask } from "src/graphql/mutations";
-const prompt = ref(false);
-const taskName = ref("");
-const taskDescription = ref("");
-const taskExecutor = ref("");
+import { getExecutorGroupSubjects } from "src/graphql/queries";
+import { createTask, createPermissionRule } from "src/graphql/mutations";
 
-//   name: "",
-//   description: "",
-//   executor: {
-//     label: "",
-//     value: "",
-//   },
-// });
+const { page } = defineProps({
+  page: Object,
+});
+
+const prompt = ref(false);
+
+const task = ref({
+  name: "",
+  description: "",
+  executor: {
+    label: "",
+    value: "",
+  },
+});
 
 const { result: executorGroupSubjectUsers } = useQuery(
   getExecutorGroupSubjects
-);
-const { result: resultModule, refetch: refetchModule } = useQuery(
-  getModuleById,
-  {
-    module_id: page.object.id,
-  }
 );
 
 const groupSubjectUsers = computed(() =>
@@ -52,30 +57,26 @@ const taskCreate = async () => {
   const { mutate: creatingTask } = useMutation(createTask);
   const { data: createdTask } = await creatingTask({
     input: {
-      name: taskName.value,
-      property1: taskDescription.value,
+      name: task.value.name,
+      property1: task.value.description,
       property2: {
-        [process.env.SUBJECT_ID]: taskExecutor.value.value,
+        [process.env.SUBJECT_ID]: task.value.executor.value,
       },
-      property3: [process.env.APPOINTED_ID],
+      property3: process.env.APPOINTED_ID,
       property4: {
-        [process.env.MODULE_ID]: moduleId, // Доделать
+        [process.env.MODULE_ID]: page.page.object.id,
       },
     },
   });
-
+  const { mutate: creatingPermissionRule } = useMutation(createPermissionRule);
   const { data: createdPermissionRule } = await creatingPermissionRule({
     input: {
       model_type: "object",
       model_id: createdTask.create_type2.recordId,
       owner_type: "subject",
-      owner_id: taskExecutor.value,
+      owner_id: task.value.executor.value,
       level: 5,
     },
-  });
-
-  await refetchModule({
-    module_id: moduleId,
   });
 
   return {
