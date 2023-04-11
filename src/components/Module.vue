@@ -25,7 +25,7 @@ const rows = ref();
 
 const {
   result: resultModule,
-  refetch: refetchModule,
+  refetch,
   loading,
   onResult,
 } = useQuery(getModuleById, {
@@ -33,17 +33,11 @@ const {
 });
 
 onResult(() => {
-  console.log(resultModule);
-  rows.value = resultModule?.value?.paginate_type2?.data.map((el) => ({
+  rows.value = resultModule?.value?.get_type1?.property4.map((el) => ({
     ...el,
     id: el.id,
   }));
 });
-
-// const { refetch: refetchTasks } = useQuery(getUserTasks);
-
-// provide("updateTasks", refetchTasks);
-// provide("updateModule", refetchModule);
 
 const columns = [
   {
@@ -74,13 +68,6 @@ const columns = [
 ];
 
 onMounted(() => {
-  console.log(page);
-  console.log(page.page.object.id);
-  // console.log(page.object.id);
-  if (!page) return;
-
-  refetchModule({
-    module_id: page.page.object.id,
-  });
+  if (!rows.value) refetch();
 });
 </script>

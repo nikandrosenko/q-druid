@@ -287,6 +287,7 @@ export const getModuleById = gql`
       property4 {
         id
         name
+        property1
         property2 {
           id
           fullname {
@@ -294,6 +295,7 @@ export const getModuleById = gql`
             last_name
           }
         }
+        property3
       }
     }
   }
