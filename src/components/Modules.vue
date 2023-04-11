@@ -7,26 +7,44 @@
       </q-card-section>
 
       <form @submit.prevent="moduleCreate" v-if="updateDeleteType.bool">
-        <q-input v-model="moduleName" label="Имя модуля" />
+        <q-card-section class="q-pt-none">
+        <q-input
+          v-model="moduleName"
+          label="Имя модуля"
+          square
+          dense
+          autofocus
+          lazy-rules
+          :rules="[required]"
+        />
         <q-select
           v-model="modelUserModule"
           :options="groupSubjectUsers"
           label="Ответственный"
         />
-
+        </q-card-section>
         <q-card-actions align="right" class="text-primary">
           <q-btn flat label="Отмена" v-close-popup />
           <q-btn flat label="Создать" v-close-popup type="submit" />
         </q-card-actions>
       </form>
       <form @submit.prevent="moduleUpdateElement(updateDeleteType.id)" v-else>
-        <q-input v-model="moduleNameUpdate" label="Имя модуля" />
+        <q-card-section class="q-pt-none">
+        <q-input
+          v-model="moduleNameUpdate"
+          label="Имя модуля"
+          square
+          dense
+          autofocus
+          lazy-rules
+          :rules="[required]"
+        />
         <q-select
           v-model="modelUserModuleUpdate"
           :options="groupSubjectUsers"
           label="Ответственный"
         />
-
+        </q-card-section>
         <q-card-actions align="right" class="text-primary">
           <q-btn flat label="Отмена" v-close-popup />
           <q-btn flat label="Изменить" v-close-popup type="submit" />
@@ -36,16 +54,6 @@
   </q-dialog>
 
   <div class="q-ma-xl">
-    <q-btn
-      label="Создать"
-      color="primary"
-      @click="
-        {
-          prompt = true;
-          updateDeleteType.bool = true;
-        }
-      "
-    />
     <div v-if="loading">
       <p>Загрузка</p>
     </div>
@@ -54,7 +62,7 @@
         <template v-slot:header="props">
           <q-tr :props="props">
             <q-th auto-width />
-            <q-th v-for="col in props.cols" :key="col.name" :props="props">
+            <q-th  v-for="col in props.cols" :key="col.name" :props="props">
               {{ col.label }}
             </q-th>
           </q-tr>
@@ -94,6 +102,16 @@
         </template>
       </q-table>
     </div>
+    <q-btn
+      label="Создать"
+      color="primary"
+      @click="
+        {
+          prompt = true;
+          updateDeleteType.bool = true;
+        }
+      "
+    />
   </div>
 </template>
 
@@ -114,7 +132,9 @@ import {
   getGroupSubjects,
   getPagesModule,
 } from "src/graphql/queries.js";
+import { useValidators } from "src/use/validators";
 
+const { required } = useValidators();
 const rows = ref();
 const groupSubjectUsers = ref();
 const updateDeleteType = ref({
