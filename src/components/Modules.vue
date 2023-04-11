@@ -1,8 +1,12 @@
 <template>
-    <q-dialog v-model="prompt">
-      <Form :dataUpdate="dataUpdate" :updateDeleteType="updateDeleteType" @Create="moduleCreate" @Update="moduleUpdateElement"/>
-    </q-dialog>
-
+  <q-dialog v-model="prompt">
+    <Form
+      :dataUpdate="dataUpdate"
+      :updateDeleteType="updateDeleteType"
+      @Create="moduleCreate"
+      @Update="moduleUpdateElement"
+    />
+  </q-dialog>
 
   <div class="q-ma-xl">
     <q-btn
@@ -11,7 +15,7 @@
       @click="
         {
           updateDeleteType.bool = true;
-          moduleUpdateElementForm()
+          moduleUpdateElementForm();
           prompt = true;
         }
       "
@@ -69,7 +73,7 @@
 
 <script setup>
 import { useMutation, useQuery } from "@vue/apollo-composable";
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import {
   createModule,
   createPermissionRule,
@@ -78,18 +82,14 @@ import {
   deletePage,
   updateModule,
   updatePage,
-  updatePermissionRule
+  updatePermissionRule,
 } from "src/graphql/mutations.js";
-import {
-  getModulesAll,
-  getPagesModule,
-} from "src/graphql/queries.js";
+import { getModulesAll, getPagesModule } from "src/graphql/queries.js";
 import Form from "./Form.vue";
 
 const rows = ref();
 
 const { result, loading, onResult, refetch } = useQuery(getModulesAll);
-
 
 onResult(() => {
   rows.value = result?.value?.paginate_type1?.data.map((el, i) => ({
@@ -100,13 +100,11 @@ onResult(() => {
 });
 
 const updateDeleteType = ref({
-    bool: true,
-    id: "",
-    })
+  bool: true,
+  id: "",
+});
 
-const dataUpdate = ref({
-
-  })
+const dataUpdate = ref({});
 
 const prompt = ref(false);
 
@@ -139,8 +137,7 @@ const columns = [
 ];
 
 const moduleCreate = async (emitValue) => {
-
-  console.log(emitValue.emitValue.date.value)
+  console.log(emitValue.emitValue.date.value);
 
   const { mutate: creatingModule } = useMutation(createModule);
   const { data: createdModule } = await creatingModule({
@@ -195,7 +192,7 @@ const moduleCreate = async (emitValue) => {
       },
     });
 
-    refetch()
+  refetch();
 
   return {
     createdModule,
@@ -217,10 +214,10 @@ const moduleDelete = async (moduleId, pageId) => {
     page_id: pageId,
   });
 
-  return{
+  return {
     delM,
-    delP
-  }
+    delP,
+  };
 };
 
 const delModule = ref();
@@ -241,7 +238,7 @@ const moduleDeleteElement = (id) => {
 
 const { mutate: updatingModule } = useMutation(updateModule);
 const { mutate: updatingPage } = useMutation(updatePage);
-const { mutate: updatingPermissionRule } = useMutation(updatePermissionRule)
+const { mutate: updatingPermissionRule } = useMutation(updatePermissionRule);
 
 const updatedModule = ref();
 
@@ -277,36 +274,34 @@ const moduleUpdate = async (moduleId, pageId, emitValue) => {
 };
 
 const moduleUpdateElementForm = (index) => {
-
-  if(updateDeleteType.value.bool){
+  if (updateDeleteType.value.bool) {
     dataUpdate.value = {
-    dateUpdate: {
-      dateUpdateEnd: '01.01.2021',
-      dateUpdateStart: '01.01.2021',
-      timeUpdateStart: '00:00:00',
-      timeUpdateEnd: '00:00:00',
-    },
+      dateUpdate: {
+        dateUpdateEnd: "01.01.2021",
+        dateUpdateStart: "01.01.2021",
+        timeUpdateStart: "00:00:00",
+        timeUpdateEnd: "00:00:00",
+      },
 
-    moduleNameUpdate: "",
-    modelUserModuleUpdate: ""
-  }
+      moduleNameUpdate: "",
+      modelUserModuleUpdate: "",
+    };
   } else {
     dataUpdate.value = {
-    dateUpdate: {
-      dateUpdateEnd: rows.value[index].property7.date,
-      dateUpdateStart: rows.value[index].property6.date,
-      timeUpdateStart: rows.value[index].property6.time,
-      timeUpdateEnd: rows.value[index].property7.time,
-    },
+      dateUpdate: {
+        dateUpdateEnd: rows.value[index].property7.date,
+        dateUpdateStart: rows.value[index].property6.date,
+        timeUpdateStart: rows.value[index].property6.time,
+        timeUpdateEnd: rows.value[index].property7.time,
+      },
 
-    moduleNameUpdate: rows.value[index].name,
-    modelUserModuleUpdate: {
-      label: `${rows.value[index].property5.fullname.first_name} ${rows.value[index].property5.fullname.last_name}`,
-      value: rows.value[index].property5.id,
-    }
+      moduleNameUpdate: rows.value[index].name,
+      modelUserModuleUpdate: {
+        label: `${rows.value[index].property5.fullname.first_name} ${rows.value[index].property5.fullname.last_name}`,
+        value: rows.value[index].property5.id,
+      },
+    };
   }
-  }
-
 };
 
 const moduleUpdateElement = (emitValue) => {

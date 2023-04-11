@@ -88,7 +88,7 @@ import { useQuery, useMutation } from "@vue/apollo-composable";
 import { getGroupSubjects } from "src/graphql/queries";
 import { ref, onMounted } from "vue";
 import { userGroupInviteUser } from "src/graphql/mutations";
-import { useValidators } from "src/use/validators";
+import { useValidators } from "src/use/validators.js";
 import { useQuasar } from "quasar";
 
 const { page, subjectId, id } = defineProps({
