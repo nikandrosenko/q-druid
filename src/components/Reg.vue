@@ -1,5 +1,5 @@
 <template>
-
+<div>
 <div class="flex column items-center" v-if="swipeRegPassword===1">
     <form @submit.prevent="signUp" >
       <div>
@@ -72,7 +72,7 @@
     <p v-if="regIndicatorEnd">Регистрация успешно завершена</p>
     <p>Вы еще не выполнили все пункты регистрации</p>
   </div>
-
+</div>
 </template>
 
 <script setup>
@@ -80,7 +80,7 @@
 import { ref, onMounted } from 'vue';
 import { useMutation } from "@vue/apollo-composable";
 import { userSignUp, userSignUpSetPassword } from 'src/graphql/mutations.js'
-import { useValidators } from "src/use/validators";
+import { useValidators } from "src/use/validators.js";
 
 const { required } = useValidators();
 onMounted(() => {

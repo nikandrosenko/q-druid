@@ -2,6 +2,7 @@
 <div style="height: 700px;" class="flex justify-center content-center">
 
   <div class="wrapper-page">
+
     <q-tabs align="center">
           <q-tab
             exact
@@ -18,6 +19,14 @@
             @click="swipeReg=false"
           />
         </q-tabs>
+
+        <div class="q-pa-md q-gutter-md" to="/home">
+            <q-btn color="primary">
+            <q-icon left size="1.5em" name="arrow_back" />
+          <div>Назад</div>
+          </q-btn>
+        </div>
+
     <Auth v-if="swipeReg"/>
     <Reg v-else/>
   </div>
@@ -42,10 +51,10 @@ provideApolloClient(apolloClient);
   .wrapper-page{
     border: 1px solid rgba(0, 0, 0, 0.445);
     border-radius: 25px;
-    height: 500px;
+    max-height: 600px;
     width: 60%;
     display: flex;
     flex-direction: column;
-    padding-top: 30px;
+    padding: 30px 0 30px 0;
   }
 </style>

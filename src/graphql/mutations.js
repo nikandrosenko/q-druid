@@ -251,6 +251,28 @@ export const createPermissionRule = gql`
     }
   }
 `;
+
+export const updatePermissionRule = gql`
+ mutation permissionRuleUpdate($id: String!, $input: PermissionRuleUpdateInput!) {
+    permissionRuleUpdate(id: $id, input: $input) {
+      recordId
+      status
+      record {
+        id
+        author_id
+        level
+        model_type
+        model_id
+        config
+        owner_id
+        owner_type
+        created_at
+        updated_at
+      }
+    }
+  }
+`;
+
 export const updateModule = gql`
   mutation ($input: update_type1_input!, $id: String!) {
     update_type1(id: $id, input: $input) {
