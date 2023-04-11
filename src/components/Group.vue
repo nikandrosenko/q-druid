@@ -1,27 +1,30 @@
 <template>
   <div class="q-pa-md">
-    <q-card style="border: 1px solid gray" class="my-card" flat bordered>
-      <q-markup-table>
-        <thead>
-          <tr>
-            <th style="border: 1px solid gray" class="text-left"><strong>Имя</strong></th>
-            <th style="border: 1px solid gray" class="text-left"><strong>Фамилия</strong></th>
-            <th style="border: 1px solid gray" class="text-left"><strong>Почта</strong></th>
-          </tr>
-        </thead>
-        <tbody v-for="user in tableUsers" :key="user.id">
-          <tr>
-            <td style="border: 1px solid gray">
-              {{ user.fullname.first_name }}
-            </td>
-            <td style="border: 1px solid gray">
-              {{ user.fullname.last_name }}
-            </td>
-            <td style="border: 1px solid gray">{{ user.email.email }}</td>
-          </tr>
-        </tbody>
-      </q-markup-table>
-    </q-card>
+    <div class="q-ma-xl">
+      <q-table :rows="rows" :columns="columns" row-key="name"/>
+    </div>
+<!--    <q-card class="my-card" flat bordered>-->
+<!--      <q-markup-table>-->
+<!--        <thead>-->
+<!--          <tr>-->
+<!--            <th class="text-left"><strong>Имя</strong></th>-->
+<!--            <th class="text-left"><strong>Фамилия</strong></th>-->
+<!--            <th class="text-left"><strong>Почта</strong></th>-->
+<!--          </tr>-->
+<!--        </thead>-->
+<!--        <tbody v-for="user in tableUsers" :key="user.id">-->
+<!--          <tr>-->
+<!--            <td style="border: 1px solid gray">-->
+<!--              {{ user.fullname.first_name }}-->
+<!--            </td>-->
+<!--            <td style="border: 1px solid gray">-->
+<!--              {{ user.fullname.last_name }}-->
+<!--            </td>-->
+<!--            <td style="border: 1px solid gray">{{ user.email.email }}</td>-->
+<!--          </tr>-->
+<!--        </tbody>-->
+<!--      </q-markup-table>-->
+<!--    </q-card>-->
     <div class="q-pa-md q-gutter-sm">
       <q-btn
         label="Пригласить участника"
@@ -90,7 +93,6 @@ const { required } = useValidators();
 const id = ref("");
 const route = useRoute();
 const prompt = ref(false);
-
 const defId = () => {
   id.value = route.params.id;
 };
@@ -100,7 +102,32 @@ const { result: page } = useQuery(getPage, {
 });
 
 const subjectId = computed(() => page.value?.page?.object.id);
-const tableUsers = ref([]);
+const tableUsers = ref([]);;
+const rows = ref();
+const columns = [
+  {
+    name: "name",
+    required: true,
+    label: "Название",
+    align: "left",
+    format: (val) => `${val}`,
+    sortable: true,
+    field: (row) =>
+      `${row.fullname.first_name}`,
+  },
+  {
+    name: "last_name",
+    label: "Фамилия",
+    field: (row) =>
+      `${row.fullname.last_name}`,
+  },
+  {
+    name: "email",
+    label: "Почта",
+    field: (row) =>
+      `${row.email.email}`,
+  },
+];
 
 const { result: subjects, onResult } = useQuery(getGroupSubjects, {
   group_id: subjectId,
@@ -108,6 +135,11 @@ const { result: subjects, onResult } = useQuery(getGroupSubjects, {
 
 onResult(() => {
   tableUsers.value = subjects.value?.get_group.subject;
+  rows.value = subjects.value?.get_group.subject.map((el) => ({
+    ...el,
+    index: el.id,
+  }));
+  console.log(rows.value)
 });
 
 const req = ref({
