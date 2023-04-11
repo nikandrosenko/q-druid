@@ -77,7 +77,7 @@ const columns = [
   {
     name: "name",
     required: true,
-    label: "Название",
+    label: "Имя",
     align: "left",
     format: (val) => `${val}`,
     sortable: true,
