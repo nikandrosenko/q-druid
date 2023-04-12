@@ -1,5 +1,7 @@
 import gql from "graphql-tag";
 
+const currentUserId = localStorage.getItem("user_id");
+
 export const User = gql`
   query User($id: String!) {
     user(id: $id) {
@@ -363,6 +365,110 @@ export const getTasksAll = gql`
               first_name
               last_name
             }
+          }
+        }
+      }
+      paginatorInfo {
+        perPage
+        currentPage
+        lastPage
+        total
+        count
+        from
+        to
+        hasMorePages
+      }
+    }
+  }
+`;
+
+export const getUserModules = gql`
+  query getUserModules {
+    paginate_subject(page: 1, perPage: 100, where: { column: "user_id", operator: EQ, value: ${currentUserId} }) {
+      data {
+        id
+        type_id
+        author_id
+        level
+        position
+        created_at
+        updated_at
+        user_id
+        fullname {
+          first_name
+          last_name
+        }
+        property4 {
+          id
+          name
+          created_at
+          property4 {
+            id
+            fullname {
+              first_name
+              last_name
+            }
+          }
+
+          property5 {
+            date
+            time
+          }
+          property6 {
+            date
+            time
+          }
+          property7 {
+            id
+            property3
+          }
+        }
+      }
+      paginatorInfo {
+        perPage
+        currentPage
+        lastPage
+        total
+        count
+        from
+        to
+        hasMorePages
+      }
+    }
+  }
+`;
+
+export const getUserTasks = gql`
+  query getUserTasks {
+    paginate_subject(page: 1, perPage: 100, where: { column: "user_id", operator: EQ, value: ${currentUserId} }) {
+      data {
+        id
+        type_id
+        author_id
+        level
+        position
+        created_at
+        updated_at
+        user_id
+        fullname {
+          first_name
+          last_name
+        }
+        property2 {
+          id
+          name
+          property1
+          created_at
+          property2 {
+            id
+            fullname {
+              first_name
+              last_name
+            }
+          }
+          property3
+          property7 {
+            id
           }
         }
       }

@@ -77,7 +77,7 @@ onResult(() => {
 });
 onMounted(() => {
   // treeCreate();
-  if (!currentSpacePages) refetch();
+  // if (!currentSpacePages) refetch();
 });
 // watch(currentSpacePages, () => {
 //   refetch();

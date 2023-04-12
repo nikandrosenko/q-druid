@@ -41,17 +41,21 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import Tree from "src/components/Tree.vue";
 import { provideApolloClient } from "@vue/apollo-composable";
 import apolloClient from "src/apollo/client";
+import stompApi from "src/stomp";
 
 provideApolloClient(apolloClient);
-
-const miniState = ref(true);
 
 const leftDrawerOpen = ref(false);
 const toggleLeftDrawer = () => {
   leftDrawerOpen.value = !leftDrawerOpen.value;
 };
+
+onMounted(() => {
+  stompApi.queueCreate().then((result) => {});
+  stompApi.stompConnect();
+});
 </script>
