@@ -11,6 +11,8 @@ import {
   getUserTasks,
   pages,
   getPage,
+  getModulesAll,
+  getTasksAll,
 } from "src/graphql/queries";
 // import Cookies from "js-cookie";
 
@@ -19,9 +21,11 @@ provideApolloClient(apolloClient);
 const { mutate: creatingQuery } = useMutation(notificationSubscribe);
 
 const { refetch: refetchPages } = useQuery(pages);
-const { refetch: refetchPage } = useQuery(getPage, {
-  id: sessionStorage.getItem("route"),
-});
+// const { refetch: refetchPage } = useQuery(getPage, {
+//   id: sessionStorage.getItem("route"),
+// });
+const { refetch: refetchModules } = useQuery(getModulesAll);
+const { refetch: refetchTasks } = useQuery(getTasksAll);
 // const { refetch: refetchModules } = useQuery(getUserModules);
 // const { refetch: refetchTasks } = useQuery(getUserTasks);
 
@@ -58,9 +62,9 @@ const stompConnect = () => {
 
       // console.log("owiwefjoiwejfoiwefgliwefgiwel");
       refetchPages();
-      refetchPage();
-      // refetchTasks();
-      // refetchModules();
+      // refetchPage();
+      refetchTasks();
+      refetchModules();
       // }
 
       message.ack();
