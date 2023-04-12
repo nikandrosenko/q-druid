@@ -38,7 +38,7 @@ const columns = [
   {
     name: "status",
     label: "Статус",
-    field: (row) => `${row.property3 === '7530914918500818452' ? 'Назначена':'Выполнена'}`,
+    field: (row) => `${row.property3}`,
   },
   {
     name: "module",

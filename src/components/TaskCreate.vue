@@ -33,6 +33,15 @@
             :rules="[requiredSelect]"
           />
         </q-card-section>
+        <q-card-section class="q-pt-none" v-if="!props.updateData.updateCreateType.bool">
+          <q-select
+            v-model="taskStatus"
+            label="Статус"
+            :options="statusTaskList"
+            lazy-rules
+            :rules="[requiredSelect]"
+          />
+        </q-card-section>
         <q-card-actions align="right" class="text-primary">
           <q-btn flat :label="'Отмена'" v-close-popup />
           <q-btn flat :label="props.updateData.updateCreateType.bool ? 'Создать задачу' : 'Изменить задачу'" type="submit" v-close-popup />
@@ -40,7 +49,6 @@
       </q-form>
     </q-card>
   </div>
-
 </template>
 
 <script setup>
@@ -52,19 +60,42 @@ import taskMutation from 'src/sdk/tasks.js'
 
 const { required } = useValidators();
 const { requiredSelect } = useValidatorsSelect();
-
+const taskStatus = ref(props.updateData.moduleStatusUpdate)
+const statusTaskList =  [
+  {
+    label: 'Назначено',
+    value: process.env.APPOINTED_ID
+  },
+  {
+    label: 'Выполнено',
+    value: process.env.COMPLETED_ID
+  },
+  {
+    label: 'Завершено',
+    value: process.env.FINISHED_ID
+  }
+]
 const props = defineProps({
   page: Object,
   updateData: Object
 });
-
-
 const task = ref({
   name: props.updateData.moduleNameUpdate,
   description: props.updateData.moduleDescriptionUpdate,
   executor: props.updateData.modelUserModuleUpdate,
+  status: taskStatus,
 });
 
+// const reDefineTask = (()=>{
+//   if(task.status === 'Назначена')
+//   task.status === '7530914918500818452'
+//   else if(task.status === 'Выполнена')
+//   task.status === '4783614762677696914'
+//   else(task.status === 'Завершена')
+//   task.status === '2279276921981023538'
+//   console.log(task.status)
+// });
+// reDefineTask()
 const { result: executorGroupSubjectUsers } = useQuery(
   getExecutorGroupSubjects
 );
@@ -76,20 +107,29 @@ const groupSubjectUsers = computed(() =>
   }))
 );
 
-const taskCreating = () => {
-  taskMutation.taskCreate(task.value, props.page.page.object.id)
-}
+// const statusTask = computed(()=> {
+//   statusTaskList.map((subject) => ({
+//     label: `${subject}`,
+//     value: subject.id,
+//   }))
 
-const taskUpdating = () => {
-  taskMutation.taskUpdate(task.value, props.updateData.updateCreateType.id)
-}
-
-const manipulationForm = () => {
-  if(props.updateData.updateCreateType.bool){
-    taskCreating()
-  } else {
-    taskUpdating()
+  const taskCreating = () => {
+    taskMutation.taskCreate(task.value, props.page.page.object.id)
   }
+
+
+  const taskUpdating = () => {
+
+    task.value.status =
+    taskMutation.taskUpdate(task.value, props.updateData.updateCreateType.id)
+  }
+
+  const manipulationForm = () => {
+    if (props.updateData.updateCreateType.bool) {
+      taskCreating()
+    } else {
+      taskUpdating()
+    }
 }
 
 
