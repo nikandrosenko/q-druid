@@ -38,7 +38,7 @@ const columns = [
   {
     name: "status",
     label: "Статус",
-    field: (row) => `${row.property3}`,
+    field: (row) => `${row.property3 === '7530914918500818452' ? 'Назначена':'Выполнена'}`,
   },
   {
     name: "module",
@@ -52,7 +52,7 @@ onResult(() => {
   rows.value = result?.value?.paginate_type2?.data.map((el) => ({
     ...el,
     index: el.id,
-    // st: ref(rows.value.property3),
+    st: ref(rows.value),
   }));
 });
 const defineStatus = () => {
