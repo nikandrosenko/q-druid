@@ -38,11 +38,8 @@ const myclick = (node) => {
 
 const { result: currentSpacePages, onResult, refetch } = useQuery(pages);
 
-// const treeCreate = async () => {
-//   const treeData = await currentSpacePages.value;
-//   console.log(treeData);
-// };
 onResult(() => {
+  treePages.value = [];
   parentPages.value = currentSpacePages?.value?.rootPages?.data;
   parentPages.value.forEach((page) => {
     let treeElem = {
@@ -76,10 +73,6 @@ onResult(() => {
   expanded.value.push(selected.value);
 });
 onMounted(() => {
-  // treeCreate();
-  // if (!currentSpacePages) refetch();
+  refetch();
 });
-// watch(currentSpacePages, () => {
-//   refetch();
-// });
 </script>

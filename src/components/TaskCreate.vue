@@ -6,36 +6,35 @@
       </q-card-section>
       <q-form @submit.prevent="taskCreate">
         <q-card-section class="q-pt-none">
-        <q-input
-          v-model="task.name"
-          type="text"
-          label="Название"
-          lazy-rules
-          :rules="[required]"
-        />
+          <q-input
+            v-model="task.name"
+            type="text"
+            label="Название"
+            lazy-rules
+            :rules="[required]"
+          />
         </q-card-section>
         <q-card-section class="q-pt-none">
-        <q-input
-          v-model="task.description"
-          type="text"
-          label="Описание"
-          lazy-rules
-          :rules="[required]"
-        />
+          <q-input
+            v-model="task.description"
+            type="text"
+            label="Описание"
+            lazy-rules
+            :rules="[required]"
+          />
         </q-card-section>
         <q-card-section class="q-pt-none">
-        <q-select
-          v-model="task.executor"
-          label="Исполнитель"
-          :options="groupSubjectUsers"
-          lazy-rules
-          :rules="[required]"
-        />
+          <q-select
+            v-model="task.executor"
+            label="Исполнитель"
+            :options="groupSubjectUsers"
+            lazy-rules
+            :rules="[requiredSelect]"
+          />
         </q-card-section>
         <q-card-actions align="right" class="text-primary">
-        <q-btn flat :label="'Отмена'" v-close-popup />
-        <q-btn flat :label="'Создать задачу'" type="submit" v-close-popup
-        />
+          <q-btn flat :label="'Отмена'" v-close-popup />
+          <q-btn flat :label="'Создать задачу'" type="submit" v-close-popup />
         </q-card-actions>
       </q-form>
     </q-card>
@@ -47,10 +46,11 @@ import { useMutation, useQuery } from "@vue/apollo-composable";
 import { ref, onMounted, computed } from "vue";
 import { getExecutorGroupSubjects } from "src/graphql/queries";
 import { createTask, createPermissionRule } from "src/graphql/mutations";
-import { useValidators } from "src/use/validators.js";
-
+import { useValidators, useValidatorsSelect } from "src/use/validators.js";
 
 const { required } = useValidators();
+const { requiredSelect } = useValidatorsSelect();
+
 const { page } = defineProps({
   page: Object,
 });

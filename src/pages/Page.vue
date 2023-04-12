@@ -42,6 +42,7 @@ const subjectId = computed(() => page.value?.page?.object.id);
 
 const defId = () => {
   id.value = route.params.id;
+  sessionStorage.setItem("route", route.params.id);
 };
 
 const refresh = () => {

@@ -6,7 +6,12 @@ import {
 import apolloClient from "src/apollo/client";
 import stompClient from "src/stomp/client";
 import { notificationSubscribe } from "src/graphql/mutations";
-import { getUserModules, getUserTasks, pages } from "src/graphql/queries";
+import {
+  getUserModules,
+  getUserTasks,
+  pages,
+  getPage,
+} from "src/graphql/queries";
 // import Cookies from "js-cookie";
 
 provideApolloClient(apolloClient);
@@ -14,8 +19,11 @@ provideApolloClient(apolloClient);
 const { mutate: creatingQuery } = useMutation(notificationSubscribe);
 
 const { refetch: refetchPages } = useQuery(pages);
-const { refetch: refetchModules } = useQuery(getUserModules);
-const { refetch: refetchTasks } = useQuery(getUserTasks);
+const { refetch: refetchPage } = useQuery(getPage, {
+  id: sessionStorage.getItem("route"),
+});
+// const { refetch: refetchModules } = useQuery(getUserModules);
+// const { refetch: refetchTasks } = useQuery(getUserTasks);
 
 const queueCreate = async () => {
   const { data: notificationSubscribed } = await creatingQuery();
@@ -50,8 +58,9 @@ const stompConnect = () => {
 
       // console.log("owiwefjoiwejfoiwefgliwefgiwel");
       refetchPages();
-      refetchTasks();
-      refetchModules();
+      refetchPage();
+      // refetchTasks();
+      // refetchModules();
       // }
 
       message.ack();
