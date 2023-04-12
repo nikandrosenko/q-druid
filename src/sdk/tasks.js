@@ -24,7 +24,6 @@ const { refetch: refetchModule } = useQuery(getModuleById, {
 });
 
 const taskCreate = async (task, moduleId) => {
-  const { mutate: creatingTask } = useMutation(createTask);
   const { data: createdTask } = await creatingTask({
     input: {
       name: task.name,
@@ -38,7 +37,6 @@ const taskCreate = async (task, moduleId) => {
       },
     },
   });
-  const { mutate: creatingPermissionRule } = useMutation(createPermissionRule);
   const { data: createdPermissionRule } = await creatingPermissionRule({
     input: {
       model_type: "object",
@@ -47,6 +45,8 @@ const taskCreate = async (task, moduleId) => {
       owner_id: task.executor.value,
       level: 5,
     },
+
+    refetchModule
   });
 
   return {

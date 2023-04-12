@@ -8,6 +8,22 @@
     />
   </q-dialog>
 
+  <q-dialog v-model="secondDialog" persistent transition-show="scale" transition-hide="scale">
+      <q-card class="bg-orange text-white" style="width: 300px">
+        <q-card-section>
+          <div class="text-h6">Ошибка</div>
+        </q-card-section>
+
+        <q-card-section class="q-pt-none">
+          В этом модуле еще есть задачи!!!
+        </q-card-section>
+
+        <q-card-actions align="right" class="bg-white text-teal">
+          <q-btn flat label="OK" v-close-popup />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+
   <div class="q-ma-xl">
     <q-btn
       label="Создать"
@@ -45,6 +61,7 @@
                 @click="moduleDeleteElement(props.row.id)"
                 icon="clear"
               />
+
               <q-btn
                 size="sm"
                 color="primary"
@@ -72,12 +89,12 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import Form from "./Form.vue";
 import moduleApi from 'src/sdk/module.js'
 import { getModulesAll, getPagesModule } from "src/graphql/queries.js";
 import { useQuery } from "@vue/apollo-composable";
-
+import { getModuleById } from "src/graphql/queries";
 
 const { result, loading, onResult, refetch } = useQuery(getModulesAll);
 
@@ -86,6 +103,8 @@ const { result: pageData } = useQuery(getPagesModule, {
       });
 
 const rows = ref();
+
+const secondDialog = ref(false)
 
 onResult(() => {
   rows.value = result?.value?.paginate_type1?.data.map((el, i) => ({
@@ -132,19 +151,38 @@ const columns = [
   },
 ];
 
-const delModule = ref();
-
+const delModule = ref([]);
+const tasksModule = ref([]);
 
 const moduleDeleteElement = (id) => {
+
   delModule.value = pageData?.value?.page.children.data.find(
     (el) => el.object.id == id
-  );
+    );
 
-  moduleApi.moduleDelete(id, delModule.value.id);
+  tasksModule.value = result?.value?.paginate_type1?.data.find((el) => el.id === id)
 
-  refetch()
+    if(tasksModule.value.property4.length > 0){
+      secondDialog.value = true
+    } else {
 
-};
+      moduleApi.moduleDelete(id, delModule.value.id);
+
+      refetch()
+    }
+
+  };
+
+  const checkTasks = (id) => {
+
+
+
+    const { dataTasks, onResult: resultTasksData } = useQuery(getModuleById, {
+    module_id: id,
+    });
+
+  }
+
 
 const updatedModule = ref();
 

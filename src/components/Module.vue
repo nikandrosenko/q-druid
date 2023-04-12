@@ -159,9 +159,6 @@ const taskUpdateElementForm = (index) => {
 }
 }
 
-const tuskUpdate = () => {
-
-}
 
 onMounted(() => {
   if (!rows.value) refetch();
