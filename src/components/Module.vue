@@ -1,13 +1,61 @@
 <template>
   <q-page class="q-pa-md">
     <div class="flex">
-      <TaskCreate :page="page" />
+
+      <q-dialog v-model="prompt">
+        <TaskCreate :page="page" :updateData="updateData"/>
+      </q-dialog>
+
+    <q-btn label="Создать задачу" color="primary" @click="prompt = true; updateCreateType.bool = true; taskUpdateElementForm()" />
+
     </div>
     <div v-if="loading">
       <p>Загрузка</p>
     </div>
     <div v-else class="q-pa-md">
-      <q-table :rows="rows" :columns="columns" row-key="name" />
+      <q-table :rows="rows" :columns="columns" row-key="index">
+        <template v-slot:header="props">
+          <q-tr :props="props">
+            <q-th auto-width />
+            <q-th v-for="col in props.cols" :key="col.name" :props="props">
+              {{ col.label }}
+            </q-th>
+          </q-tr>
+        </template>
+
+        <template v-slot:body="props">
+          <q-tr :props="props">
+            <q-td auto-width>
+              <q-btn
+                size="sm"
+                color="primary"
+                round
+                dense
+                @click="taskDeleteElement(props.row.id)"
+                icon="clear"
+              />
+              <q-btn
+                size="sm"
+                color="primary"
+                round
+                dense
+                @click="
+                  {
+                    updateCreateType.bool = false;
+                    updateCreateType.id = props.row.id;
+                    taskUpdateElementForm(props.row.index);
+                    prompt = true;
+                  }
+                "
+                icon="create"
+              />
+            </q-td>
+            <q-td v-for="col in props.cols" :key="col.name" :props="props">
+              {{ col.value }}
+            </q-td>
+          </q-tr>
+        </template>
+      </q-table>
     </div>
   </q-page>
 </template>
@@ -17,10 +65,13 @@ import { useQuery } from "@vue/apollo-composable";
 import { getModuleById } from "src/graphql/queries";
 import { onMounted, ref } from "vue";
 import TaskCreate from "./TaskCreate.vue";
+import  taskApi  from 'src/sdk/tasks.js'
 
 const { page } = defineProps({
   page: Object,
 });
+
+const prompt = ref(false);
 
 const rows = ref();
 
@@ -34,9 +85,10 @@ const {
 });
 
 onResult(() => {
-  rows.value = resultModule?.value?.get_type1?.property4.map((el) => ({
+  rows.value = resultModule?.value?.get_type1?.property4.map((el, i) => ({
     ...el,
     id: el.id,
+    index: i
   }));
 });
 
@@ -67,6 +119,46 @@ const columns = [
     field: (row) => `${row.property3}`,
   },
 ];
+
+const updateData = ref();
+const updateCreateType = ref({
+    bool: true,
+    id: ''
+})
+
+const taskDeleteElement = (id) => {
+
+  taskApi.taskDelete(id);
+
+}
+
+const taskUpdateElementForm = (index) => {
+  console.log(updateCreateType.value)
+    if(updateCreateType.value.bool){
+      updateData.value = {
+      updateCreateType: updateCreateType.value,
+
+      moduleNameUpdate: '',
+      moduleDescriptionUpdate: '',
+      modelUserModuleUpdate: {
+        label: '',
+        value: '',
+      },
+  }
+    } else {
+      updateData.value = {
+      updateCreateType: updateCreateType.value,
+
+      moduleNameUpdate: rows.value[index].name,
+      moduleDescriptionUpdate: rows.value[index].property1,
+      modelUserModuleUpdate: {
+        label: `${rows.value[index].property2.fullname.first_name} ${rows.value[index].property2.fullname.last_name}`,
+        value: rows.value[index].property2.id,
+      },
+    }
+}
+}
+
 
 onMounted(() => {
   if (!rows.value) refetch();
