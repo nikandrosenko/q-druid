@@ -1,7 +1,13 @@
 import gql from "graphql-tag";
+import { ref } from "vue";
 
-const currentUserId = localStorage.getItem("userId");
-console.log(currentUserId);
+// const currentUserId = localStorage.getItem("userId");
+const currentUserId = ref("");
+
+if (localStorage.getItem("userId"))
+  currentUserId.value = localStorage.getItem("userId");
+
+console.log(currentUserId.value);
 
 export const User = gql`
   query User($id: String!) {
@@ -492,7 +498,7 @@ export const getUserTasks = gql`
     paginate_subject(
       page: 1
       perPage: 100
-      where: { column: "user_id", operator: EQ, value: ${currentUserId} }
+      where: { column: "user_id", operator: EQ, value: ${currentUserId.value} }
     ) {
       data {
         id

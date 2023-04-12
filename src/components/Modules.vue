@@ -74,16 +74,15 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import Form from "./Form.vue";
-import moduleApi from 'src/sdk/module.js'
+import moduleApi from "src/sdk/module.js";
 import { getModulesAll, getPagesModule } from "src/graphql/queries.js";
 import { useQuery } from "@vue/apollo-composable";
-
 
 const { result, loading, onResult, refetch } = useQuery(getModulesAll);
 
 const { result: pageData } = useQuery(getPagesModule, {
-        id: process.env.MODULES_PAGE_ID,
-      });
+  id: process.env.MODULES_PAGE_ID,
+});
 
 const rows = ref();
 
@@ -134,7 +133,6 @@ const columns = [
 
 const delModule = ref();
 
-
 const moduleDeleteElement = (id) => {
   delModule.value = pageData?.value?.page.children.data.find(
     (el) => el.object.id == id
@@ -142,8 +140,7 @@ const moduleDeleteElement = (id) => {
 
   moduleApi.moduleDelete(id, delModule.value.id);
 
-  refetch()
-
+  refetch();
 };
 
 const updatedModule = ref();
@@ -180,24 +177,26 @@ const moduleUpdateElementForm = (index) => {
 };
 
 const moduleCreateModules = (emitValue) => {
+  moduleApi.moduleCreate(emitValue);
 
-  moduleApi.moduleCreate(emitValue)
-
-  refetch()
-}
+  refetch();
+};
 
 const moduleUpdateElement = (emitValue) => {
   updatedModule.value = pageData?.value?.page.children.data.find(
     (el) => el.object.id == emitValue.emitValue.id
   );
 
-  moduleApi.moduleUpdate(emitValue.emitValue.id, updatedModule.value.id, emitValue);
+  moduleApi.moduleUpdate(
+    emitValue.emitValue.id,
+    updatedModule.value.id,
+    emitValue
+  );
 
-  refetch()
+  refetch();
 };
 
 onMounted(() => {
   if (!rows.value) refetch();
 });
-
 </script>
