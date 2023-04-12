@@ -86,16 +86,6 @@ const task = ref({
   status: taskStatus,
 });
 
-// const reDefineTask = (()=>{
-//   if(task.status === 'Назначена')
-//   task.status === '7530914918500818452'
-//   else if(task.status === 'Выполнена')
-//   task.status === '4783614762677696914'
-//   else(task.status === 'Завершена')
-//   task.status === '2279276921981023538'
-//   console.log(task.status)
-// });
-// reDefineTask()
 const { result: executorGroupSubjectUsers } = useQuery(
   getExecutorGroupSubjects
 );
@@ -106,24 +96,14 @@ const groupSubjectUsers = computed(() =>
     value: subject.id,
   }))
 );
-
-// const statusTask = computed(()=> {
-//   statusTaskList.map((subject) => ({
-//     label: `${subject}`,
-//     value: subject.id,
-//   }))
-
   const taskCreating = () => {
     taskMutation.taskCreate(task.value, props.page.page.object.id)
   }
-
-
   const taskUpdating = () => {
 
     task.value.status =
     taskMutation.taskUpdate(task.value, props.updateData.updateCreateType.id)
   }
-
   const manipulationForm = () => {
     if (props.updateData.updateCreateType.bool) {
       taskCreating()
