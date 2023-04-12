@@ -178,7 +178,7 @@ export const createTask = gql`
 `;
 
 export const updateTask = gql`
-  mutation ($id: String!, $input: update_type1_input!) {
+  mutation ($id: String!, $input: update_type2_input!) {
     update_type2(id: $id, input: $input) {
       status
       recordId
