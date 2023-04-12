@@ -1,21 +1,42 @@
 <template>
   <q-dialog v-model="prompt">
     <q-card style="min-width: 350px">
-      <q-form style="min-width: 500px" @submit.prevent="taskCreate">
-        <q-input v-model="task.name" type="text" label="Название" />
-        <q-input v-model="task.description" type="text" label="Описание" />
+      <q-card-section>
+        <div class="text-h6">Создать задачу</div>
+      </q-card-section>
+      <q-form @submit.prevent="taskCreate">
+        <q-card-section class="q-pt-none">
+        <q-input
+          v-model="task.name"
+          type="text"
+          label="Название"
+          lazy-rules
+          :rules="[required]"
+        />
+        </q-card-section>
+        <q-card-section class="q-pt-none">
+        <q-input
+          v-model="task.description"
+          type="text"
+          label="Описание"
+          lazy-rules
+          :rules="[required]"
+        />
+        </q-card-section>
+        <q-card-section class="q-pt-none">
         <q-select
           v-model="task.executor"
           label="Исполнитель"
           :options="groupSubjectUsers"
+          lazy-rules
+          :rules="[required]"
         />
-        <q-btn color="primary" :label="'Отмена'" v-close-popup />
-        <q-btn
-          color="primary"
-          :label="'Создать задачу'"
-          type="submit"
-          v-close-popup
+        </q-card-section>
+        <q-card-actions align="right" class="text-primary">
+        <q-btn flat :label="'Отмена'" v-close-popup />
+        <q-btn flat :label="'Создать задачу'" type="submit" v-close-popup
         />
+        </q-card-actions>
       </q-form>
     </q-card>
   </q-dialog>
@@ -26,7 +47,10 @@ import { useMutation, useQuery } from "@vue/apollo-composable";
 import { ref, onMounted, computed } from "vue";
 import { getExecutorGroupSubjects } from "src/graphql/queries";
 import { createTask, createPermissionRule } from "src/graphql/mutations";
+import { useValidators } from "src/use/validators.js";
 
+
+const { required } = useValidators();
 const { page } = defineProps({
   page: Object,
 });

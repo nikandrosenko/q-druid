@@ -46,14 +46,20 @@ const columns = [
     field: (row) => `${row.property4.name}`,
   },
 ];
-
+let st = ref();
 const { result, loading, onResult, refetch } = useQuery(getTasksAll);
 onResult(() => {
   rows.value = result?.value?.paginate_type2?.data.map((el) => ({
     ...el,
     index: el.id,
+    // st: ref(rows.value.property3),
   }));
 });
+const defineStatus = () => {
+  st.value === '7530914918500818452' ? st.value = 'onGoing':'else'
+};
+defineStatus()
+console.log(st.value)
 onMounted(() => {
   if (!rows.value) refetch();
 });
