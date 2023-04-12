@@ -1,6 +1,7 @@
 import gql from "graphql-tag";
 
-const currentUserId = localStorage.getItem("user_id");
+const currentUserId = localStorage.getItem("userId");
+console.log(currentUserId);
 
 export const User = gql`
   query User($id: String!) {
@@ -438,9 +439,61 @@ export const getUserModules = gql`
   }
 `;
 
+// export const getUserTasks = gql`
+//   query getUserTasks {
+//     paginate_subject(page: 1, perPage: 100, where: { column: "user_id", operator: EQ, value: ${currentUserId} }) {
+//       data {
+//         id
+//         type_id
+//         author_id
+//         level
+//         position
+//         created_at
+//         updated_at
+//         user_id
+//         fullname {
+//           first_name
+//           last_name
+//         }
+//         property2 {
+//           id
+//           name
+//           property1
+//           created_at
+//           property2 {
+//             id
+//             fullname {
+//               first_name
+//               last_name
+//             }
+//             property3
+//             property4 {
+//               id
+//               name
+//             }
+//           }
+//         }
+//       }
+//       paginatorInfo {
+//         perPage
+//         currentPage
+//         lastPage
+//         total
+//         count
+//         from
+//         to
+//         hasMorePages
+//       }
+//     }
+//   }
+// `;
 export const getUserTasks = gql`
   query getUserTasks {
-    paginate_subject(page: 1, perPage: 100, where: { column: "user_id", operator: EQ, value: ${currentUserId} }) {
+    paginate_subject(
+      page: 1
+      perPage: 100
+      where: { column: "user_id", operator: EQ, value: ${currentUserId} }
+    ) {
       data {
         id
         type_id
@@ -461,14 +514,24 @@ export const getUserTasks = gql`
           created_at
           property2 {
             id
+            user_id
             fullname {
               first_name
               last_name
             }
           }
           property3
-          property7 {
+          property4 {
             id
+            name
+            property5 {
+              id
+              user_id
+              fullname {
+                first_name
+                last_name
+              }
+            }
           }
         }
       }
