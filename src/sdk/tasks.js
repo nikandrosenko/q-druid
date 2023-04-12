@@ -64,7 +64,7 @@ const taskUpdate = async (task, taskId) => {
       property2: {
         [process.env.SUBJECT_ID]: task.executor.value,
       },
-      // property3: task.status.value,
+      property3: task.status.value,
     },
   });
 

@@ -13,7 +13,7 @@
       <p>Загрузка</p>
     </div>
     <div v-else class="q-pa-md">
-      <q-table :rows="rows" :columns="columns" row-key="index">
+      <q-table :rows="rows" :columns="columns" row-key="index" >
         <template v-slot:header="props">
           <q-tr :props="props">
             <q-th auto-width />
@@ -23,8 +23,8 @@
           </q-tr>
         </template>
 
-        <template v-slot:body="props">
-          <q-tr :props="props">
+        <template v-slot:body="props" >
+          <q-tr :props="props" :class="props.row.status.label==='Выполнено' ? 'bg-purple' : props.row.status.label==='Назначено' ? 'bg-light-green' : 'bg-yellow'">
             <q-td auto-width>
               <q-btn
                 size="sm"
@@ -65,13 +65,14 @@ import { useQuery } from "@vue/apollo-composable";
 import { getModuleById } from "src/graphql/queries";
 import { onMounted, ref } from "vue";
 import TaskCreate from "./TaskCreate.vue";
-import  taskApi  from 'src/sdk/tasks.js'
+import taskApi  from 'src/sdk/tasks.js'
 
 const { page } = defineProps({
   page: Object,
 });
 
 const prompt = ref(false);
+
 
 const rows = ref();
 
@@ -85,11 +86,29 @@ const {
 });
 
 onResult(() => {
-  rows.value = resultModule?.value?.get_type1?.property4.map((el, i) => ({
+  rows.value = resultModule?.value?.get_type1?.property4.map((el, i) => {
+    let status = {}
+    if(el.property3===process.env.APPOINTED_ID)
+    {status = {
+      label: 'Назначено',
+      value: process.env.APPOINTED_ID
+    }}
+    else if(el.property3===process.env.COMPLETED_ID)
+    {status = {
+      label: 'Выполнено',
+      value: process.env.COMPLETED_ID
+    }}
+    else
+    {status = {
+      label: 'Завершено',
+      value: process.env.FINISHED_ID
+    }}
+    return{
     ...el,
     id: el.id,
-    index: i
-  }));
+    index: i,
+      status: status
+  }});
 });
 
 const columns = [
@@ -116,7 +135,7 @@ const columns = [
   {
     name: "status",
     label: "Статус",
-    field: (row) => `${row.property3}`,
+    field: (row) => `${row.status.label}`,
   },
 ];
 
@@ -144,19 +163,20 @@ const taskUpdateElementForm = (index) => {
         label: '',
         value: '',
       },
+        moduleStatusUpdate: '',
   }
     } else {
       updateData.value = {
       updateCreateType: updateCreateType.value,
-
       moduleNameUpdate: rows.value[index].name,
       moduleDescriptionUpdate: rows.value[index].property1,
       modelUserModuleUpdate: {
         label: `${rows.value[index].property2.fullname.first_name} ${rows.value[index].property2.fullname.last_name}`,
         value: rows.value[index].property2.id,
       },
+        moduleStatusUpdate: rows.value[index].status,
     }
-}
+  }
 }
 
 

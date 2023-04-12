@@ -52,26 +52,32 @@ let st = ref();
 // const { result, loading, onResult, refetch } = useQuery(getTasksAll);
 const { result, loading, onResult, refetch } = useQuery(getUserTasks);
 onResult(() => {
-  rows.value = result?.value?.paginate_subject?.data[0]?.property2?.map(
-    (el) => ({
-      ...el,
-      index: el.id,
-      // st: ref(rows.value.property3),
-    })
-  );
-  console.log(rows.value);
-  console.log(
-    result?.value?.paginate_subject?.data[0]?.user_id.toString().slice(0, 13)
-  );
-  console.log(localStorage.getItem("userId").slice(0, 13));
-  isNewUser.value = false;
-  if (
-    localStorage.getItem("userId").slice(0, 13) ===
-    result?.value?.paginate_subject?.data[0]?.user_id.toString().slice(0, 13)
-  ) {
-    isNewUser.value = true;
-  }
-  console.log(isNewUser.value);
+  // rows.value = result?.value?.paginate_subject?.data[0]?.property2?.map(
+  //   (el) => ({
+  //     ...el,
+  //     index: el.id,
+  //     // st: ref(rows.value.property3),
+  //   })
+  // );
+  // console.log(rows.value);
+  // console.log(
+  //   result?.value?.paginate_subject?.data[0]?.user_id.toString().slice(0, 13)
+  // );
+  // console.log(localStorage.getItem("userId").slice(0, 13));
+  // isNewUser.value = false;
+  // if (
+  //   localStorage.getItem("userId").slice(0, 13) ===
+  //   result?.value?.paginate_subject?.data[0]?.user_id.toString().slice(0, 13)
+  // ) {
+  //   isNewUser.value = true;
+  // }
+  // console.log(isNewUser.value);
+
+  rows.value = result?.value?.paginate_type2?.data.map((el) => ({
+    ...el,
+    index: el.id,
+    st: ref(rows.value),
+  }));
 });
 
 // const defineStatus = () => {
