@@ -172,7 +172,6 @@ onResult(() => {
 });
 
 const emits = defineEmits(["create", "update"]);
-const emitValue = ref();
 
 const manipulationForm = () => {
   if (props.updateDeleteType.bool) {

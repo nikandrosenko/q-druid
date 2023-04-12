@@ -88,7 +88,7 @@ const signIn = async () => {
     .then((res) => {
       if (!res.errors) {
         console.log(res.data.userSignIn);
-        // localStorage.setItem("userId", res.data.userSignIn.recordId);
+        localStorage.setItem("user-id", res.data.userSignIn.recordId);
         sessionStorage.setItem(
           "token",
           res.data.userSignIn.record.access_token
@@ -118,7 +118,7 @@ const signInFromGoogle = async (JWTTokenGoogle) => {
   signInUserSocialNetwork()
     .then((res) => {
       if (!res.errors) {
-        // localStorage.setItem("userId", res.data.userSignIn.recordId);
+        localStorage.setItem("user-id", res.data.userSignIn.recordId);
         sessionStorage.setItem(
           "token",
           res.data.userSignIn.record.access_token

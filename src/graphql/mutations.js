@@ -178,7 +178,7 @@ export const createTask = gql`
 `;
 
 export const updateTask = gql`
-  mutation ($id: String!, $input: update_type1_input!) {
+  mutation ($id: String!, $input: update_type2_input!) {
     update_type2(id: $id, input: $input) {
       status
       recordId
@@ -253,7 +253,10 @@ export const createPermissionRule = gql`
 `;
 
 export const updatePermissionRule = gql`
- mutation permissionRuleUpdate($id: String!, $input: PermissionRuleUpdateInput!) {
+  mutation permissionRuleUpdate(
+    $id: String!
+    $input: PermissionRuleUpdateInput!
+  ) {
     permissionRuleUpdate(id: $id, input: $input) {
       recordId
       status
@@ -333,6 +336,14 @@ export const deletePage = gql`
   mutation deletePage($page_id: String!) {
     pageDelete(id: $page_id) {
       recordId
+    }
+  }
+`;
+
+export const notificationSubscribe = gql`
+  mutation {
+    notificationSubscribe {
+      hash
     }
   }
 `;

@@ -10,7 +10,7 @@ import {
   createPermissionRule,
 } from "src/graphql/mutations";
 import { getModuleById } from "src/graphql/queries";
-import apolloClient from "src/apollo/apollo-client";
+import apolloClient from "src/apollo/client";
 
 provideApolloClient(apolloClient);
 
@@ -23,35 +23,30 @@ const { refetch: refetchModule } = useQuery(getModuleById, {
   module_id: "1",
 });
 
-const taskCreate = async (form, moduleId) => {
-  console.log(form, process.env.MODULE_ID);
-
+const taskCreate = async (task, moduleId) => {
+  const { mutate: creatingTask } = useMutation(createTask);
   const { data: createdTask } = await creatingTask({
     input: {
-      name: form.name,
-      property1: form.description,
+      name: task.name,
+      property1: task.description,
       property2: {
-        [process.env.SUBJECT_ID]: form.executor.value,
+        [process.env.SUBJECT_ID]: task.executor.value,
       },
       property3: process.env.APPOINTED_ID,
-      property7: {
+      property4: {
         [process.env.MODULE_ID]: moduleId,
       },
     },
   });
-
+  const { mutate: creatingPermissionRule } = useMutation(createPermissionRule);
   const { data: createdPermissionRule } = await creatingPermissionRule({
     input: {
       model_type: "object",
-      model_id: createdTask.create_type1.recordId,
+      model_id: createdTask.create_type2.recordId,
       owner_type: "subject",
-      owner_id: form.executor.value,
+      owner_id: task.executor.value,
       level: 5,
     },
-  });
-
-  refetchModule({
-    module_id: moduleId,
   });
 
   return {
@@ -60,16 +55,16 @@ const taskCreate = async (form, moduleId) => {
   };
 };
 
-const taskUpdate = async (form, taskId) => {
+const taskUpdate = async (task, taskId) => {
   const { data } = await updatingTask({
     id: taskId,
     input: {
-      name: form.name,
-      property1: form.description,
+      name: task.name,
+      property1: task.description,
       property2: {
-        [process.env.SUBJECT_ID]: form.executor.value,
+        [process.env.SUBJECT_ID]: task.executor.value,
       },
-      property3: form.status.value,
+      // property3: task.status.value,
     },
   });
 
