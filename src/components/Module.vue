@@ -2,6 +2,22 @@
   <q-page class="q-pa-md">
     <div class="flex">
 
+      <q-dialog v-model="secondDialog" persistent transition-show="scale" transition-hide="scale">
+      <q-card class="bg-orange text-white" style="width: 300px">
+        <q-card-section>
+          <div class="text-h6">Ошибка</div>
+        </q-card-section>
+
+        <q-card-section class="q-pt-none">
+          Задача не находится в статусе "Завершена"
+        </q-card-section>
+
+        <q-card-actions align="right" class="bg-white text-teal">
+          <q-btn flat label="OK" v-close-popup />
+        </q-card-actions>
+      </q-card>
+      </q-dialog>
+
       <q-dialog v-model="prompt">
         <TaskCreate :page="page" :updateData="updateData"/>
       </q-dialog>
@@ -31,7 +47,7 @@
                 color="primary"
                 round
                 dense
-                @click="taskDeleteElement(props.row.id)"
+                @click="taskDeleteElement(props.row.id, props.row.index)"
                 icon="clear"
               />
               <q-btn
@@ -75,6 +91,8 @@ const prompt = ref(false);
 
 
 const rows = ref();
+
+const secondDialog = ref(false)
 
 const {
   result: resultModule,
@@ -145,9 +163,13 @@ const updateCreateType = ref({
     id: ''
 })
 
-const taskDeleteElement = (id) => {
+const taskDeleteElement = (id, index) => {
 
-  taskApi.taskDelete(id);
+  if(rows.value[index].status.value !== process.env.FINISHED_ID){
+    secondDialog.value = true
+  } else {
+    taskApi.taskDelete(id);
+  }
 
 }
 

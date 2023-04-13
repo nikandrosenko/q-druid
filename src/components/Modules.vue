@@ -94,7 +94,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted } from "vue";
 import Form from "./Form.vue";
 import moduleApi from "src/sdk/module.js";
 import {
@@ -115,11 +115,30 @@ const rows = ref();
 const secondDialog = ref(false);
 
 onResult(() => {
-  rows.value = result?.value?.paginate_type1?.data.map((el, i) => ({
-    ...el,
-    id: el.id,
-    index: i,
-  }));
+  rows.value = result?.value?.paginate_type1?.data.map((el, i) => {
+    let statusAppointed = 0;
+    let statusCompleted = 0;
+    let statusFinished = 0;
+
+    el.property4.forEach((item) => {
+      if (item.property3 === process.env.APPOINTED_ID) {
+        statusAppointed++;
+      } else if (item.property3 === process.env.COMPLETED_ID) {
+        statusCompleted++;
+      } else {
+        statusFinished++;
+      }
+    });
+
+    return {
+      ...el,
+      id: el.id,
+      index: i,
+      stAppointed: statusAppointed,
+      stCompleted: statusCompleted,
+      stFinished: statusFinished,
+    };
+  });
 });
 
 const updateDeleteType = ref({
@@ -157,6 +176,21 @@ const columns = [
     label: "Конец",
     field: (row) => `${row.property7.date} ${row.property7.time}`,
   },
+  {
+    name: "finish",
+    label: "Назначенных задач",
+    field: (row) => row.stAppointed,
+  },
+  {
+    name: "finish",
+    label: "Выполненных задач",
+    field: (row) => row.stCompleted,
+  },
+  {
+    name: "finish",
+    label: "Завершенных задач",
+    field: (row) => row.stFinished,
+  },
 ];
 
 const delModule = ref([]);
@@ -178,12 +212,6 @@ const moduleDeleteElement = (id) => {
 
     refetch();
   }
-};
-
-const checkTasks = (id) => {
-  const { dataTasks, onResult: resultTasksData } = useQuery(getModuleById, {
-    module_id: id,
-  });
 };
 
 const updatedModule = ref();
