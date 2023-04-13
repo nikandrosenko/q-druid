@@ -103,6 +103,7 @@ const {
   module_id: page.page.object?.id,
 });
 
+
 onResult(() => {
   rows.value = resultModule?.value?.get_type1?.property4.map((el, i) => {
     let status = {}
