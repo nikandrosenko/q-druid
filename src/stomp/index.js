@@ -6,28 +6,15 @@ import {
 import apolloClient from "src/apollo/client";
 import stompClient from "src/stomp/client";
 import { notificationSubscribe } from "src/graphql/mutations";
-import {
-  getUserModules,
-  getUserTasks,
-  pages,
-  getPage,
-  getModulesAll,
-  getTasksAll,
-} from "src/graphql/queries";
-// import Cookies from "js-cookie";
+import { pages, getModulesAll, getTasksAll } from "src/graphql/queries";
 
 provideApolloClient(apolloClient);
 
 const { mutate: creatingQuery } = useMutation(notificationSubscribe);
 
 const { refetch: refetchPages } = useQuery(pages);
-// const { refetch: refetchPage } = useQuery(getPage, {
-//   id: sessionStorage.getItem("route"),
-// });
 const { refetch: refetchModules } = useQuery(getModulesAll);
 const { refetch: refetchTasks } = useQuery(getTasksAll);
-// const { refetch: refetchModules } = useQuery(getUserModules);
-// const { refetch: refetchTasks } = useQuery(getUserTasks);
 
 const queueCreate = async () => {
   const { data: notificationSubscribed } = await creatingQuery();
@@ -44,28 +31,14 @@ const stompConnect = () => {
   const queue = localStorage.getItem("queue");
 
   const onConnect = async () => {
-    // console.log("connected");
-
     let onMessage = (message) => {
       const messageObj = JSON.parse(message.body);
 
       console.log("Receive message:", messageObj);
 
-      // if (
-      //   messageObj.type === "object.created" ||
-      //   messageObj.type === "page.created" ||
-      //   messageObj.type === "object.updated" ||
-      //   messageObj.type === "page.updated" ||
-      //   messageObj.type === "object.deleted" ||
-      //   messageObj.type === "page.deleted"
-      // ) {
-
-      // console.log("owiwefjoiwejfoiwefgliwefgiwel");
       refetchPages();
-      // refetchPage();
       refetchTasks();
       refetchModules();
-      // }
 
       message.ack();
     };
