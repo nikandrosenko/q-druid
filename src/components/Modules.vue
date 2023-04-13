@@ -51,7 +51,7 @@
         </template>
 
         <template v-slot:body="props">
-          <q-tr :props="props" :class="props.row.status.label==='Выполнено' ? 'bg-green' : props.row.status.label==='Назначено' ? 'bg-red' : 'bg-orange'">
+          <q-tr :props="props">
             <q-td auto-width >
               <q-btn
                 size="sm"
