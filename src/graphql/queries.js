@@ -257,6 +257,7 @@ export const getModulesAll = gql`
         }
         property4 {
           id
+          property3
         }
       }
       paginatorInfo {
