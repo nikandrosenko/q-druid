@@ -4,7 +4,26 @@
       <p>Загрузка</p>
     </div>
     <div v-else class="q-pa-md">
-      <q-table :rows="rows" :columns="columns" row-key="name" />
+      <q-table :rows="rows" :columns="columns" row-key="index">
+        <template v-slot:header="props">
+          <q-tr :props="props">
+            <q-th auto-width />
+            <q-th v-for="col in props.cols" :key="col.name" :props="props">
+              {{ col.label }}
+            </q-th>
+          </q-tr>
+        </template>
+
+        <template v-slot:body="props" >
+          <q-tr :props="props" :class="props.row.status.label==='Выполнено' ? 'bg-yellow' : props.row.status.label==='Назначено' ? 'bg-pink' : 'bg-green'">
+            <q-td auto-width>
+            </q-td>
+            <q-td v-for="col in props.cols" :key="col.name" :props="props">
+              {{ col.value }}
+            </q-td>
+          </q-tr>
+        </template>
+      </q-table>
     </div>
   </q-page>
 </template>
@@ -13,6 +32,9 @@ import { ref, onMounted } from "vue";
 import { useQuery } from "@vue/apollo-composable";
 import gql from "graphql-tag";
 
+const { page } = defineProps({
+  page: Object,
+});
 const isNewUser = ref(false);
 const rows = ref();
 const columns = [
