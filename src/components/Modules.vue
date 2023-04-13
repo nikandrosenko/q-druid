@@ -41,18 +41,18 @@
     </div>
     <div v-else class="q-pa-md">
       <q-table :rows="rows" :columns="columns" row-key="index">
-        <template v-slot:header="props">
+        <template v-slot:header="props" >
           <q-tr :props="props">
             <q-th auto-width />
-            <q-th v-for="col in props.cols" :key="col.name" :props="props">
+            <q-th v-for="col in props.cols" :key="col.name" :props="props" >
               {{ col.label }}
             </q-th>
           </q-tr>
         </template>
 
         <template v-slot:body="props">
-          <q-tr :props="props">
-            <q-td auto-width>
+          <q-tr :props="props" :class="props.row.status.label==='Выполнено' ? 'bg-green' : props.row.status.label==='Назначено' ? 'bg-red' : 'bg-orange'">
+            <q-td auto-width >
               <q-btn
                 size="sm"
                 color="primary"
@@ -94,7 +94,6 @@ import Form from "./Form.vue";
 import moduleApi from 'src/sdk/module.js'
 import { getModulesAll, getPagesModule } from "src/graphql/queries.js";
 import { useQuery } from "@vue/apollo-composable";
-import { getModuleById } from "src/graphql/queries";
 
 const { result, loading, onResult, refetch } = useQuery(getModulesAll);
 
@@ -172,17 +171,6 @@ const moduleDeleteElement = (id) => {
     }
 
   };
-
-  const checkTasks = (id) => {
-
-
-
-    const { dataTasks, onResult: resultTasksData } = useQuery(getModuleById, {
-    module_id: id,
-    });
-
-  }
-
 
 const updatedModule = ref();
 

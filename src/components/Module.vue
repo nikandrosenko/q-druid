@@ -85,7 +85,8 @@ const {
 });
 
 onResult(() => {
-  rows.value = resultModule?.value?.get_type1?.property4.map((el, i) => ({
+  rows.value = resultModule?.value?.get_type1?.property4.map((el, i) => (
+    {
     ...el,
     id: el.id,
     index: i
