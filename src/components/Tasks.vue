@@ -1,5 +1,10 @@
 <template>
   <q-page class="q-ma-xl">
+
+    <q-dialog v-model="prompt">
+        <FormTasks :updateData="updateData"/>
+      </q-dialog>
+
     <div v-if="loading">
       <p>Загрузка</p>
     </div>
@@ -17,6 +22,19 @@
         <template v-slot:body="props" >
           <q-tr :props="props" :class="props.row.status.label==='Выполнено' ? 'bg-yellow' : props.row.status.label==='Назначено' ? 'bg-pink' : 'bg-green'">
             <q-td auto-width>
+              <q-btn
+                size="sm"
+                color="primary"
+                round
+                dense
+                @click="
+                  {
+                    tasksUpdateElementForm(props.row.index, props.row.id);
+                    prompt = true;
+                  }
+                "
+                icon="create"
+              />
             </q-td>
             <q-td v-for="col in props.cols" :key="col.name" :props="props">
               {{ col.value }}
@@ -31,6 +49,11 @@
 import { ref, onMounted } from "vue";
 import { useQuery } from "@vue/apollo-composable";
 import gql from "graphql-tag";
+import FormTasks from "./FormTasks.vue";
+
+const prompt = ref(false)
+
+const updateData = ref()
 
 const { page } = defineProps({
   page: Object,
@@ -150,6 +173,20 @@ onResult(() => {
     }
   );
 });
+
+const tasksUpdateElementForm = (index, id) => {
+
+  updateData.value = {
+      id: id,
+      moduleNameUpdate: rows.value[index].name,
+      moduleDescriptionUpdate: rows.value[index].property1,
+      modelUserModuleUpdate: {
+        label: `${rows.value[index].property2.fullname.first_name} ${rows.value[index].property2.fullname.last_name}`,
+        value: rows.value[index].property2.id,
+      },
+        moduleStatusUpdate: rows.value[index].status,
+    }
+}
 
 onMounted(() => {
   if (!rows.value) refetch();

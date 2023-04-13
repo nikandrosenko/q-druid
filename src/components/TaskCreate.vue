@@ -101,7 +101,6 @@ const groupSubjectUsers = computed(() =>
   }
   const taskUpdating = () => {
 
-    task.value.status =
     taskMutation.taskUpdate(task.value, props.updateData.updateCreateType.id)
   }
   const manipulationForm = () => {
