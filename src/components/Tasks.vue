@@ -11,7 +11,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useQuery } from "@vue/apollo-composable";
-import { getTasksAll, getUserTasks } from "src/graphql/queries.js";
+import gql from "graphql-tag";
 
 const isNewUser = ref(false);
 const rows = ref();
@@ -30,33 +30,103 @@ const columns = [
     label: "Описание",
     field: (row) => `${row.property1}`,
   },
-  // {
-  //   name: "executor_name",
-  //   label: "Исполнитель",
-  //   field: (row) =>
-  //     `${row.property2.fullname.first_name} ${row.property2.fullname.last_name}`,
-  // },
-  // {
-  //   name: "responsible_name",
-  //   label: "Ответственный",
-  //   field: (row) =>
-  //     `${row.property4.property5.fullname.first_name} ${row.property4.property5.fullname.last_name}`,
-  // },
   {
     name: "status",
     label: "Статус",
-    field: (row) => `${row.property3}`,
+    field: (row) => `${row.status.label}`,
   },
 ];
 let st = ref();
-// const { result, loading, onResult, refetch } = useQuery(getTasksAll);
-const { result, loading, onResult, refetch } = useQuery(getUserTasks);
+const currentUserId = localStorage.getItem("userId");
+const { result, loading, onResult, refetch } = useQuery(gql`
+  query getUserTasks {
+    paginate_subject(
+      page: 1
+      perPage: 100
+      where: { column: "user_id", operator: EQ, value: ${currentUserId} }
+    ) {
+      data {
+        id
+        type_id
+        author_id
+        level
+        position
+        created_at
+        updated_at
+        user_id
+        fullname {
+          first_name
+          last_name
+        }
+        property2 {
+          id
+          name
+          property1
+          created_at
+          property2 {
+            id
+            user_id
+            fullname {
+              first_name
+              last_name
+            }
+          }
+          property3
+          property4 {
+            id
+            name
+            property5 {
+              id
+              user_id
+              fullname {
+                first_name
+                last_name
+              }
+            }
+          }
+        }
+      }
+      paginatorInfo {
+        perPage
+        currentPage
+        lastPage
+        total
+        count
+        from
+        to
+        hasMorePages
+      }
+    }
+  }
+`);
 onResult(() => {
-  rows.value = result?.value?.paginate_type2?.data.map((el) => ({
-    ...el,
-    index: el.id,
-    st: ref(rows.value),
-  }));
+  rows.value = result?.value?.paginate_subject?.data[0]?.property2?.map(
+    (el, i) => {
+      let status = {};
+      if (el.property3 === process.env.APPOINTED_ID) {
+        status = {
+          label: "Назначено",
+          value: process.env.APPOINTED_ID,
+        };
+      } else if (el.property3 === process.env.COMPLETED_ID) {
+        status = {
+          label: "Выполнено",
+          value: process.env.COMPLETED_ID,
+        };
+      } else {
+        status = {
+          label: "Завершено",
+          value: process.env.FINISHED_ID,
+        };
+      }
+      return {
+        ...el,
+        id: el.id,
+        index: i,
+        status: status,
+      };
+    }
+  );
 });
 
 onMounted(() => {

@@ -1,13 +1,20 @@
 import gql from "graphql-tag";
-import { ref } from "vue";
+// import { ref } from "vue";
 
 // const currentUserId = localStorage.getItem("userId");
-const currentUserId = ref("");
+// const currentUserId = ref("");
 
-if (localStorage.getItem("userId"))
-  currentUserId.value = localStorage.getItem("userId");
+// if (localStorage.getItem("userId"))
+//   currentUserId.value = localStorage.getItem("userId");
 
-console.log(currentUserId.value);
+// let currentUserId = localStorage.getItem("userId");
+
+// export const getItemUserId = () => {
+//   const currentUserId = ref("");
+//   currentUserId.value = localStorage.getItem("userId");
+//   console.log("Обновили ID в квери, ID: ", currentUserId.value);
+//   return currentUserId.value;
+// };
 
 export const User = gql`
   query User($id: String!) {
@@ -391,61 +398,61 @@ export const getTasksAll = gql`
   }
 `;
 
-export const getUserModules = gql`
-  query getUserModules {
-    paginate_subject(page: 1, perPage: 100, where: { column: "user_id", operator: EQ, value: ${currentUserId} }) {
-      data {
-        id
-        type_id
-        author_id
-        level
-        position
-        created_at
-        updated_at
-        user_id
-        fullname {
-          first_name
-          last_name
-        }
-        property4 {
-          id
-          name
-          created_at
-          property4 {
-            id
-            fullname {
-              first_name
-              last_name
-            }
-          }
+// export const getUserModules = gql`
+//   query getUserModules {
+//     paginate_subject(page: 1, perPage: 100, where: { column: "user_id", operator: EQ, value: ${currentUserId} }) {
+//       data {
+//         id
+//         type_id
+//         author_id
+//         level
+//         position
+//         created_at
+//         updated_at
+//         user_id
+//         fullname {
+//           first_name
+//           last_name
+//         }
+//         property4 {
+//           id
+//           name
+//           created_at
+//           property4 {
+//             id
+//             fullname {
+//               first_name
+//               last_name
+//             }
+//           }
 
-          property5 {
-            date
-            time
-          }
-          property6 {
-            date
-            time
-          }
-          property7 {
-            id
-            property3
-          }
-        }
-      }
-      paginatorInfo {
-        perPage
-        currentPage
-        lastPage
-        total
-        count
-        from
-        to
-        hasMorePages
-      }
-    }
-  }
-`;
+//           property5 {
+//             date
+//             time
+//           }
+//           property6 {
+//             date
+//             time
+//           }
+//           property7 {
+//             id
+//             property3
+//           }
+//         }
+//       }
+//       paginatorInfo {
+//         perPage
+//         currentPage
+//         lastPage
+//         total
+//         count
+//         from
+//         to
+//         hasMorePages
+//       }
+//     }
+//   }
+// `;
 
 // export const getUserTasks = gql`
 //   query getUserTasks {
@@ -495,64 +502,64 @@ export const getUserModules = gql`
 //     }
 //   }
 // `;
-export const getUserTasks = gql`
-  query getUserTasks {
-    paginate_subject(
-      page: 1
-      perPage: 100
-      where: { column: "user_id", operator: EQ, value: ${currentUserId.value} }
-    ) {
-      data {
-        id
-        type_id
-        author_id
-        level
-        position
-        created_at
-        updated_at
-        user_id
-        fullname {
-          first_name
-          last_name
-        }
-        property2 {
-          id
-          name
-          property1
-          created_at
-          property2 {
-            id
-            user_id
-            fullname {
-              first_name
-              last_name
-            }
-          }
-          property3
-          property4 {
-            id
-            name
-            property5 {
-              id
-              user_id
-              fullname {
-                first_name
-                last_name
-              }
-            }
-          }
-        }
-      }
-      paginatorInfo {
-        perPage
-        currentPage
-        lastPage
-        total
-        count
-        from
-        to
-        hasMorePages
-      }
-    }
-  }
-`;
+// export const getUserTasks = gql`
+//   query getUserTasks {
+//     paginate_subject(
+//       page: 1
+//       perPage: 100
+//       where: { column: "user_id", operator: EQ, value: ${currentUserId} }
+//     ) {
+//       data {
+//         id
+//         type_id
+//         author_id
+//         level
+//         position
+//         created_at
+//         updated_at
+//         user_id
+//         fullname {
+//           first_name
+//           last_name
+//         }
+//         property2 {
+//           id
+//           name
+//           property1
+//           created_at
+//           property2 {
+//             id
+//             user_id
+//             fullname {
+//               first_name
+//               last_name
+//             }
+//           }
+//           property3
+//           property4 {
+//             id
+//             name
+//             property5 {
+//               id
+//               user_id
+//               fullname {
+//                 first_name
+//                 last_name
+//               }
+//             }
+//           }
+//         }
+//       }
+//       paginatorInfo {
+//         perPage
+//         currentPage
+//         lastPage
+//         total
+//         count
+//         from
+//         to
+//         hasMorePages
+//       }
+//     }
+//   }
+// `;
