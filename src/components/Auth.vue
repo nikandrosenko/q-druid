@@ -31,8 +31,6 @@
         type="submit"
       />
     </form>
-
-    <div id="buttonDiv"></div>
   </div>
 </template>
 
@@ -52,18 +50,16 @@ const handleCredentialResponse = (response) => {
 };
 
 onMounted(() => {
-  google.accounts.id.initialize({
-    client_id:
-      "657923009459-arg62iseulaj74kosjp2ntv41268o5pq.apps.googleusercontent.com",
-    callback: handleCredentialResponse,
-  });
-
-  google.accounts.id.renderButton(document.getElementById("buttonDiv"), {
-    theme: "outline",
-    size: "large",
-  });
-
-  google.accounts.id.prompt();
+  // google.accounts.id.initialize({
+  //   client_id:
+  //     "657923009459-arg62iseulaj74kosjp2ntv41268o5pq.apps.googleusercontent.com",
+  //   callback: handleCredentialResponse,
+  // });
+  // google.accounts.id.renderButton(document.getElementById("buttonDiv"), {
+  //   theme: "outline",
+  //   size: "large",
+  // });
+  // google.accounts.id.prompt();
 });
 
 const routProfile = () => {
