@@ -1,5 +1,11 @@
 <template>
   <div style="height: 700px" class="flex justify-center content-center">
+    <div class="q-pa-md q-gutter-md absolute-left">
+      <q-btn color="primary" exacts to="/">
+        <q-icon left size="1.5em" name="arrow_back" />
+        <div>Назад</div>
+      </q-btn>
+    </div>
     <div class="wrapper-page">
       <q-tabs align="center">
         <q-tab
@@ -17,13 +23,6 @@
           @click="swipeReg = false"
         />
       </q-tabs>
-
-      <div class="q-pa-md q-gutter-md">
-        <q-btn color="primary" exacts to="/">
-          <q-icon left size="1.5em" name="arrow_back" />
-          <div>Назад</div>
-        </q-btn>
-      </div>
 
       <Auth v-if="swipeReg" />
       <Reg v-else />
