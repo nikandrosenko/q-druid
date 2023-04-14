@@ -2,6 +2,7 @@
   <div class="q-ma-xl">
     <div>
       <q-btn
+        v-if="level === 7"
         label="Пригласить участника"
         color="primary"
         @click="prompt = true"
@@ -54,7 +55,7 @@
       </q-dialog>
     </div>
     <div class="q-pa-md">
-      <q-table :rows="rows" :columns="columns" row-key="name"/>
+      <q-table :rows="rows" :columns="columns" row-key="name" />
     </div>
   </div>
 </template>
@@ -66,11 +67,14 @@ import { userGroupInviteUser } from "src/graphql/mutations";
 import { useValidators } from "src/use/validators.js";
 import { useQuasar } from "quasar";
 
-const { page, subjectId, id } = defineProps({
+const { page, subjectId, id, level } = defineProps({
   page: Object,
   subjectId: String,
   id: String,
+  level: Number,
 });
+
+console.log(level);
 
 const rows = ref();
 const columns = [
@@ -81,20 +85,17 @@ const columns = [
     align: "left",
     format: (val) => `${val}`,
     sortable: true,
-    field: (row) =>
-      `${row.fullname.first_name}`,
+    field: (row) => `${row.fullname.first_name}`,
   },
   {
     name: "last_name",
     label: "Фамилия",
-    field: (row) =>
-      `${row.fullname.last_name}`,
+    field: (row) => `${row.fullname.last_name}`,
   },
   {
     name: "email",
     label: "Почта",
-    field: (row) =>
-      `${row.email.email}`,
+    field: (row) => `${row.email.email}`,
   },
 ];
 
