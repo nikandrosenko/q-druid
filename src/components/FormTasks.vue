@@ -26,27 +26,27 @@
 <script setup>
 import { ref } from "vue";
 import { useValidators, useValidatorsSelect } from "src/use/validators.js";
-import tasksMutation from 'src/sdk/tasks.js'
+import tasksMutation from "src/sdk/tasks.js";
 
 const { required } = useValidators();
 const { requiredSelect } = useValidatorsSelect();
-const taskStatus = ref(props.updateData.moduleStatusUpdate)
-const statusTaskList =  [
+const taskStatus = ref(props.updateData.moduleStatusUpdate);
+const statusTaskList = [
   {
-    label: 'Назначено',
-    value: process.env.APPOINTED_ID
+    label: "Назначено",
+    value: process.env.APPOINTED_ID,
   },
   {
-    label: 'Выполнено',
-    value: process.env.COMPLETED_ID
+    label: "Выполнено",
+    value: process.env.COMPLETED_ID,
   },
-  {
-    label: 'Завершено',
-    value: process.env.FINISHED_ID
-  }
-]
+  // {
+  //   label: 'Завершено',
+  //   value: process.env.FINISHED_ID
+  // }
+];
 const props = defineProps({
-  updateData: Object
+  updateData: Object,
 });
 const task = ref({
   name: props.updateData.moduleNameUpdate,
@@ -56,13 +56,9 @@ const task = ref({
 });
 
 const taskUpdating = () => {
-
-tasksMutation.taskUpdate(task.value, props.updateData.id)
-}
+  tasksMutation.taskUpdate(task.value, props.updateData.id);
+};
 const manipulationForm = () => {
-  taskUpdating()
-}
-
-
-
+  taskUpdating();
+};
 </script>

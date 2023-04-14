@@ -97,14 +97,67 @@
 import { ref, onMounted } from "vue";
 import Form from "./Form.vue";
 import moduleApi from "src/sdk/module.js";
-import {
-  getModulesAll,
-  getPagesModule,
-  getModuleById,
-} from "src/graphql/queries.js";
+import { getModulesAll, getPagesModule } from "src/graphql/queries.js";
 import { useQuery } from "@vue/apollo-composable";
+import gql from "graphql-tag";
 
-const { result, loading, onResult, refetch } = useQuery(getModulesAll);
+// const { result, loading, onResult, refetch } = useQuery(getModulesAll);
+const currentUserId = localStorage.getItem("userId");
+const { result, loading, onResult, refetch } = useQuery(gql`
+  query getUserModules {
+    paginate_subject(page: 1, perPage: 100, where: { column: "user_id", operator: EQ, value: ${currentUserId} }) {
+      data {
+        id
+        type_id
+        author_id
+        level
+        position
+        created_at
+        updated_at
+        user_id
+        fullname {
+          first_name
+          last_name
+        }
+        property5 {
+          id
+          name
+          created_at
+          property5 {
+            id
+            fullname {
+              first_name
+              last_name
+            }
+          }
+
+          property6 {
+            date
+            time
+          }
+          property7 {
+            date
+            time
+          }
+          property4 {
+            id
+            property3
+          }
+        }
+      }
+      paginatorInfo {
+        perPage
+        currentPage
+        lastPage
+        total
+        count
+        from
+        to
+        hasMorePages
+      }
+    }
+  }
+`);
 
 const { result: pageData } = useQuery(getPagesModule, {
   id: process.env.MODULES_PAGE_ID,
@@ -115,30 +168,33 @@ const rows = ref();
 const secondDialog = ref(false);
 
 onResult(() => {
-  rows.value = result?.value?.paginate_type1?.data.map((el, i) => {
-    let statusAppointed = 0;
-    let statusCompleted = 0;
-    let statusFinished = 0;
+  console.log(result?.value?.paginate_subject?.data);
+  rows.value = result?.value?.paginate_subject?.data[0]?.property5?.map(
+    (el, i) => {
+      let statusAppointed = 0;
+      let statusCompleted = 0;
+      let statusFinished = 0;
 
-    el.property4.forEach((item) => {
-      if (item.property3 === process.env.APPOINTED_ID) {
-        statusAppointed++;
-      } else if (item.property3 === process.env.COMPLETED_ID) {
-        statusCompleted++;
-      } else {
-        statusFinished++;
-      }
-    });
+      el.property4.forEach((item) => {
+        if (item.property3 === process.env.APPOINTED_ID) {
+          statusAppointed++;
+        } else if (item.property3 === process.env.COMPLETED_ID) {
+          statusCompleted++;
+        } else {
+          statusFinished++;
+        }
+      });
 
-    return {
-      ...el,
-      id: el.id,
-      index: i,
-      stAppointed: statusAppointed,
-      stCompleted: statusCompleted,
-      stFinished: statusFinished,
-    };
-  });
+      return {
+        ...el,
+        id: el.id,
+        index: i,
+        stAppointed: statusAppointed,
+        stCompleted: statusCompleted,
+        stFinished: statusFinished,
+      };
+    }
+  );
 });
 
 const updateDeleteType = ref({

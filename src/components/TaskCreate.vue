@@ -2,7 +2,9 @@
   <div>
     <q-card style="min-width: 350px">
       <q-card-section>
-        <div v-if="props.updateData.updateCreateType.bool" class="text-h6">Создать задачу</div>
+        <div v-if="props.updateData.updateCreateType.bool" class="text-h6">
+          Создать задачу
+        </div>
         <div v-else class="text-h6">Изменить задачу</div>
       </q-card-section>
       <q-form @submit.prevent="manipulationForm">
@@ -33,7 +35,10 @@
             :rules="[requiredSelect]"
           />
         </q-card-section>
-        <q-card-section class="q-pt-none" v-if="!props.updateData.updateCreateType.bool">
+        <q-card-section
+          class="q-pt-none"
+          v-if="!props.updateData.updateCreateType.bool"
+        >
           <q-select
             v-model="taskStatus"
             label="Статус"
@@ -44,7 +49,16 @@
         </q-card-section>
         <q-card-actions align="right" class="text-primary">
           <q-btn flat :label="'Отмена'" v-close-popup />
-          <q-btn flat :label="props.updateData.updateCreateType.bool ? 'Создать задачу' : 'Изменить задачу'" type="submit" v-close-popup />
+          <q-btn
+            flat
+            :label="
+              props.updateData.updateCreateType.bool
+                ? 'Создать задачу'
+                : 'Изменить задачу'
+            "
+            type="submit"
+            v-close-popup
+          />
         </q-card-actions>
       </q-form>
     </q-card>
@@ -56,28 +70,28 @@ import { useQuery } from "@vue/apollo-composable";
 import { ref, computed } from "vue";
 import { getExecutorGroupSubjects } from "src/graphql/queries";
 import { useValidators, useValidatorsSelect } from "src/use/validators.js";
-import taskMutation from 'src/sdk/tasks.js'
+import taskMutation from "src/sdk/tasks.js";
 
 const { required } = useValidators();
 const { requiredSelect } = useValidatorsSelect();
-const taskStatus = ref(props.updateData.moduleStatusUpdate)
-const statusTaskList =  [
+const taskStatus = ref(props.updateData.moduleStatusUpdate);
+const statusTaskList = [
+  // {
+  //   label: 'Назначено',
+  //   value: process.env.APPOINTED_ID
+  // },
   {
-    label: 'Назначено',
-    value: process.env.APPOINTED_ID
+    label: "Выполнено",
+    value: process.env.COMPLETED_ID,
   },
   {
-    label: 'Выполнено',
-    value: process.env.COMPLETED_ID
+    label: "Завершено",
+    value: process.env.FINISHED_ID,
   },
-  {
-    label: 'Завершено',
-    value: process.env.FINISHED_ID
-  }
-]
+];
 const props = defineProps({
   page: Object,
-  updateData: Object
+  updateData: Object,
 });
 const task = ref({
   name: props.updateData.moduleNameUpdate,
@@ -96,20 +110,17 @@ const groupSubjectUsers = computed(() =>
     value: subject.id,
   }))
 );
-  const taskCreating = () => {
-    taskMutation.taskCreate(task.value, props.page.page.object.id)
+const taskCreating = () => {
+  taskMutation.taskCreate(task.value, props.page.page.object.id);
+};
+const taskUpdating = () => {
+  taskMutation.taskUpdate(task.value, props.updateData.updateCreateType.id);
+};
+const manipulationForm = () => {
+  if (props.updateData.updateCreateType.bool) {
+    taskCreating();
+  } else {
+    taskUpdating();
   }
-  const taskUpdating = () => {
-
-    taskMutation.taskUpdate(task.value, props.updateData.updateCreateType.id)
-  }
-  const manipulationForm = () => {
-    if (props.updateData.updateCreateType.bool) {
-      taskCreating()
-    } else {
-      taskUpdating()
-    }
-}
-
-
+};
 </script>
