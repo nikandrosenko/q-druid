@@ -1,6 +1,6 @@
 <template>
   <div class="flex column items-center">
-    <form @submit.prevent="signIn">
+    <form @submit.prevent="signIn" class="flex column items-center">
       <div>
         <p style="margin: 30px 0 5px">Почта</p>
         <q-input
@@ -24,8 +24,7 @@
         />
       </div>
       <q-btn
-        style="margin: 20px 0 20px 0"
-        class="q-mt-md"
+        class="q-ma-md"
         color="primary"
         text-color="white"
         label="Войти"
