@@ -2,7 +2,7 @@
   <q-list>
     <q-tree
       :nodes="keyedPages"
-      node-key="label"
+      node-key="id"
       no-connectors
       no-selection-unset
       selected-color="primary"
@@ -22,14 +22,13 @@ import _ from "lodash";
 
 const router = useRouter();
 const route = useRoute();
-const id = ref("");
 const treePages = ref([]);
 const keyedPages = ref([]);
 const parentPages = ref([]);
 const selected = ref();
 const expanded = ref([]);
 
-const myclick = (node) => {
+const redirect = (node) => {
   router.push({
     name: "page",
     params: { id: node.id },
@@ -47,13 +46,13 @@ onResult(() => {
       label: page.title,
       icon: page.icon,
       position: page.position,
-      handler: (node) => myclick(node),
+      handler: (node) => redirect(node),
       children: page.children.data.map((elem) => {
         elem = {
           id: elem.id,
           label: elem.title,
           icon: elem.icon,
-          handler: (node) => myclick(node),
+          handler: (node) => redirect(node),
         };
         return elem;
       }),
@@ -61,16 +60,23 @@ onResult(() => {
     treePages.value.push(treeElem);
   });
   keyedPages.value = _.sortBy(treePages.value, ["label", "position"]);
-  // selected.value = keyedPages.value[0].label;
-  // console.log(keyedPages.value);
-  // console.log(id.value);
-  selected.value = keyedPages.value[0].label;
-  // console.log(
-  //   _.find(keyedPages.value, (o) => {
-  //     return o.children[0].id === route.params.id;
-  //   })
-  // );
-  expanded.value.push(selected.value);
+
+  const findById = (array, id) => {
+    let result;
+    array.some(
+      (o) => (result = o.id === id ? o : findById(o.children || [], id))
+    );
+    return result;
+  };
+
+  selected.value = findById(keyedPages.value, route.params.id).id;
+  expanded.value.push(
+    keyedPages.value.find(
+      (item) =>
+        item.id === route.params.id ||
+        item.children.find((i) => i.id === route.params.id)
+    ).id
+  );
 });
 onMounted(() => {
   refetch();
