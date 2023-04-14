@@ -57,7 +57,7 @@ const moduleCreate = async (emitValue) => {
       model_id: createdPage.pageCreate.recordId,
       owner_type: "subject",
       owner_id: emitValue.emitValue.modelUserModule.value.value,
-      level: 5,
+      level: 7,
     },
   });
 

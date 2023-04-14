@@ -31,6 +31,7 @@
 
   <div class="q-ma-xl">
     <q-btn
+      v-if="level === 7"
       label="Создать"
       color="primary"
       @click="
@@ -100,6 +101,12 @@ import moduleApi from "src/sdk/module.js";
 import { getPagesModule } from "src/graphql/queries.js";
 import { useQuery } from "@vue/apollo-composable";
 import gql from "graphql-tag";
+
+const { level } = defineProps({
+  level: Number,
+});
+
+console.log(level);
 
 const currentUserId = localStorage.getItem("userId");
 const { result, loading, onResult, refetch } = useQuery(gql`
@@ -255,10 +262,10 @@ const moduleDeleteElement = (id) => {
     (el) => el.object.id == id
   );
 
-  tasksModule.value = result?.value?.paginate_type1?.data.find(
+  tasksModule.value = result?.value?.paginate_subject?.data[0]?.property5?.find(
     (el) => el.id === id
   );
-
+  console.log(tasksModule);
   if (tasksModule.value.property4.length > 0) {
     secondDialog.value = true;
   } else {

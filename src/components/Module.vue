@@ -27,6 +27,7 @@
       </q-dialog>
 
       <q-btn
+        v-if="level === 7"
         label="Создать задачу"
         color="primary"
         @click="
@@ -103,9 +104,12 @@ import { onMounted, ref } from "vue";
 import TaskCreate from "./TaskCreate.vue";
 import taskApi from "src/sdk/tasks.js";
 
-const { page } = defineProps({
+const { page, level } = defineProps({
   page: Object,
+  level: Number,
 });
+
+console.log(level);
 
 const prompt = ref(false);
 

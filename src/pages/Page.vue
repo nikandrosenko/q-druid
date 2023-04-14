@@ -11,11 +11,12 @@
         v-if="pageType === 'Группа'"
         :page="page"
         :subjectId="subjectId"
+        :level="level"
         :id="id"
       />
-      <modules v-if="pageType === 'Модули'" />
-      <module v-if="pageType === 'Модуль'" :page="page" />
-      <tasks v-if="pageType === 'Задачи'" />
+      <modules v-if="pageType === 'Модули'" :level="level" />
+      <module v-if="pageType === 'Модуль'" :page="page" :level="level" />
+      <tasks v-if="pageType === 'Задачи'" :level="level" />
     </section>
   </q-page>
 </template>
@@ -38,6 +39,7 @@ const { result: page, loading } = useQuery(getPage, {
 });
 
 const subjectId = computed(() => page.value?.page?.object.id);
+const level = computed(() => page.value?.page?.level);
 
 const defId = () => {
   id.value = route.params.id;
