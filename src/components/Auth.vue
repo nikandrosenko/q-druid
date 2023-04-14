@@ -43,7 +43,6 @@ import { useRouter } from "vue-router";
 import { useMutation } from "@vue/apollo-composable";
 import { userSignIn, userSignInSocialNetwork } from "src/graphql/mutations.js";
 import { useValidators } from "src/use/validators.js";
-// import { getItemUserId } from "src/graphql/queries";
 
 const { required } = useValidators();
 const router = useRouter();
@@ -88,11 +87,8 @@ const signIn = async () => {
   signInUser()
     .then((res) => {
       if (!res.errors) {
-        console.log(res.data.userSignIn);
         localStorage.setItem("userId", null);
         localStorage.setItem("userId", res.data.userSignIn.recordId);
-        console.log(localStorage.getItem("userId"));
-        // getItemUserId();
         sessionStorage.setItem(
           "token",
           res.data.userSignIn.record.access_token
@@ -124,7 +120,6 @@ const signInFromGoogle = async (JWTTokenGoogle) => {
       if (!res.errors) {
         localStorage.setItem("userId", null);
         localStorage.setItem("userId", res.data.userSignIn.recordId);
-        console.log(localStorage.getItem("userId"));
         sessionStorage.setItem(
           "token",
           res.data.userSignIn.record.access_token

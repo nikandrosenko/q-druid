@@ -97,11 +97,10 @@
 import { ref, onMounted } from "vue";
 import Form from "./Form.vue";
 import moduleApi from "src/sdk/module.js";
-import { getModulesAll, getPagesModule } from "src/graphql/queries.js";
+import { getPagesModule } from "src/graphql/queries.js";
 import { useQuery } from "@vue/apollo-composable";
 import gql from "graphql-tag";
 
-// const { result, loading, onResult, refetch } = useQuery(getModulesAll);
 const currentUserId = localStorage.getItem("userId");
 const { result, loading, onResult, refetch } = useQuery(gql`
   query getUserModules {
@@ -168,7 +167,6 @@ const rows = ref();
 const secondDialog = ref(false);
 
 onResult(() => {
-  console.log(result?.value?.paginate_subject?.data);
   rows.value = result?.value?.paginate_subject?.data[0]?.property5?.map(
     (el, i) => {
       let statusAppointed = 0;

@@ -8,14 +8,12 @@ import {
   deletePage,
   updateModule,
   updatePage,
-  updatePermissionRule,
 } from "src/graphql/mutations.js";
 
 provideApolloClient(apolloClient);
 
 const { mutate: updatingModule } = useMutation(updateModule);
 const { mutate: updatingPage } = useMutation(updatePage);
-// const { mutate: updatingPermissionRule } = useMutation(updatePermissionRule);
 const { mutate: deletingModule } = useMutation(deleteModule);
 const { mutate: deletingPage } = useMutation(deletePage);
 const { mutate: creatingModule } = useMutation(createModule);
@@ -73,10 +71,6 @@ const moduleCreate = async (emitValue) => {
         level: 5,
       },
     });
-
-    // console.log(createdPermissionRuleForModuleObject.permissionRuleCreate.recordId)
-    // console.log(createdPermissionRuleForPage.permissionRuleCreate.recordId)
-
 };
 
 const moduleDelete = async (moduleId, pageId) => {

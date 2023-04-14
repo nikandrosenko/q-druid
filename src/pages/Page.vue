@@ -12,7 +12,6 @@
         :page="page"
         :subjectId="subjectId"
         :id="id"
-        @refresh="refresh"
       />
       <modules v-if="pageType === 'Модули'" />
       <module v-if="pageType === 'Модуль'" :page="page" />
@@ -43,10 +42,6 @@ const subjectId = computed(() => page.value?.page?.object.id);
 const defId = () => {
   id.value = route.params.id;
   sessionStorage.setItem("route", route.params.id);
-};
-
-const refresh = () => {
-  console.log("Кек");
 };
 
 const pageType = ref("");

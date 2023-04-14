@@ -76,10 +76,6 @@ const { required } = useValidators();
 const { requiredSelect } = useValidatorsSelect();
 const taskStatus = ref(props.updateData.moduleStatusUpdate);
 const statusTaskList = [
-  // {
-  //   label: 'Назначено',
-  //   value: process.env.APPOINTED_ID
-  // },
   {
     label: "Выполнено",
     value: process.env.COMPLETED_ID,

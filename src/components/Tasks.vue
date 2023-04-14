@@ -1,9 +1,8 @@
 <template>
   <q-page class="q-ma-xl">
-
     <q-dialog v-model="prompt">
-        <FormTasks :updateData="updateData"/>
-      </q-dialog>
+      <FormTasks :updateData="updateData" />
+    </q-dialog>
 
     <div v-if="loading">
       <p>Загрузка</p>
@@ -19,8 +18,17 @@
           </q-tr>
         </template>
 
-        <template v-slot:body="props" >
-          <q-tr :props="props" :class="props.row.status.label==='Выполнено' ? 'bg-yellow' : props.row.status.label==='Назначено' ? 'bg-pink' : 'bg-green'">
+        <template v-slot:body="props">
+          <q-tr
+            :props="props"
+            :class="
+              props.row.status.label === 'Выполнено'
+                ? 'bg-yellow'
+                : props.row.status.label === 'Назначено'
+                ? 'bg-pink'
+                : 'bg-green'
+            "
+          >
             <q-td auto-width>
               <q-btn
                 size="sm"
@@ -51,14 +59,14 @@ import { useQuery } from "@vue/apollo-composable";
 import gql from "graphql-tag";
 import FormTasks from "./FormTasks.vue";
 
-const prompt = ref(false)
+const prompt = ref(false);
 
-const updateData = ref()
+const updateData = ref();
 
 const { page } = defineProps({
   page: Object,
 });
-const isNewUser = ref(false);
+
 const rows = ref();
 const columns = [
   {
@@ -175,18 +183,17 @@ onResult(() => {
 });
 
 const tasksUpdateElementForm = (index, id) => {
-
   updateData.value = {
-      id: id,
-      moduleNameUpdate: rows.value[index].name,
-      moduleDescriptionUpdate: rows.value[index].property1,
-      modelUserModuleUpdate: {
-        label: `${rows.value[index].property2.fullname.first_name} ${rows.value[index].property2.fullname.last_name}`,
-        value: rows.value[index].property2.id,
-      },
-        moduleStatusUpdate: rows.value[index].status,
-    }
-}
+    id: id,
+    moduleNameUpdate: rows.value[index].name,
+    moduleDescriptionUpdate: rows.value[index].property1,
+    modelUserModuleUpdate: {
+      label: `${rows.value[index].property2.fullname.first_name} ${rows.value[index].property2.fullname.last_name}`,
+      value: rows.value[index].property2.id,
+    },
+    moduleStatusUpdate: rows.value[index].status,
+  };
+};
 
 onMounted(() => {
   if (!rows.value) refetch();

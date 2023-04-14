@@ -25,10 +25,9 @@
 
 <script setup>
 import { ref } from "vue";
-import { useValidators, useValidatorsSelect } from "src/use/validators.js";
+import { useValidatorsSelect } from "src/use/validators.js";
 import tasksMutation from "src/sdk/tasks.js";
 
-const { required } = useValidators();
 const { requiredSelect } = useValidatorsSelect();
 const taskStatus = ref(props.updateData.moduleStatusUpdate);
 const statusTaskList = [
@@ -40,10 +39,6 @@ const statusTaskList = [
     label: "Выполнено",
     value: process.env.COMPLETED_ID,
   },
-  // {
-  //   label: 'Завершено',
-  //   value: process.env.FINISHED_ID
-  // }
 ];
 const props = defineProps({
   updateData: Object,

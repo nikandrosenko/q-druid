@@ -14,7 +14,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from "vue";
+import { ref, onMounted } from "vue";
 import { pages } from "src/graphql/queries";
 import { useQuery } from "@vue/apollo-composable";
 import { useRouter, useRoute } from "vue-router";
