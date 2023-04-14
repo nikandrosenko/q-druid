@@ -1,6 +1,7 @@
 <template>
   <q-list>
     <q-tree
+      v-if="keyedPages"
       :nodes="keyedPages"
       node-key="id"
       no-connectors
@@ -69,14 +70,16 @@ onResult(() => {
     return result;
   };
 
-  selected.value = findById(keyedPages.value, route.params.id).id;
-  expanded.value.push(
-    keyedPages.value.find(
-      (item) =>
-        item.id === route.params.id ||
-        item.children.find((i) => i.id === route.params.id)
-    ).id
-  );
+  selected.value = findById(keyedPages.value, route.params.id)?.id ?? "";
+  if (selected.value !== "") {
+    expanded.value.push(
+      keyedPages.value.find(
+        (item) =>
+          item.id === route.params.id ||
+          item.children.find((i) => i.id === route.params.id)
+      ).id
+    );
+  }
 });
 onMounted(() => {
   refetch();
