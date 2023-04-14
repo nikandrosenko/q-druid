@@ -106,8 +106,6 @@ const { level } = defineProps({
   level: Number,
 });
 
-console.log(level);
-
 const currentUserId = localStorage.getItem("userId");
 const { result, loading, onResult, refetch } = useQuery(gql`
   query getUserModules {

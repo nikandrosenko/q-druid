@@ -74,8 +74,6 @@ const { page, subjectId, id, level } = defineProps({
   level: Number,
 });
 
-console.log(level);
-
 const rows = ref();
 const columns = [
   {

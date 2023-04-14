@@ -16,7 +16,7 @@
       />
       <modules v-if="pageType === 'Модули'" :level="level" />
       <module v-if="pageType === 'Модуль'" :page="page" :level="level" />
-      <tasks v-if="pageType === 'Задачи'" :level="level" />
+      <tasks v-if="pageType === 'Задачи'" />
     </section>
   </q-page>
 </template>

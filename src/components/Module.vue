@@ -109,8 +109,6 @@ const { page, level } = defineProps({
   level: Number,
 });
 
-console.log(level);
-
 const prompt = ref(false);
 
 const rows = ref();

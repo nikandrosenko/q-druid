@@ -89,7 +89,7 @@ const columns = [
     field: (row) => `${row.status.label}`,
   },
 ];
-let st = ref();
+
 const currentUserId = localStorage.getItem("userId");
 const { result, loading, onResult, refetch } = useQuery(gql`
   query getUserTasks {
