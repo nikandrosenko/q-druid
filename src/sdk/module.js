@@ -1,4 +1,4 @@
-import { provideApolloClient, useMutation } from "@vue/apollo-composable";
+import { provideApolloClient, useMutation, useQuery } from "@vue/apollo-composable";
 import apolloClient from "src/apollo/client";
 import {
   createModule,
@@ -8,7 +8,9 @@ import {
   deletePage,
   updateModule,
   updatePage,
+  permissionRuleDeleting
 } from "src/graphql/mutations.js";
+import { permissionTreeSubjects } from "src/graphql/queries.js";
 
 provideApolloClient(apolloClient);
 
@@ -17,6 +19,10 @@ const { mutate: updatingPage } = useMutation(updatePage);
 const { mutate: deletingModule } = useMutation(deleteModule);
 const { mutate: deletingPage } = useMutation(deletePage);
 const { mutate: creatingModule } = useMutation(createModule);
+const { mutate: permissionRuleDelete } = useMutation(permissionRuleDeleting)
+const { mutate: creatingPermissionRule } = useMutation(createPermissionRule);
+
+const { result: dataPermission } = useQuery(permissionTreeSubjects)
 
 const moduleCreate = async (emitValue) => {
   const { data: createdModule } = await creatingModule({
@@ -50,14 +56,13 @@ const moduleCreate = async (emitValue) => {
     },
   });
 
-  const { mutate: creatingPermissionRule } = useMutation(createPermissionRule);
   const { data: createdPermissionRuleForPage } = await creatingPermissionRule({
     input: {
       model_type: "page",
       model_id: createdPage.pageCreate.recordId,
       owner_type: "subject",
       owner_id: emitValue.emitValue.modelUserModule.value.value,
-      level: 7,
+      level: 5,
     },
   });
 
@@ -82,6 +87,11 @@ const moduleDelete = async (moduleId, pageId) => {
     page_id: pageId,
   });
 };
+
+const permissionIdForDeleted = ref({
+  module: '',
+  page: ''
+})
 
 const moduleUpdate = async (moduleId, pageId, emitValue) => {
   const { data: updateM } = await updatingModule({
@@ -109,6 +119,47 @@ const moduleUpdate = async (moduleId, pageId, emitValue) => {
       title: emitValue.emitValue.moduleName.value,
     },
   });
+
+  if(emitValue.emitValue.updatePermission.value){
+
+    permissionIdForDeleted.value.module = permissionTreeSubjects?.value?.data.find((el) => {
+      el.subject_id === moduleId
+    })
+
+    permissionIdForDeleted.value.page = permissionTreeSubjects?.value?.data.find((el) => {
+      el.subject_id === pageId
+    })
+
+    const { data: deletePermissionModule } = await permissionRuleDelete({
+      id: permissionIdForDeleted.value.module
+    })
+
+    const { data: deletePermissionPage } = await permissionRuleDelete({
+      id: permissionIdForDeleted.value.page
+    })
+
+    const { data: createdPermissionRuleForPage } = await creatingPermissionRule({
+      input: {
+        model_type: "page",
+        model_id: moduleId,
+        owner_type: "subject",
+        owner_id: emitValue.emitValue.modelUserModule.value.value,
+        level: 5,
+      },
+    });
+
+    const { data: createdPermissionRuleForModuleObject } =
+      await creatingPermissionRule({
+        input: {
+          model_type: "object",
+          model_id: pageId,
+          owner_type: "subject",
+          owner_id: emitValue.emitValue.modelUserModule.value.value,
+          level: 5,
+        },
+      });
+
+  }
 };
 
 const moduleApi = { moduleCreate, moduleDelete, moduleUpdate };
