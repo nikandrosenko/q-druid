@@ -95,6 +95,14 @@ const columns = [
     label: "Почта",
     field: (row) => `${row.email.email}`,
   },
+  {
+    name: "modules",
+    label: "Модули",
+    field: (row) =>
+      `${row.modules.map((el) => {
+        return ` ${el.name}`;
+      })}`,
+  },
 ];
 
 const $q = useQuasar();
@@ -104,6 +112,8 @@ const { required } = useValidators();
 const prompt = ref(false);
 
 const tableUsers = ref([]);
+
+const modulesVar = ref([]);
 
 const {
   result: subjects,

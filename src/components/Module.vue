@@ -125,14 +125,14 @@ const {
 });
 
 onResult(() => {
-  rows.value = resultModule?.value?.get_type1?.property4.map((el, i) => {
+  rows.value = resultModule?.value?.get_type1?.tasks.map((el, i) => {
     let status = {};
-    if (el.property3 === process.env.APPOINTED_ID) {
+    if (el.status === process.env.APPOINTED_ID) {
       status = {
         label: "Назначено",
         value: process.env.APPOINTED_ID,
       };
-    } else if (el.property3 === process.env.COMPLETED_ID) {
+    } else if (el.status === process.env.COMPLETED_ID) {
       status = {
         label: "Выполнено",
         value: process.env.COMPLETED_ID,
@@ -165,13 +165,13 @@ const columns = [
   {
     name: "description",
     label: "Описание",
-    field: (row) => `${row.property1}`,
+    field: (row) => `${row.description}`,
   },
   {
     name: "first_name",
     label: "Исполнитель",
     field: (row) =>
-      `${row.property2.fullname.first_name} ${row.property2.fullname.last_name}`,
+      `${row.executor.fullname.first_name} ${row.executor.fullname.last_name}`,
   },
   {
     name: "status",
@@ -211,10 +211,10 @@ const taskUpdateElementForm = (index) => {
     updateData.value = {
       updateCreateType: updateCreateType.value,
       moduleNameUpdate: rows.value[index].name,
-      moduleDescriptionUpdate: rows.value[index].property1,
+      moduleDescriptionUpdate: rows.value[index].description,
       modelUserModuleUpdate: {
-        label: `${rows.value[index].property2.fullname.first_name} ${rows.value[index].property2.fullname.last_name}`,
-        value: rows.value[index].property2.id,
+        label: `${rows.value[index].executor.fullname.first_name} ${rows.value[index].executor.fullname.last_name}`,
+        value: rows.value[index].executor.id,
       },
       moduleStatusUpdate: rows.value[index].status,
     };

@@ -101,11 +101,11 @@ export const getGroupSubjects = gql`
           id
           name
         }
-        property5 {
+        tasks {
           id
           name
         }
-        property2 {
+        modules {
           id
           name
         }
@@ -231,25 +231,25 @@ export const getModulesAll = gql`
         created_at
         updated_at
         name
-        property5 {
+        responsible {
           id
           fullname {
             first_name
             last_name
           }
         }
-        property6 {
+        date_start {
           date
           time
         }
-        property7 {
+        date_end {
           date
           time
         }
-        property4 {
+        tasks {
           id
           name
-          property3
+          status
         }
       }
       paginatorInfo {
@@ -271,33 +271,33 @@ export const getModuleById = gql`
     get_type1(id: $module_id) {
       id
       name
-      property5 {
+      responsible {
         id
         fullname {
           first_name
           last_name
         }
       }
-      property6 {
+      date_start {
         date
         time
       }
-      property7 {
+      date_end {
         date
         time
       }
-      property4 {
+      tasks {
         id
         name
-        property1
-        property2 {
+        description
+        executor {
           id
           fullname {
             first_name
             last_name
           }
         }
-        property3
+        status
       }
     }
   }
@@ -347,19 +347,19 @@ export const getTasksAll = gql`
         created_at
         updated_at
         name
-        property1
-        property2 {
+        description
+        executor {
           id
           fullname {
             first_name
             last_name
           }
         }
-        property3
-        property4 {
+        status
+        modules {
           id
           name
-          property5 {
+          responsible {
             id
             fullname {
               first_name

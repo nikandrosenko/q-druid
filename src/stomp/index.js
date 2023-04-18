@@ -33,11 +33,11 @@ const { refetch: refetchModules } = useQuery(gql`
           first_name
           last_name
         }
-        property5 {
+        modules {
           id
           name
           created_at
-          property5 {
+          responsible {
             id
             fullname {
               first_name
@@ -45,17 +45,17 @@ const { refetch: refetchModules } = useQuery(gql`
             }
           }
 
-          property6 {
+          date_start {
             date
             time
           }
-          property7 {
+          date_end {
             date
             time
           }
-          property4 {
+          tasks {
             id
-            property3
+            status
           }
         }
       }
@@ -93,12 +93,12 @@ const { refetch: refetchTasks } = useQuery(gql`
           first_name
           last_name
         }
-        property2 {
+        tasks {
           id
           name
-          property1
+          description
           created_at
-          property2 {
+          executor {
             id
             user_id
             fullname {
@@ -106,11 +106,11 @@ const { refetch: refetchTasks } = useQuery(gql`
               last_name
             }
           }
-          property3
-          property4 {
+          status
+          module {
             id
             name
-            property5 {
+            responsible {
               id
               user_id
               fullname {

@@ -116,7 +116,7 @@ export const createModule = gql`
         created_at
         updated_at
         name
-        property5 {
+        responsible {
           id
           user_id
           fullname {
@@ -124,18 +124,18 @@ export const createModule = gql`
             last_name
           }
         }
-        property6 {
+        date_start {
           date
           time
         }
-        property7 {
+        date_end {
           date
           time
         }
-        property4 {
+        tasks {
           name
-          property1
-          property2 {
+          description
+          executor {
             fullname {
               first_name
               last_name
@@ -160,8 +160,8 @@ export const createTask = gql`
         created_at
         updated_at
         name
-        property1
-        property2 {
+        description
+        executor {
           id
           user_id
           fullname {
@@ -169,7 +169,7 @@ export const createTask = gql`
             last_name
           }
         }
-        property4 {
+        module {
           id
         }
       }
@@ -191,8 +191,8 @@ export const updateTask = gql`
         created_at
         updated_at
         name
-        property1
-        property2 {
+        description
+        executor {
           id
           user_id
           fullname {
@@ -200,7 +200,7 @@ export const updateTask = gql`
             last_name
           }
         }
-        property3
+        status
       }
     }
   }

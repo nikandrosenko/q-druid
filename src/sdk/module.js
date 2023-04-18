@@ -22,15 +22,15 @@ const moduleCreate = async (emitValue) => {
   const { data: createdModule } = await creatingModule({
     input: {
       name: emitValue.emitValue.moduleName.value,
-      property5: {
+      responsible: {
         [process.env.SUBJECT_ID]:
           emitValue.emitValue.modelUserModule.value.value,
       },
-      property6: {
+      date_start: {
         date: emitValue.emitValue.date.value.dateStart,
         time: emitValue.emitValue.date.value.timeStart,
       },
-      property7: {
+      date_end: {
         date: emitValue.emitValue.date.value.dateEnd,
         time: emitValue.emitValue.date.value.timeEnd,
       },
@@ -88,15 +88,15 @@ const moduleUpdate = async (moduleId, pageId, emitValue) => {
     id: moduleId,
     input: {
       name: emitValue.emitValue.moduleName.value,
-      property5: {
+      responsible: {
         [process.env.SUBJECT_ID]:
           emitValue.emitValue.modelUserModule.value.value,
       },
-      property6: {
+      date_start: {
         date: emitValue.emitValue.date.value.dateStart,
         time: emitValue.emitValue.date.value.timeStart,
       },
-      property7: {
+      date_end: {
         date: emitValue.emitValue.date.value.dateEnd,
         time: emitValue.emitValue.date.value.timeEnd,
       },

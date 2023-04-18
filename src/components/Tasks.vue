@@ -81,7 +81,7 @@ const columns = [
   {
     name: "description",
     label: "Описание",
-    field: (row) => `${row.property1}`,
+    field: (row) => `${row.description}`,
   },
   {
     name: "status",
@@ -111,12 +111,12 @@ const { result, loading, onResult, refetch } = useQuery(gql`
           first_name
           last_name
         }
-        property2 {
+        tasks {
           id
           name
-          property1
+          description
           created_at
-          property2 {
+          executor {
             id
             user_id
             fullname {
@@ -124,11 +124,11 @@ const { result, loading, onResult, refetch } = useQuery(gql`
               last_name
             }
           }
-          property3
-          property4 {
+          status
+          module {
             id
             name
-            property5 {
+            responsible {
               id
               user_id
               fullname {
@@ -153,43 +153,41 @@ const { result, loading, onResult, refetch } = useQuery(gql`
   }
 `);
 onResult(() => {
-  rows.value = result?.value?.paginate_subject?.data[0]?.property2?.map(
-    (el, i) => {
-      let status = {};
-      if (el.property3 === process.env.APPOINTED_ID) {
-        status = {
-          label: "Назначено",
-          value: process.env.APPOINTED_ID,
-        };
-      } else if (el.property3 === process.env.COMPLETED_ID) {
-        status = {
-          label: "Выполнено",
-          value: process.env.COMPLETED_ID,
-        };
-      } else {
-        status = {
-          label: "Завершено",
-          value: process.env.FINISHED_ID,
-        };
-      }
-      return {
-        ...el,
-        id: el.id,
-        index: i,
-        status: status,
+  rows.value = result?.value?.paginate_subject?.data[0]?.tasks?.map((el, i) => {
+    let statusName = {};
+    if (el.status === process.env.APPOINTED_ID) {
+      statusName = {
+        label: "Назначено",
+        value: process.env.APPOINTED_ID,
+      };
+    } else if (el.status === process.env.COMPLETED_ID) {
+      statusName = {
+        label: "Выполнено",
+        value: process.env.COMPLETED_ID,
+      };
+    } else {
+      statusName = {
+        label: "Завершено",
+        value: process.env.FINISHED_ID,
       };
     }
-  );
+    return {
+      ...el,
+      id: el.id,
+      index: i,
+      status: statusName,
+    };
+  });
 });
 
 const tasksUpdateElementForm = (index, id) => {
   updateData.value = {
     id: id,
     moduleNameUpdate: rows.value[index].name,
-    moduleDescriptionUpdate: rows.value[index].property1,
+    moduleDescriptionUpdate: rows.value[index].description,
     modelUserModuleUpdate: {
-      label: `${rows.value[index].property2.fullname.first_name} ${rows.value[index].property2.fullname.last_name}`,
-      value: rows.value[index].property2.id,
+      label: `${rows.value[index].executor.fullname.first_name} ${rows.value[index].executor.fullname.last_name}`,
+      value: rows.value[index].executor.id,
     },
     moduleStatusUpdate: rows.value[index].status,
   };

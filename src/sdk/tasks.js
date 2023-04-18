@@ -27,12 +27,12 @@ const taskCreate = async (task, moduleId) => {
   const { data: createdTask } = await creatingTask({
     input: {
       name: task.name,
-      property1: task.description,
-      property2: {
+      description: task.description,
+      executor: {
         [process.env.SUBJECT_ID]: task.executor.value,
       },
-      property3: process.env.APPOINTED_ID,
-      property4: {
+      status: process.env.APPOINTED_ID,
+      module: {
         [process.env.MODULE_ID]: moduleId,
       },
     },
@@ -46,7 +46,7 @@ const taskCreate = async (task, moduleId) => {
       level: 5,
     },
 
-    refetchModule
+    refetchModule,
   });
 
   return {
@@ -60,11 +60,11 @@ const taskUpdate = async (task, taskId) => {
     id: taskId,
     input: {
       name: task.name,
-      property1: task.description,
-      property2: {
+      description: task.description,
+      executor: {
         [process.env.SUBJECT_ID]: task.executor.value,
       },
-      property3: task.status.value,
+      status: task.status.value,
     },
   });
 

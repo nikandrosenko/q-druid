@@ -39,6 +39,10 @@ const statusTaskList = [
     label: "Выполнено",
     value: process.env.COMPLETED_ID,
   },
+  // {
+  //   label: "Завершена",
+  //   value: process.env.FINISHED_ID,
+  // },
 ];
 const props = defineProps({
   updateData: Object,

@@ -123,11 +123,11 @@ const { result, loading, onResult, refetch } = useQuery(gql`
           first_name
           last_name
         }
-        property5 {
+        modules {
           id
           name
           created_at
-          property5 {
+          responsible {
             id
             fullname {
               first_name
@@ -135,17 +135,17 @@ const { result, loading, onResult, refetch } = useQuery(gql`
             }
           }
 
-          property6 {
+          date_start {
             date
             time
           }
-          property7 {
+          date_end {
             date
             time
           }
-          property4 {
+          tasks {
             id
-            property3
+            status
           }
         }
       }
@@ -172,16 +172,16 @@ const rows = ref();
 const secondDialog = ref(false);
 
 onResult(() => {
-  rows.value = result?.value?.paginate_subject?.data[0]?.property5?.map(
+  rows.value = result?.value?.paginate_subject?.data[0]?.modules?.map(
     (el, i) => {
       let statusAppointed = 0;
       let statusCompleted = 0;
       let statusFinished = 0;
 
-      el.property4.forEach((item) => {
-        if (item.property3 === process.env.APPOINTED_ID) {
+      el.tasks.forEach((item) => {
+        if (item.status === process.env.APPOINTED_ID) {
           statusAppointed++;
-        } else if (item.property3 === process.env.COMPLETED_ID) {
+        } else if (item.status === process.env.COMPLETED_ID) {
           statusCompleted++;
         } else {
           statusFinished++;
@@ -223,17 +223,17 @@ const columns = [
     name: "first_name",
     label: "Ответственный",
     field: (row) =>
-      `${row.property5.fullname.first_name} ${row.property5.fullname.last_name}`,
+      `${row.responsible.fullname.first_name} ${row.responsible.fullname.last_name}`,
   },
   {
     name: "start",
     label: "Начало",
-    field: (row) => `${row.property6.date} ${row.property6.time}`,
+    field: (row) => `${row.date_start.date} ${row.date_start.time}`,
   },
   {
     name: "finish",
     label: "Конец",
-    field: (row) => `${row.property7.date} ${row.property7.time}`,
+    field: (row) => `${row.date_end.date} ${row.date_end.time}`,
   },
   {
     name: "finish",
@@ -260,11 +260,11 @@ const moduleDeleteElement = (id) => {
     (el) => el.object.id == id
   );
 
-  tasksModule.value = result?.value?.paginate_subject?.data[0]?.property5?.find(
+  tasksModule.value = result?.value?.paginate_subject?.data[0]?.modules?.find(
     (el) => el.id === id
   );
   console.log(tasksModule);
-  if (tasksModule.value.property4.length > 0) {
+  if (tasksModule.value.tasks.length > 0) {
     secondDialog.value = true;
   } else {
     moduleApi.moduleDelete(id, delModule.value.id);
@@ -291,16 +291,16 @@ const moduleUpdateElementForm = (index) => {
   } else {
     dataUpdate.value = {
       dateUpdate: {
-        dateUpdateEnd: rows.value[index].property7.date,
-        dateUpdateStart: rows.value[index].property6.date,
-        timeUpdateStart: rows.value[index].property6.time,
-        timeUpdateEnd: rows.value[index].property7.time,
+        dateUpdateEnd: rows.value[index].date_end.date,
+        dateUpdateStart: rows.value[index].date_start.date,
+        timeUpdateStart: rows.value[index].date_start.time,
+        timeUpdateEnd: rows.value[index].date_end.time,
       },
 
       moduleNameUpdate: rows.value[index].name,
       modelUserModuleUpdate: {
-        label: `${rows.value[index].property5.fullname.first_name} ${rows.value[index].property5.fullname.last_name}`,
-        value: rows.value[index].property5.id,
+        label: `${rows.value[index].responsible.fullname.first_name} ${rows.value[index].responsible.fullname.last_name}`,
+        value: rows.value[index].responsible.id,
       },
     };
   }
