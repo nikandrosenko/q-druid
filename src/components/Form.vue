@@ -141,6 +141,8 @@ const date = ref({
   timeEnd: props.dataUpdate.dateUpdate.timeUpdateEnd,
 });
 
+const updatePermissionOrNot = ref(false)
+
 const dateAndTimeEnd = computed(
   () => `${date.value.dateEnd} ${date.value.timeEnd}`
 );
@@ -174,6 +176,13 @@ onResult(() => {
 const emits = defineEmits(["create", "update"]);
 
 const manipulationForm = () => {
+
+  if(props.dataUpdate.modelUserModuleUpdate !== modelUserModule.value){
+    updatePermissionOrNot.value = true
+  } else {
+    updatePermissionOrNot.value = false
+  }
+
   if (props.updateDeleteType.bool) {
     emits("create", {
       emitValue: {
@@ -189,6 +198,7 @@ const manipulationForm = () => {
         moduleName,
         modelUserModule,
         id: props.updateDeleteType.id,
+        updatePermission: updatePermissionOrNot.value,
       },
     });
   }

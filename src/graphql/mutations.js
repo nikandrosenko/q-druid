@@ -347,3 +347,12 @@ export const notificationSubscribe = gql`
     }
   }
 `;
+
+export const permissionRuleDeleting = gql`
+mutation permissionRuleDelete($id: String!) {
+  permissionRuleDelete(id: $id) {
+    recordId
+    status
+  }
+}
+`
