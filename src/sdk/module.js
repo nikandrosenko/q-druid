@@ -88,10 +88,10 @@ const moduleDelete = async (moduleId, pageId) => {
   });
 };
 
-const permissionIdForDeleted = ref({
+let permissionIdForDeleted = {
   module: '',
   page: ''
-})
+}
 
 const moduleUpdate = async (moduleId, pageId, emitValue) => {
   const { data: updateM } = await updatingModule({
@@ -122,20 +122,20 @@ const moduleUpdate = async (moduleId, pageId, emitValue) => {
 
   if(emitValue.emitValue.updatePermission.value){
 
-    permissionIdForDeleted.value.module = permissionTreeSubjects?.value?.data.find((el) => {
+    permissionIdForDeleted.module = permissionTreeSubjects?.value?.data.find((el) => {
       el.subject_id === moduleId
     })
 
-    permissionIdForDeleted.value.page = permissionTreeSubjects?.value?.data.find((el) => {
+    permissionIdForDeleted.page = permissionTreeSubjects?.value?.data.find((el) => {
       el.subject_id === pageId
     })
 
     const { data: deletePermissionModule } = await permissionRuleDelete({
-      id: permissionIdForDeleted.value.module
+      id: permissionIdForDeleted.module
     })
 
     const { data: deletePermissionPage } = await permissionRuleDelete({
-      id: permissionIdForDeleted.value.page
+      id: permissionIdForDeleted.page
     })
 
     const { data: createdPermissionRuleForPage } = await creatingPermissionRule({
