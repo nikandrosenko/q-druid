@@ -89,6 +89,13 @@
             </q-td>
           </q-tr>
         </template>
+        <template v-slot:no-data>
+          <div class="q-pa-md">
+            <p>
+              Список пользователей пуст
+            </p>
+          </div>
+        </template>
       </q-table>
     </div>
   </div>

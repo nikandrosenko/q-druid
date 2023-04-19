@@ -92,6 +92,13 @@
             </q-td>
           </q-tr>
         </template>
+        <template v-slot:no-data>
+          <div class="q-pa-md">
+            <p>
+              Список задач пуст
+            </p>
+          </div>
+        </template>
       </q-table>
     </div>
   </q-page>
