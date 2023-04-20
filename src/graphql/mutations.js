@@ -103,8 +103,8 @@ export const userUpdate = gql`
   }
 `;
 export const createModule = gql`
-  mutation ($input: create_type1_input!) {
-    create_type1(input: $input) {
+  mutation ($input: create_module_input!) {
+    create_module(input: $input) {
       status
       recordId
       record {
@@ -147,8 +147,8 @@ export const createModule = gql`
   }
 `;
 export const createTask = gql`
-  mutation ($input: create_type2_input!) {
-    create_type2(input: $input) {
+  mutation ($input: create_task_input!) {
+    create_task(input: $input) {
       status
       recordId
       record {
@@ -178,8 +178,8 @@ export const createTask = gql`
 `;
 
 export const updateTask = gql`
-  mutation ($id: String!, $input: update_type2_input!) {
-    update_type2(id: $id, input: $input) {
+  mutation ($id: String!, $input: update_task_input!) {
+    update_task(id: $id, input: $input) {
       status
       recordId
       record {
@@ -277,8 +277,8 @@ export const updatePermissionRule = gql`
 `;
 
 export const updateModule = gql`
-  mutation ($input: update_type1_input!, $id: String!) {
-    update_type1(id: $id, input: $input) {
+  mutation ($input: update_module_input!, $id: String!) {
+    update_module(id: $id, input: $input) {
       status
       recordId
       record {
@@ -320,14 +320,14 @@ export const updatePage = gql`
 
 export const deleteModule = gql`
   mutation deleteModule($module_id: String!) {
-    delete_type1(id: $module_id) {
+    delete_module(id: $module_id) {
       recordId
     }
   }
 `;
 export const deleteTask = gql`
   mutation deleteTask($task_id: String!) {
-    delete_type2(id: $task_id) {
+    delete_task(id: $task_id) {
       recordId
     }
   }
@@ -349,10 +349,10 @@ export const notificationSubscribe = gql`
 `;
 
 export const permissionRuleDeleting = gql`
-mutation permissionRuleDelete($id: String!) {
-  permissionRuleDelete(id: $id) {
-    recordId
-    status
+  mutation permissionRuleDelete($id: String!) {
+    permissionRuleDelete(id: $id) {
+      recordId
+      status
+    }
   }
-}
-`
+`;

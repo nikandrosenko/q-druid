@@ -40,7 +40,7 @@ const taskCreate = async (task, moduleId) => {
   const { data: createdPermissionRule } = await creatingPermissionRule({
     input: {
       model_type: "object",
-      model_id: createdTask.create_type2.recordId,
+      model_id: createdTask.create_task.recordId,
       owner_type: "subject",
       owner_id: task.executor.value,
       level: 5,

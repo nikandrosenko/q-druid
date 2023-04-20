@@ -221,7 +221,7 @@ export const getPage = gql`
 
 export const getModulesAll = gql`
   query getModules {
-    paginate_type1(page: 1, perPage: 100) {
+    paginate_module(page: 1, perPage: 100) {
       data {
         id
         type_id
@@ -268,7 +268,7 @@ export const getModulesAll = gql`
 
 export const getModuleById = gql`
   query getModuleById($module_id: String!) {
-    get_type1(id: $module_id) {
+    get_module(id: $module_id) {
       id
       name
       responsible {
@@ -337,7 +337,7 @@ export const getPagesModule = gql`
 
 export const getTasksAll = gql`
   query getTasks {
-    paginate_type2(page: 1, perPage: 100) {
+    paginate_task(page: 1, perPage: 100) {
       data {
         id
         type_id
@@ -383,32 +383,33 @@ export const getTasksAll = gql`
 `;
 
 export const permissionTreeSubjects = gql`
-query permissionTreeSubjects(
-	$perPage: Int
-	$page: Int
-	$modelId: String!
-	$groupId: String!
-) {
-	permissionTreeSubjects(
-		perPage: $perPage
-		page: $page
-		modelId: $modelId
-		groupId: $groupId
-	) {
-		data {
-			subject_id
-			level
-			permission_rule_id
-		}
-		paginatorInfo {
-			perPage
-			total
-			count
-			currentPage
-			from
-			to
-			lastPage
-			hasMorePages
-		}
-	}
-}`
+  query permissionTreeSubjects(
+    $perPage: Int
+    $page: Int
+    $modelId: String!
+    $groupId: String!
+  ) {
+    permissionTreeSubjects(
+      perPage: $perPage
+      page: $page
+      modelId: $modelId
+      groupId: $groupId
+    ) {
+      data {
+        subject_id
+        level
+        permission_rule_id
+      }
+      paginatorInfo {
+        perPage
+        total
+        count
+        currentPage
+        from
+        to
+        lastPage
+        hasMorePages
+      }
+    }
+  }
+`;

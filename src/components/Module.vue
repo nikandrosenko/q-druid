@@ -125,7 +125,7 @@ const {
 });
 
 onResult(() => {
-  rows.value = resultModule?.value?.get_type1?.tasks.map((el, i) => {
+  rows.value = resultModule?.value?.get_module?.tasks.map((el, i) => {
     let status = {};
     if (el.status === process.env.APPOINTED_ID) {
       status = {

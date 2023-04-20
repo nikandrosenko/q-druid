@@ -1,4 +1,8 @@
-import { provideApolloClient, useMutation, useQuery } from "@vue/apollo-composable";
+import {
+  provideApolloClient,
+  useMutation,
+  useQuery,
+} from "@vue/apollo-composable";
 import apolloClient from "src/apollo/client";
 import {
   createModule,
@@ -8,9 +12,10 @@ import {
   deletePage,
   updateModule,
   updatePage,
-  permissionRuleDeleting
+  permissionRuleDeleting,
 } from "src/graphql/mutations.js";
 import { permissionTreeSubjects } from "src/graphql/queries.js";
+import { ref } from "vue";
 
 provideApolloClient(apolloClient);
 
@@ -19,10 +24,10 @@ const { mutate: updatingPage } = useMutation(updatePage);
 const { mutate: deletingModule } = useMutation(deleteModule);
 const { mutate: deletingPage } = useMutation(deletePage);
 const { mutate: creatingModule } = useMutation(createModule);
-const { mutate: permissionRuleDelete } = useMutation(permissionRuleDeleting)
+const { mutate: permissionRuleDelete } = useMutation(permissionRuleDeleting);
 const { mutate: creatingPermissionRule } = useMutation(createPermissionRule);
 
-const { result: dataPermission } = useQuery(permissionTreeSubjects)
+const { result: dataPermission } = useQuery(permissionTreeSubjects);
 
 const moduleCreate = async (emitValue) => {
   const { data: createdModule } = await creatingModule({
@@ -46,12 +51,12 @@ const moduleCreate = async (emitValue) => {
   const { mutate: creatingPage } = useMutation(createPage);
   const { data: createdPage } = await creatingPage({
     input: {
-      title: createdModule.create_type1.record.name,
+      title: createdModule.create_module.record.name,
       parent_id: process.env.MODULES_PAGE_ID,
       icon: "list_alt",
       object: {
-        id: createdModule.create_type1.recordId,
-        type_id: createdModule.create_type1.record.type_id,
+        id: createdModule.create_module.recordId,
+        type_id: createdModule.create_module.record.type_id,
       },
     },
   });
@@ -70,7 +75,7 @@ const moduleCreate = async (emitValue) => {
     await creatingPermissionRule({
       input: {
         model_type: "object",
-        model_id: createdModule.create_type1.recordId,
+        model_id: createdModule.create_module.recordId,
         owner_type: "subject",
         owner_id: emitValue.emitValue.modelUserModule.value.value,
         level: 5,
@@ -89,9 +94,9 @@ const moduleDelete = async (moduleId, pageId) => {
 };
 
 const permissionIdForDeleted = ref({
-  module: '',
-  page: ''
-})
+  module: "",
+  page: "",
+});
 
 const moduleUpdate = async (moduleId, pageId, emitValue) => {
   const { data: updateM } = await updatingModule({
@@ -120,33 +125,36 @@ const moduleUpdate = async (moduleId, pageId, emitValue) => {
     },
   });
 
-  if(emitValue.emitValue.updatePermission.value){
+  if (emitValue.emitValue.updatePermission.value) {
+    permissionIdForDeleted.value.module =
+      permissionTreeSubjects?.value?.data.find((el) => {
+        el.subject_id === moduleId;
+      });
 
-    permissionIdForDeleted.value.module = permissionTreeSubjects?.value?.data.find((el) => {
-      el.subject_id === moduleId
-    })
-
-    permissionIdForDeleted.value.page = permissionTreeSubjects?.value?.data.find((el) => {
-      el.subject_id === pageId
-    })
+    permissionIdForDeleted.value.page =
+      permissionTreeSubjects?.value?.data.find((el) => {
+        el.subject_id === pageId;
+      });
 
     const { data: deletePermissionModule } = await permissionRuleDelete({
-      id: permissionIdForDeleted.value.module
-    })
+      id: permissionIdForDeleted.value.module,
+    });
 
     const { data: deletePermissionPage } = await permissionRuleDelete({
-      id: permissionIdForDeleted.value.page
-    })
-
-    const { data: createdPermissionRuleForPage } = await creatingPermissionRule({
-      input: {
-        model_type: "page",
-        model_id: moduleId,
-        owner_type: "subject",
-        owner_id: emitValue.emitValue.modelUserModule.value.value,
-        level: 5,
-      },
+      id: permissionIdForDeleted.value.page,
     });
+
+    const { data: createdPermissionRuleForPage } = await creatingPermissionRule(
+      {
+        input: {
+          model_type: "page",
+          model_id: moduleId,
+          owner_type: "subject",
+          owner_id: emitValue.emitValue.modelUserModule.value.value,
+          level: 5,
+        },
+      }
+    );
 
     const { data: createdPermissionRuleForModuleObject } =
       await creatingPermissionRule({
@@ -158,7 +166,6 @@ const moduleUpdate = async (moduleId, pageId, emitValue) => {
           level: 5,
         },
       });
-
   }
 };
 
