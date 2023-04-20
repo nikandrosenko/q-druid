@@ -100,68 +100,19 @@ import Form from "./Form.vue";
 import moduleApi from "src/sdk/module.js";
 import { getPagesModule } from "src/graphql/queries.js";
 import { useQuery } from "@vue/apollo-composable";
-import gql from "graphql-tag";
+import { getUserModules } from "src/graphql/queries.js";
 
 const { level } = defineProps({
   level: Number,
 });
 
-const currentUserId = localStorage.getItem("userId");
-const { result, loading, onResult, refetch } = useQuery(gql`
-  query getUserModules {
-    paginate_subject(page: 1, perPage: 100, where: { column: "user_id", operator: EQ, value: ${currentUserId} }) {
-      data {
-        id
-        type_id
-        author_id
-        level
-        position
-        created_at
-        updated_at
-        user_id
-        fullname {
-          first_name
-          last_name
-        }
-        modules {
-          id
-          name
-          created_at
-          responsible {
-            id
-            fullname {
-              first_name
-              last_name
-            }
-          }
-
-          date_start {
-            date
-            time
-          }
-          date_end {
-            date
-            time
-          }
-          tasks {
-            id
-            status
-          }
-        }
-      }
-      paginatorInfo {
-        perPage
-        currentPage
-        lastPage
-        total
-        count
-        from
-        to
-        hasMorePages
-      }
-    }
-  }
-`);
+const { result, loading, onResult, refetch } = useQuery(getUserModules, {
+  where: {
+    column: "user_id",
+    operator: "EQ",
+    value: localStorage.getItem("userId"),
+  },
+});
 
 const { result: pageData } = useQuery(getPagesModule, {
   id: process.env.MODULES_PAGE_ID,

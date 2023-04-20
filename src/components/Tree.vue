@@ -1,8 +1,8 @@
 <template>
   <q-list>
     <q-tree
-      v-if="keyedPages"
-      :nodes="keyedPages"
+      v-if="treePages"
+      :nodes="treePages"
       node-key="id"
       no-connectors
       no-selection-unset
@@ -19,12 +19,10 @@ import { ref, onMounted } from "vue";
 import { pages } from "src/graphql/queries";
 import { useQuery } from "@vue/apollo-composable";
 import { useRouter, useRoute } from "vue-router";
-import _ from "lodash";
 
 const router = useRouter();
 const route = useRoute();
 const treePages = ref([]);
-const keyedPages = ref([]);
 const parentPages = ref([]);
 const selected = ref();
 const expanded = ref([]);
@@ -36,15 +34,26 @@ const redirect = (node) => {
   });
 };
 
-const { result: currentSpacePages, onResult, refetch } = useQuery(pages);
+const {
+  result: currentSpacePages,
+  onResult,
+  refetch,
+} = useQuery(pages, {
+  orderBy: {
+    column: "position",
+    order: "ASC",
+  },
+});
 
 onResult(() => {
   treePages.value = [];
   parentPages.value = currentSpacePages?.value?.rootPages?.data;
+  console.log(parentPages.value);
   parentPages.value.forEach((page) => {
     let treeElem = {
       id: page.id,
       label: page.title,
+      level: page.level,
       icon: page.icon,
       position: page.position,
       handler: (node) => redirect(node),
@@ -52,6 +61,7 @@ onResult(() => {
         elem = {
           id: elem.id,
           label: elem.title,
+          level: elem.level,
           icon: elem.icon,
           handler: (node) => redirect(node),
         };
@@ -60,7 +70,6 @@ onResult(() => {
     };
     treePages.value.push(treeElem);
   });
-  keyedPages.value = _.sortBy(treePages.value, ["label", "position"]);
 
   const findById = (array, id) => {
     let result;
@@ -70,10 +79,10 @@ onResult(() => {
     return result;
   };
 
-  selected.value = findById(keyedPages.value, route.params.id)?.id ?? "";
+  selected.value = findById(treePages.value, route.params.id)?.id ?? "";
   if (selected.value !== "") {
     expanded.value.push(
-      keyedPages.value.find(
+      treePages.value.find(
         (item) =>
           item.id === route.params.id ||
           item.children.find((i) => i.id === route.params.id)

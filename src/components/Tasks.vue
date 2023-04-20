@@ -56,7 +56,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useQuery } from "@vue/apollo-composable";
-import gql from "graphql-tag";
+import { getUserTasks } from "src/graphql/queries";
 import FormTasks from "./FormTasks.vue";
 
 const prompt = ref(false);
@@ -90,68 +90,14 @@ const columns = [
   },
 ];
 
-const currentUserId = localStorage.getItem("userId");
-const { result, loading, onResult, refetch } = useQuery(gql`
-  query getUserTasks {
-    paginate_subject(
-      page: 1
-      perPage: 100
-      where: { column: "user_id", operator: EQ, value: ${currentUserId} }
-    ) {
-      data {
-        id
-        type_id
-        author_id
-        level
-        position
-        created_at
-        updated_at
-        user_id
-        fullname {
-          first_name
-          last_name
-        }
-        tasks {
-          id
-          name
-          description
-          created_at
-          executor {
-            id
-            user_id
-            fullname {
-              first_name
-              last_name
-            }
-          }
-          status
-          module {
-            id
-            name
-            responsible {
-              id
-              user_id
-              fullname {
-                first_name
-                last_name
-              }
-            }
-          }
-        }
-      }
-      paginatorInfo {
-        perPage
-        currentPage
-        lastPage
-        total
-        count
-        from
-        to
-        hasMorePages
-      }
-    }
-  }
-`);
+const { result, loading, onResult, refetch } = useQuery(getUserTasks, {
+  where: {
+    column: "user_id",
+    operator: "EQ",
+    value: localStorage.getItem("userId"),
+  },
+});
+
 onResult(() => {
   rows.value = result?.value?.paginate_subject?.data[0]?.tasks?.map((el, i) => {
     let statusName = {};

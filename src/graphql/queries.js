@@ -21,8 +21,8 @@ export const User = gql`
 `;
 
 export const pages = gql`
-  query pages {
-    rootPages {
+  query pages($where: PaginatorWhere, $orderBy: PaginatorOrderBy) {
+    rootPages(perPage: 50, page: 1, where: $where, orderBy: $orderBy) {
       data {
         id
         parent_id
@@ -165,20 +165,51 @@ export const getExecutorGroupSubjects = gql`
 `;
 
 export const getSubject = gql`
-  query getSubject($id: String!) {
-    get_subject(id: $id) {
-      email {
-        email
-      }
-      group {
-        name
+  query ($perPage: Int!, $page: Int!, $where: ObjectPaginatorWhere) {
+    paginate_subject(perPage: $perPage, page: $page, where: $where) {
+      data {
         id
+        fullname {
+          first_name
+          last_name
+          __typename
+        }
+        email {
+          email
+        }
+        group {
+          id
+          name
+        }
+        modules {
+          id
+          name
+        }
+        tasks {
+          id
+          name
+          module {
+            id
+            name
+          }
+        }
+        user_id
+        created_at
+        updated_at
+        __typename
       }
-      fullname {
-        first_name
-        middle_name
-        last_name
+      paginatorInfo {
+        perPage
+        count
+        total
+        currentPage
+        from
+        to
+        lastPage
+        hasMorePages
+        __typename
       }
+      __typename
     }
   }
 `;
@@ -250,6 +281,65 @@ export const getModulesAll = gql`
           id
           name
           status
+        }
+      }
+      paginatorInfo {
+        perPage
+        currentPage
+        lastPage
+        total
+        count
+        from
+        to
+        hasMorePages
+      }
+    }
+  }
+`;
+
+export const getUserModules = gql`
+  query getUserModules(
+    $where: ObjectPaginatorWhere
+    $orderBy: ObjectPaginatorOrderBy
+  ) {
+    paginate_subject(perPage: 50, page: 1, where: $where, orderBy: $orderBy) {
+      data {
+        id
+        type_id
+        author_id
+        level
+        position
+        created_at
+        updated_at
+        user_id
+        fullname {
+          first_name
+          last_name
+        }
+        modules {
+          id
+          name
+          created_at
+          responsible {
+            id
+            fullname {
+              first_name
+              last_name
+            }
+          }
+
+          date_start {
+            date
+            time
+          }
+          date_end {
+            date
+            time
+          }
+          tasks {
+            id
+            status
+          }
         }
       }
       paginatorInfo {
@@ -364,6 +454,67 @@ export const getTasksAll = gql`
             fullname {
               first_name
               last_name
+            }
+          }
+        }
+      }
+      paginatorInfo {
+        perPage
+        currentPage
+        lastPage
+        total
+        count
+        from
+        to
+        hasMorePages
+      }
+    }
+  }
+`;
+
+export const getUserTasks = gql`
+  query getUserTasks(
+    $where: ObjectPaginatorWhere
+    $orderBy: ObjectPaginatorOrderBy
+  ) {
+    paginate_subject(perPage: 50, page: 1, where: $where, orderBy: $orderBy) {
+      data {
+        id
+        type_id
+        author_id
+        level
+        position
+        created_at
+        updated_at
+        user_id
+        fullname {
+          first_name
+          last_name
+        }
+        tasks {
+          id
+          name
+          description
+          created_at
+          executor {
+            id
+            user_id
+            fullname {
+              first_name
+              last_name
+            }
+          }
+          status
+          module {
+            id
+            name
+            responsible {
+              id
+              user_id
+              fullname {
+                first_name
+                last_name
+              }
             }
           }
         }
