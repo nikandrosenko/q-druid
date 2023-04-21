@@ -10,6 +10,7 @@
       color="black"
       v-model:selected="selected"
       v-model:expanded="expanded"
+      no-nodes-label="Необходимо авторизоваться!"
     />
   </q-list>
 </template>

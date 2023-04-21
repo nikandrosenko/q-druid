@@ -8,7 +8,7 @@
       <p>Загрузка</p>
     </div>
     <div v-else class="q-pa-md">
-      <q-table :rows="rows" :columns="columns" row-key="index">
+      <q-table :rows="rows" :columns="columns" row-key="index" hide-pagination>
         <template v-slot:header="props">
           <q-tr :props="props">
             <q-th auto-width />
@@ -19,16 +19,7 @@
         </template>
 
         <template v-slot:body="props">
-          <q-tr
-            :props="props"
-            :class="
-              props.row.status.label === 'Выполнено'
-                ? 'bg-yellow'
-                : props.row.status.label === 'Назначено'
-                ? 'bg-pink'
-                : 'bg-green'
-            "
-          >
+          <q-tr :props="props">
             <q-td auto-width>
               <q-btn
                 size="sm"
@@ -44,16 +35,34 @@
                 icon="create"
               />
             </q-td>
-            <q-td v-for="col in props.cols" :key="col.name" :props="props">
+            <!-- <q-td v-for="col in props.cols" :key="col.name" :props="props">
               {{ col.value }}
+            </q-td> -->
+            <q-td>
+              {{ props.row.name }}
+            </q-td>
+            <q-td>
+              {{ props.row.description }}
+            </q-td>
+            <q-td class="text-right">
+              <span
+                class="q-pa-sm rounded-borders"
+                :class="
+                  props.row.status.label === 'Выполнено'
+                    ? 'bg-yellow'
+                    : props.row.status.label === 'Назначено'
+                    ? 'bg-pink'
+                    : 'bg-green'
+                "
+              >
+                {{ props.row.status.label }}
+              </span>
             </q-td>
           </q-tr>
         </template>
         <template v-slot:no-data>
           <div class="q-pa-md">
-            <p>
-              Список задач пуст
-            </p>
+            <p>Список задач пуст</p>
           </div>
         </template>
       </q-table>
@@ -88,6 +97,7 @@ const columns = [
   {
     name: "description",
     label: "Описание",
+    align: "left",
     field: (row) => `${row.description}`,
   },
   {

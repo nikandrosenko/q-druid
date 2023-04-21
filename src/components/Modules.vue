@@ -46,7 +46,7 @@
       <p>Загрузка</p>
     </div>
     <div v-else class="q-pa-md">
-      <q-table :rows="rows" :columns="columns" row-key="index">
+      <q-table :rows="rows" :columns="columns" row-key="index" hide-pagination>
         <template v-slot:header="props">
           <q-tr :props="props">
             <q-th auto-width />
@@ -60,6 +60,7 @@
           <q-tr :props="props">
             <q-td auto-width>
               <q-btn
+                class="q-mr-sm"
                 size="sm"
                 color="primary"
                 round

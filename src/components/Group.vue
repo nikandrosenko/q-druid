@@ -55,12 +55,10 @@
       </q-dialog>
     </div>
     <div class="q-pa-md">
-      <q-table :rows="rows" :columns="columns" row-key="name" >
+      <q-table :rows="rows" :columns="columns" row-key="name" hide-pagination>
         <template v-slot:no-data>
           <div class="q-pa-md">
-            <p>
-              Список пользователей пуст
-            </p>
+            <p>Список пользователей пуст</p>
           </div>
         </template>
       </q-table>
