@@ -91,9 +91,7 @@
         </template>
         <template v-slot:no-data>
           <div class="q-pa-md">
-            <p>
-              Список пользователей пуст
-            </p>
+            <p>Список модулей пуст</p>
           </div>
         </template>
       </q-table>
