@@ -60,6 +60,7 @@
           <q-tr :props="props">
             <q-td auto-width>
               <q-btn
+                v-if="level === 7"
                 class="q-mr-sm"
                 size="sm"
                 color="primary"
@@ -70,6 +71,7 @@
               />
 
               <q-btn
+                v-if="level === 7"
                 size="sm"
                 color="primary"
                 round
@@ -104,9 +106,8 @@
 import { ref, onMounted } from "vue";
 import Form from "./Form.vue";
 import moduleApi from "src/sdk/module.js";
-import { getPagesModule } from "src/graphql/queries.js";
+import { getPagesModule, getUserModules } from "src/graphql/queries.js";
 import { useQuery } from "@vue/apollo-composable";
-import { getUserModules } from "src/graphql/queries.js";
 
 const { level } = defineProps({
   level: Number,

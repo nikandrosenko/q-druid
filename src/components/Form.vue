@@ -125,7 +125,7 @@
 
 <script setup>
 import { useValidators, useValidatorsSelect } from "src/use/validators.js";
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
 import { getGroupSubjects } from "src/graphql/queries";
 import { useQuery } from "@vue/apollo-composable";
 
@@ -141,7 +141,7 @@ const date = ref({
   timeEnd: props.dataUpdate.dateUpdate.timeUpdateEnd,
 });
 
-const updatePermissionOrNot = ref(false)
+const updatePermissionOrNot = ref(false);
 
 const dateAndTimeEnd = computed(
   () => `${date.value.dateEnd} ${date.value.timeEnd}`
@@ -157,12 +157,13 @@ const moduleName = ref(props.dataUpdate.moduleNameUpdate);
 const modelUserModule = ref(props.dataUpdate.modelUserModuleUpdate);
 const groupSubjectUsers = ref();
 
-const { result: groupSubject, onResult: onResult } = useQuery(
-  getGroupSubjects,
-  {
-    group_id: "3163550221139005516",
-  }
-);
+const {
+  result: groupSubject,
+  onResult: onResult,
+  refetch: refetchSubject,
+} = useQuery(getGroupSubjects, {
+  group_id: "3163550221139005516",
+});
 
 onResult(() => {
   groupSubjectUsers.value = groupSubject?.value?.get_group.subject.map((el) => {
@@ -176,11 +177,10 @@ onResult(() => {
 const emits = defineEmits(["create", "update"]);
 
 const manipulationForm = () => {
-
-  if(props.dataUpdate.modelUserModuleUpdate !== modelUserModule.value){
-    updatePermissionOrNot.value = true
+  if (props.dataUpdate.modelUserModuleUpdate !== modelUserModule.value) {
+    updatePermissionOrNot.value = true;
   } else {
-    updatePermissionOrNot.value = false
+    updatePermissionOrNot.value = false;
   }
 
   if (props.updateDeleteType.bool) {
@@ -203,4 +203,7 @@ const manipulationForm = () => {
     });
   }
 };
+onMounted(() => {
+  if (!groupSubjectUsers.value) refetchSubject();
+});
 </script>

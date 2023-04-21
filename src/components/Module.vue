@@ -55,6 +55,7 @@
           <q-tr :props="props">
             <q-td auto-width>
               <q-btn
+                v-if="level === 7"
                 class="q-mr-sm"
                 size="sm"
                 color="primary"
